@@ -5,11 +5,11 @@ gtts==2.5.4
 pydantic==2.10.3
 python-multipart==0.0.20
 httpx==0.28.1
-langchain
-langchain-community
-langchain-text-splitters
-langchain-groq
-langchain-huggingface
+langchain==0.3.30
+langchain-community==0.3.31
+langchain-text-splitters==0.3.11
+langchain-groq==0.3.8
+langchain-huggingface==0.3.1
 sentence-transformers
 faiss-cpu
 sqlalchemy
