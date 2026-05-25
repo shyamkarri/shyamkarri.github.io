@@ -939,12 +939,13 @@ async function handleMessage(userText){
 
   } catch(e) {
     // Backend unreachable — fallback to browser TTS with a note
-    const fallbackReply = "Hmm, looks like my backend is waking up (Render free tier spins down). Try again in 20 seconds! Meanwhile, feel free to email me at ksprasadmvsa.1999@gmail.com";
+    const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
     appendMsg('ai', fallbackReply);
     document.getElementById('voice-btn').disabled = false;
+    document.getElementById('mode-label').textContent = 'Offline';
     Face.setState('idle');
     speakFallback(fallbackReply, ()=>{
-      setStatus('ready','Backend waking up — try again in 20s');
+      setStatus('ready','Backend offline — try again');
     });
   }
 }

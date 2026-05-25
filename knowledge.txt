@@ -1,0 +1,56 @@
+KARRI'S COMPLETE BACKGROUND
+
+IDENTITY:
+- Full name: Karri Shyam Prasad (goes by Prasad or Karri)
+- Location: Lewisville, Texas, USA
+- Open to: Remote work OR relocation anywhere in the US
+- Email: ksprasadmvsa.1999@gmail.com | Phone: +1 817-601-5406
+- GitHub: github.com/shyamkarri | LinkedIn: linkedin.com/in/shyam-karri
+- Looking for: AI/ML Engineer, Senior Data Engineer roles
+
+CURRENT ROLE:
+- Software Engineer – GCP Cloud Data Platform / AI Engineering @ HCA Healthcare (June 2024 – Present, Remote)
+- Designing and deploying production LLM agents, RAG pipelines, and Lakehouse architectures
+- Key win: Built a LangGraph agentic workflow that eliminated a 2-day clinical triage process — approved for full rollout after a single live demo to hospital leadership
+- Built RAG schema intelligence system on BigQuery — analysts self-serve without needing a data engineer
+- Fine-tuned clinical NLP (LoRA/PEFT): +34% accuracy, processing 2M+ docs at sub-second Pinecone latency
+- Running 500M+ records/day pipelines at 99.7% reliability
+- Achieved 45% BigQuery cost reduction
+
+PREVIOUS EXPERIENCE:
+- Citi (July 2023 – May 2024, Irving TX) – Data Engineer, Cloud Data Lake
+  • CDC incremental ingestion with Debezium + Pub/Sub: 92% reduction in ingestion window (6hr→30min)
+  • GKE Kubernetes framework: 70% fewer deployment failures
+  • Led full Hadoop → GCP migration: 65% processing time reduction, full decommission achieved
+- Accenture (Aug 2020 – Jan 2022, Bengaluru India) – Data Engineer
+  • Hadoop ecosystem on 200+ node enterprise clusters: 55% processing load reduction
+  • Python/Shell automation cutting manual ops effort by 60%
+
+TECHNICAL SKILLS:
+- Gen AI & Agents: LangChain, LangGraph, RAG Pipelines, LLM Fine-Tuning, LoRA/PEFT, Pinecone, Weaviate, Prompt Engineering, Hugging Face
+- Cloud Platforms: GCP, AWS, Azure, Cloud Run, GKE/EKS/AKS, Cloud Dataflow, BigQuery, Terraform
+- Data Engineering: Apache Beam, Kafka/Pub-Sub, Airflow, Debezium CDC, Delta Lake, PySpark, Great Expectations
+- Languages & DevOps: Python (Expert), SQL/BigQuery SQL, Shell/Bash, Docker, Kubernetes, CI/CD, Git
+
+CERTIFICATIONS (all active):
+- AWS Solutions Architect – Associate (July 2023 – July 2026)
+- Azure Data Engineer Associate (March 2024)
+- Azure Databricks Associate (October 2024)
+- Snowflake SnowPro Core (October 2024)
+- Certified Data Science Professional – DataCamp (September 2023)
+- Google Professional Data Engineer (In Progress)
+
+KEY PROJECTS:
+1. LLM Agentic Triage Workflow @ HCA – LangGraph multi-step agent triages clinical data, 2-day→real-time
+2. RAG Schema Intelligence @ HCA – LLM understands full BigQuery data model, custom chunking, Pinecone
+3. Clinical NLP Fine-Tuning @ HCA – LoRA/PEFT transformer, Cloud Run/K8s, +34% accuracy, 2M+ docs
+4. Lakehouse Architecture @ HCA – Delta Lake over GCS, unified layer for pipelines and AI agents
+5. CDC Ingestion Platform @ Citi – Debezium+Pub/Sub, 6hr batch→30min incremental
+6. Hadoop→GCP Migration @ Citi – BigQuery SQL + Dataflow, 65% faster, full decommission
+
+PERSONALITY & PASSIONS:
+- Passionate about AI that actually ships and makes real impact (not demos/prototypes)
+- Believes the best AI engineers sit with users, understand pain points, then build
+- Proud of the HCA triage agent — the most meaningful work so far
+- Enjoys explaining complex AI systems in plain language
+- Humble but confident — backs everything with real metrics

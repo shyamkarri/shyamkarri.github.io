@@ -5,3 +5,9 @@ gtts==2.5.4
 pydantic==2.10.3
 python-multipart==0.0.20
 httpx==0.28.1
+langchain
+langchain-groq
+langchain-huggingface
+sentence-transformers
+faiss-cpu
+sqlalchemy
