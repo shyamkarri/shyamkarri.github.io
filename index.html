@@ -1,1060 +1,2397 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Karri Prasad — AI Engineer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-:root{
---bg:#060812;--bg2:#090d1f;--surface:#0f1326;--card:#131729;
---border:rgba(120,160,255,0.12);--border2:rgba(120,160,255,0.28);
---text:#eef0ff;--muted:#6b7a9f;--dim:#363d55;
---blue:#5b8cff;--cyan:#38d9f5;--violet:#a78bfa;--green:#2dd4ac;--amber:#f5a623;--pink:#f472b6;
---glow:rgba(91,140,255,0.2);--glow2:rgba(56,217,245,0.15);
---fh:'Playfair Display',serif;--fb:'Outfit',sans-serif;--fm:'JetBrains Mono',monospace;
-}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--fb);overflow-x:hidden;cursor:none;}
-
-#cursor{position:fixed;width:10px;height:10px;background:var(--cyan);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.2s,height 0.2s,opacity 0.2s;mix-blend-mode:screen;}
-#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(91,140,255,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.08s,width 0.25s,height 0.25s;}
-
-.bg-grid{position:fixed;inset:0;background-image:linear-gradient(rgba(91,140,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(91,140,255,0.03) 1px,transparent 1px);background-size:80px 80px;pointer-events:none;z-index:0;}
-.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0;filter:blur(100px);}
-.orb-a{width:600px;height:600px;background:radial-gradient(circle,rgba(91,140,255,0.1) 0%,transparent 70%);top:-200px;left:-150px;}
-.orb-b{width:500px;height:500px;background:radial-gradient(circle,rgba(167,139,250,0.08) 0%,transparent 70%);bottom:-100px;right:-100px;}
-.orb-c{width:400px;height:400px;background:radial-gradient(circle,rgba(56,217,245,0.06) 0%,transparent 70%);top:40%;right:20%;}
-
-nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1.1rem 3rem;display:flex;justify-content:space-between;align-items:center;background:rgba(6,8,18,0.7);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);}
-.nav-logo{font-family:var(--fm);font-size:0.8rem;color:var(--blue);letter-spacing:3px;text-transform:uppercase;}
-.nav-links{display:flex;gap:2.5rem;}
-.nav-links a{color:var(--muted);text-decoration:none;font-size:0.8rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:500;transition:color 0.2s;}
-.nav-links a:hover{color:var(--text);}
-.nav-hire{font-family:var(--fm);font-size:0.75rem;color:var(--cyan);border:1px solid rgba(56,217,245,0.3);border-radius:4px;padding:0.4rem 1rem;text-decoration:none;transition:all 0.2s;letter-spacing:1px;}
-.nav-hire:hover{background:rgba(56,217,245,0.08);border-color:var(--cyan);}
-
-#hero{min-height:100vh;display:flex;align-items:center;padding:8rem 3rem 4rem;position:relative;z-index:1;}
-.hero-layout{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;max-width:1200px;margin:0 auto;width:100%;}
-
-.hero-left .eyebrow{font-family:var(--fm);font-size:0.72rem;color:var(--cyan);letter-spacing:4px;text-transform:uppercase;display:block;margin-bottom:1.2rem;}
-.hero-title{font-family:var(--fh);font-size:clamp(3rem,5.5vw,5rem);line-height:1.05;margin-bottom:1.5rem;font-weight:400;}
-.hero-title em{font-style:italic;color:var(--blue);}
-.hero-title .line2{display:block;color:var(--muted);font-size:0.65em;font-weight:300;margin-top:0.3rem;font-family:var(--fb);letter-spacing:2px;font-style:normal;}
-.hero-bio{color:var(--muted);font-size:0.95rem;line-height:1.85;margin-bottom:2.5rem;max-width:480px;}
-.hero-stats{display:flex;gap:2.5rem;margin-bottom:2.5rem;}
-.hstat{text-align:left;}
-.hstat-n{font-family:var(--fh);font-size:2rem;color:var(--text);display:block;font-weight:700;}
-.hstat-l{font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
-.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
-.btn-glow{background:var(--blue);color:#fff;padding:0.75rem 2rem;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.88rem;letter-spacing:0.5px;transition:all 0.25s;box-shadow:0 0 30px rgba(91,140,255,0.3);}
-.btn-glow:hover{transform:translateY(-3px);box-shadow:0 0 50px rgba(91,140,255,0.5);}
-.btn-ghost{color:var(--text);padding:0.75rem 2rem;border-radius:8px;text-decoration:none;font-weight:500;font-size:0.88rem;border:1px solid var(--border2);transition:all 0.25s;}
-.btn-ghost:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px);}
-
-/* ── AVATAR ZONE ── */
-.avatar-zone{display:flex;flex-direction:column;align-items:center;gap:1.5rem;}
-
-.avatar-card{
-  position:relative;width:300px;
-  background:linear-gradient(160deg,rgba(19,23,41,0.95) 0%,rgba(9,13,31,0.9) 100%);
-  border:1px solid var(--border2);border-radius:28px;overflow:hidden;
-  box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(91,140,255,0.08),inset 0 1px 0 rgba(255,255,255,0.05);
-}
-.avatar-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(91,140,255,0.5),rgba(56,217,245,0.3),transparent);z-index:3;}
-.scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(56,217,245,0.6),transparent);z-index:4;animation:scan 4s ease-in-out infinite;pointer-events:none;}
-@keyframes scan{0%{top:0%;opacity:0;}10%{opacity:1;}90%{opacity:0.3;}100%{top:100%;opacity:0;}}
-
-/* ─── EMOJI FACE AVATAR ─── */
-.emoji-avatar-wrap{
-  position:relative;width:100%;height:280px;
-  display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(160deg,#0f1326 0%,#1a1f40 50%,#0a0d1e 100%);
-  overflow:hidden;
-}
-/* Subtle glow behind face */
-.emoji-avatar-wrap::before{
-  content:'';position:absolute;width:180px;height:180px;
-  background:radial-gradient(circle,rgba(91,140,255,0.25) 0%,transparent 70%);
-  border-radius:50%;animation:face-glow 3s ease-in-out infinite alternate;
-}
-@keyframes face-glow{from{opacity:0.5;transform:scale(0.95);}to{opacity:1;transform:scale(1.05);}}
-
-/* The SVG face container */
-.face-container{
-  position:relative;z-index:2;
-  width:180px;height:180px;
-  animation:face-idle 4s ease-in-out infinite;
-}
-@keyframes face-idle{0%,100%{transform:translateY(0) rotate(0deg);}25%{transform:translateY(-4px) rotate(0.5deg);}75%{transform:translateY(2px) rotate(-0.5deg);}}
-
-/* ── Face SVG elements ── */
-.face-svg{width:180px;height:180px;overflow:visible;}
-
-/* HEAD */
-.head-circle{fill:#FFDBA4;filter:drop-shadow(0 8px 24px rgba(0,0,0,0.5));}
-/* EYES */
-.eye-white{fill:#fff;}
-.eye-pupil{fill:#2d1a00;transition:transform 0.15s;}
-.eye-shine{fill:#fff;opacity:0.9;}
-.eye-lid{fill:#FFDBA4;transform-origin:center;transition:transform 0.2s ease;}
-/* Blinking */
-.blinking .eye-lid-left,.blinking .eye-lid-right{transform:scaleY(1) !important;}
-
-/* EYEBROWS */
-.eyebrow-path{stroke:#6B3A1F;stroke-width:3;stroke-linecap:round;fill:none;transition:d 0.3s ease;}
-
-/* MOUTH */
-.mouth-path{stroke:#8B4513;stroke-width:3;stroke-linecap:round;fill:none;transition:d 0.4s ease;}
-.mouth-open{fill:#CC6B4A;stroke:#8B4513;stroke-width:2;transition:all 0.3s ease;}
-.teeth{fill:#FFFFF0;}
-.tongue{fill:#E86060;}
-
-/* CHEEKS */
-.cheek{fill:#FFB3B3;opacity:0;transition:opacity 0.5s;}
-.cheek.show{opacity:0.5;}
-
-/* SWEAT DROP (thinking) */
-.sweat{opacity:0;transition:opacity 0.4s;}
-.sweat.show{opacity:1;animation:sweat-drop 1.5s ease-in-out infinite;}
-@keyframes sweat-drop{0%,100%{transform:translateY(0);}50%{transform:translateY(3px);}}
-
-/* STARS / SPARKLES (happy) */
-.sparkle{opacity:0;transition:opacity 0.4s;animation:sparkle-spin 2s linear infinite;}
-.sparkle.show{opacity:1;}
-@keyframes sparkle-spin{0%{transform:rotate(0deg) scale(1);}50%{transform:rotate(180deg) scale(1.2);}100%{transform:rotate(360deg) scale(1);}}
-
-/* LIP SYNC – mouth shapes animated by JS */
-.speaking-wave{stroke:#8B4513;stroke-width:2.5;stroke-linecap:round;fill:none;opacity:0;transition:opacity 0.15s;}
-.speaking-wave.active{opacity:1;}
-
-/* Headphones (decoration) */
-.headphone{fill:none;stroke:#5b8cff;stroke-width:4;stroke-linecap:round;opacity:0.7;}
-
-.avatar-info{padding:1.25rem 1.5rem 1.5rem;position:relative;z-index:3;}
-.avatar-name{font-family:var(--fh);font-size:1.4rem;font-weight:700;margin-bottom:0.2rem;}
-.avatar-role{font-family:var(--fm);font-size:0.72rem;color:var(--cyan);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:1rem;}
-.voice-bar{display:flex;align-items:flex-end;gap:3px;height:28px;margin-bottom:1rem;}
-.vb{width:4px;border-radius:2px;background:var(--blue);transition:height 0.1s ease;}
-.vb.active{animation:wave-bar var(--d,0.8s) ease-in-out infinite alternate;}
-@keyframes wave-bar{from{height:4px;}to{height:22px;}}
-.vb:nth-child(1){--d:0.7s;}.vb:nth-child(2){--d:0.5s;animation-delay:0.1s;}.vb:nth-child(3){--d:0.6s;animation-delay:0.05s;}.vb:nth-child(4){--d:0.4s;animation-delay:0.15s;}.vb:nth-child(5){--d:0.8s;animation-delay:0.08s;}.vb:nth-child(6){--d:0.5s;animation-delay:0.12s;}.vb:nth-child(7){--d:0.65s;animation-delay:0.03s;}.vb:nth-child(8){--d:0.45s;animation-delay:0.18s;}.vb:nth-child(9){--d:0.7s;animation-delay:0.06s;}.vb:nth-child(10){--d:0.55s;animation-delay:0.1s;}
-.avatar-status{display:flex;align-items:center;gap:8px;font-family:var(--fm);font-size:0.72rem;color:var(--muted);}
-.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse-green 2s ease-in-out infinite;}
-@keyframes pulse-green{0%,100%{box-shadow:0 0 8px var(--green);}50%{box-shadow:0 0 18px var(--green),0 0 30px rgba(45,212,172,0.3);}}
-
-/* ── VOICE CONSOLE ── */
-.voice-console{width:300px;background:rgba(9,13,31,0.95);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
-.vc-header{padding:0.9rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:rgba(91,140,255,0.04);}
-.vc-title{font-family:var(--fm);font-size:0.72rem;color:var(--blue);letter-spacing:2px;text-transform:uppercase;flex:1;}
-.vc-mode{font-family:var(--fm);font-size:0.65rem;color:var(--muted);}
-.vc-body{padding:1rem 1.2rem;}
-.vc-transcript{min-height:80px;max-height:130px;overflow-y:auto;margin-bottom:0.9rem;font-size:0.82rem;color:var(--muted);line-height:1.65;}
-.vc-transcript::-webkit-scrollbar{width:3px;}
-.vc-transcript::-webkit-scrollbar-thumb{background:var(--border2);}
-.vc-msg{margin-bottom:0.5rem;padding:0.4rem 0.7rem;border-radius:8px;font-size:0.79rem;animation:fade-in-msg 0.3s ease;}
-@keyframes fade-in-msg{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
-.vc-msg.user{background:rgba(91,140,255,0.1);border-left:2px solid var(--blue);}
-.vc-msg.ai{background:rgba(56,217,245,0.06);border-left:2px solid var(--cyan);color:var(--text);}
-.vc-msg .sender{font-family:var(--fm);font-size:0.65rem;color:var(--muted);margin-bottom:0.2rem;letter-spacing:1px;text-transform:uppercase;}
-.vc-controls{display:flex;gap:0.6rem;}
-.vc-btn{flex:1;padding:0.65rem;border-radius:8px;border:none;font-family:var(--fb);font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
-.vc-btn-voice{background:linear-gradient(135deg,var(--blue),var(--violet));color:#fff;}
-.vc-btn-voice:hover{transform:scale(1.02);box-shadow:0 4px 20px rgba(91,140,255,0.4);}
-.vc-btn-voice.listening{background:linear-gradient(135deg,var(--green),var(--cyan));animation:pulse-listen 1.5s ease-in-out infinite;}
-.vc-btn-voice.speaking{background:linear-gradient(135deg,var(--amber),var(--pink));animation:pulse-speak 1s ease-in-out infinite;}
-@keyframes pulse-listen{0%,100%{box-shadow:0 0 0 0 rgba(45,212,172,0.4);}50%{box-shadow:0 0 0 8px rgba(45,212,172,0);}}
-@keyframes pulse-speak{0%,100%{box-shadow:0 0 0 0 rgba(245,166,35,0.4);}50%{box-shadow:0 0 0 8px rgba(245,166,35,0);}}
-.vc-btn-stop{background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.25);color:var(--pink);font-size:0.78rem;flex:0 0 auto;padding:0.65rem 0.8rem;}
-.vc-btn-stop:hover{background:rgba(244,114,182,0.2);}
-.vc-hint{font-family:var(--fm);font-size:0.65rem;color:var(--dim);text-align:center;margin-top:0.6rem;letter-spacing:0.5px;}
-.chips{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.75rem;}
-.chip{background:rgba(91,140,255,0.07);border:1px solid var(--border);border-radius:20px;padding:0.25rem 0.65rem;font-size:0.7rem;font-family:var(--fm);color:var(--muted);cursor:pointer;transition:all 0.2s;letter-spacing:0.5px;}
-.chip:hover{border-color:var(--blue);color:var(--blue);}
-
-/* ── SECTIONS ── */
-section.sec{padding:6rem 3rem;position:relative;z-index:1;}
-section.sec.alt{background:var(--bg2);}
-.sec-wrap{max-width:1100px;margin:0 auto;}
-.sec-eye{font-family:var(--fm);font-size:0.7rem;color:var(--blue);letter-spacing:4px;text-transform:uppercase;display:block;margin-bottom:0.8rem;}
-.sec-h{font-family:var(--fh);font-size:clamp(2rem,4vw,3rem);font-weight:400;margin-bottom:0.5rem;}
-.sec-h em{font-style:italic;color:var(--blue);}
-.sec-sub{color:var(--muted);font-size:0.9rem;margin-bottom:3rem;}
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;}
-.sk-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;transition:all 0.3s;}
-.sk-card:hover{border-color:rgba(91,140,255,0.4);transform:translateY(-3px);box-shadow:0 12px 40px var(--glow);}
-.sk-head{display:flex;align-items:center;gap:10px;margin-bottom:1.1rem;}
-.sk-ico{font-size:1.4rem;}.sk-name{font-weight:600;font-size:0.9rem;}
-.sk-tags{display:flex;flex-wrap:wrap;gap:0.4rem;}
-.sk-t{background:rgba(91,140,255,0.07);border:1px solid var(--border);border-radius:5px;padding:0.18rem 0.55rem;font-size:0.72rem;font-family:var(--fm);color:var(--muted);transition:all 0.2s;}
-.sk-t:hover{background:rgba(91,140,255,0.18);color:var(--blue);}
-.timeline{position:relative;padding-left:2rem;}
-.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--blue),transparent);}
-.exp-item{position:relative;margin-bottom:3.5rem;padding-left:1.5rem;}
-.exp-item::before{content:'';position:absolute;left:-2.45rem;top:0.4rem;width:10px;height:10px;border-radius:50%;background:var(--blue);box-shadow:0 0 0 4px rgba(91,140,255,0.15),0 0 16px rgba(91,140,255,0.3);}
-.exp-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.5rem;}
-.exp-co{font-family:var(--fh);font-size:1.4rem;font-weight:400;}
-.exp-dt{font-family:var(--fm);font-size:0.72rem;color:var(--blue);background:rgba(91,140,255,0.08);border:1px solid var(--border);border-radius:4px;padding:0.2rem 0.6rem;}
-.exp-ttl{font-family:var(--fm);font-size:0.78rem;color:var(--cyan);margin-bottom:0.3rem;}
-.exp-loc{font-family:var(--fm);font-size:0.7rem;color:var(--dim);margin-bottom:1rem;}
-.exp-ul{list-style:none;display:flex;flex-direction:column;gap:0.55rem;}
-.exp-ul li{color:var(--muted);font-size:0.86rem;padding-left:1.1rem;position:relative;line-height:1.7;}
-.exp-ul li::before{content:'▸';position:absolute;left:0;color:var(--blue);font-size:0.65rem;top:0.35rem;}
-.exp-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:1rem;}
-.exp-tag{background:rgba(45,212,172,0.07);border:1px solid rgba(45,212,172,0.18);border-radius:4px;padding:0.14rem 0.5rem;font-size:0.68rem;font-family:var(--fm);color:var(--green);}
-.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem;}
-.proj{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:1.75rem;transition:all 0.3s;position:relative;overflow:hidden;}
-.proj::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--cyan));transform:scaleX(0);transform-origin:left;transition:transform 0.3s;}
-.proj:hover::before{transform:scaleX(1);}
-.proj:hover{border-color:rgba(91,140,255,0.35);transform:translateY(-5px);box-shadow:0 16px 60px rgba(0,0,0,0.4);}
-.proj-n{font-family:var(--fm);font-size:0.68rem;color:var(--blue);opacity:0.5;display:block;margin-bottom:0.6rem;}
-.proj-ttl{font-family:var(--fh);font-size:1.25rem;margin-bottom:0.5rem;font-weight:400;line-height:1.3;}
-.proj-org{font-family:var(--fm);font-size:0.72rem;color:var(--cyan);margin-bottom:0.75rem;}
-.proj-desc{color:var(--muted);font-size:0.83rem;line-height:1.75;margin-bottom:1rem;}
-.proj-impact{background:rgba(45,212,172,0.06);border:1px solid rgba(45,212,172,0.15);border-radius:8px;padding:0.5rem 0.8rem;font-size:0.76rem;font-family:var(--fm);color:var(--green);}
-.proj-stack{display:flex;flex-wrap:wrap;gap:0.35rem;margin-top:0.9rem;}
-.pst{background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.18);border-radius:4px;padding:0.13rem 0.5rem;font-size:0.68rem;font-family:var(--fm);color:var(--violet);}
-.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;}
-.cert{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.2rem;display:flex;align-items:flex-start;gap:1rem;transition:all 0.3s;}
-.cert:hover{border-color:rgba(245,166,35,0.35);transform:translateY(-2px);}
-.cert-ico{font-size:1.9rem;flex-shrink:0;}
-.cert-name{font-weight:600;font-size:0.85rem;line-height:1.3;margin-bottom:0.25rem;}
-.cert-dt{font-size:0.72rem;color:var(--muted);font-family:var(--fm);}
-.cert-badge{display:inline-block;margin-top:0.4rem;background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);border-radius:4px;padding:0.1rem 0.5rem;font-size:0.65rem;font-family:var(--fm);color:var(--amber);}
-#contact{text-align:center;}
-.contact-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:4rem 2.5rem;max-width:620px;margin:0 auto;position:relative;overflow:hidden;}
-.contact-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(91,140,255,0.06),transparent 60%);pointer-events:none;}
-.contact-card h2{font-family:var(--fh);font-size:2.5rem;margin-bottom:1rem;font-weight:400;}
-.contact-card p{color:var(--muted);margin-bottom:2.5rem;line-height:1.8;}
-.c-links{display:flex;flex-direction:column;gap:0.75rem;align-items:center;}
-.c-link{display:flex;align-items:center;gap:12px;color:var(--text);text-decoration:none;font-size:0.88rem;padding:0.7rem 1.5rem;border:1px solid var(--border);border-radius:10px;transition:all 0.2s;width:100%;max-width:340px;justify-content:center;}
-.c-link:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-1px);}
-footer{padding:2rem 3rem;text-align:center;border-top:1px solid var(--border);font-family:var(--fm);font-size:0.72rem;color:var(--dim);}
-.fi{opacity:0;transform:translateY(28px);transition:opacity 0.7s ease,transform 0.7s ease;}
-.fi.vis{opacity:1;transform:translateY(0);}
-.avatar-card.speaking{box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 0 2px rgba(56,217,245,0.4),0 0 60px rgba(56,217,245,0.15),inset 0 1px 0 rgba(255,255,255,0.05);}
-
-@media(max-width:900px){
-  .hero-layout{grid-template-columns:1fr;text-align:center;}
-  .avatar-zone{margin-top:2rem;}
-  .hero-bio{margin:0 auto 2rem;}
-  .hero-stats{justify-content:center;}
-  .hero-btns{justify-content:center;}
-  nav{padding:1rem 1.5rem;}
-  .nav-links{display:none;}
-  section.sec{padding:4rem 1.5rem;}
-}
-</style>
-</head>
-<body>
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-<div class="bg-grid"></div>
-<div class="orb orb-a"></div><div class="orb orb-b"></div><div class="orb orb-c"></div>
-
-<nav>
-  <div class="nav-logo">Karri Prasad</div>
-  <div class="nav-links">
-    <a href="#about">About</a><a href="#skills">Skills</a>
-    <a href="#experience">Experience</a><a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </div>
-  <a class="nav-hire" href="mailto:ksprasadmvsa.1999@gmail.com">Hire Me →</a>
-</nav>
-
-<section id="hero">
-  <div class="hero-layout">
-    <div class="hero-left fi">
-      <span class="eyebrow">AI Engineer</span>
-      <h1 class="hero-title">Karri <em>Prasad</em><span class="line2">Building AI That Ships</span></h1>
-      <p class="hero-bio">5+ years building production LLM agents, RAG pipelines, and Lakehouse architectures across GCP, AWS &amp; Azure. Currently at HCA Healthcare turning clinical workflows into AI-powered systems — no demos, just real impact.</p>
-      <div class="hero-stats">
-        <div class="hstat"><span class="hstat-n">500M+</span><span class="hstat-l">Daily Records</span></div>
-        <div class="hstat"><span class="hstat-n">99.7%</span><span class="hstat-l">Reliability</span></div>
-        <div class="hstat"><span class="hstat-n">34%</span><span class="hstat-l">NLP Accuracy ↑</span></div>
-      </div>
-      <div class="hero-btns">
-        <a class="btn-glow" href="#" onclick="startVoice(); return false;">🎙 Talk to My AI Avatar</a>
-        <a class="btn-ghost" href="https://github.com/shyamkarri" target="_blank">GitHub ↗</a>
-        <a class="btn-ghost" href="#contact">Contact</a>
-      </div>
-    </div>
-
-    <!-- AVATAR RIGHT SIDE -->
-    <div class="avatar-zone fi">
-      <div class="avatar-card" id="avatar-card">
-        <div class="scan-line"></div>
-
-        <!-- ✨ INTERACTIVE EMOJI FACE ✨ -->
-        <div class="emoji-avatar-wrap">
-          <div class="face-container" id="face-container">
-            <svg class="face-svg" id="face-svg" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-
-              <!-- Headphone arc left -->
-              <path class="headphone" d="M 30 90 Q 30 35 90 35" stroke-width="6"/>
-              <!-- Headphone arc right -->
-              <path class="headphone" d="M 150 90 Q 150 35 90 35" stroke-width="6"/>
-              <!-- Left ear pad -->
-              <rect class="headphone" x="18" y="80" width="18" height="26" rx="8" fill="rgba(91,140,255,0.2)" stroke="#5b8cff" stroke-width="3"/>
-              <!-- Right ear pad -->
-              <rect class="headphone" x="144" y="80" width="18" height="26" rx="8" fill="rgba(91,140,255,0.2)" stroke="#5b8cff" stroke-width="3"/>
-
-              <!-- FACE HEAD -->
-              <circle class="head-circle" cx="90" cy="95" r="68"/>
-              <!-- Ear lobes -->
-              <ellipse fill="#F5C680" cx="22" cy="95" rx="7" ry="10"/>
-              <ellipse fill="#F5C680" cx="158" cy="95" rx="7" ry="10"/>
-
-              <!-- HAIR -->
-              <ellipse fill="#3D1F00" cx="90" cy="36" rx="52" ry="22"/>
-              <rect fill="#3D1F00" x="40" y="36" width="100" height="18" rx="4"/>
-
-              <!-- LEFT EYE GROUP -->
-              <g id="eye-left">
-                <ellipse class="eye-white" cx="68" cy="88" rx="16" ry="14"/>
-                <ellipse class="eye-pupil" id="pupil-left" cx="68" cy="89" rx="8" ry="9"/>
-                <circle class="eye-shine" cx="72" cy="85" r="3"/>
-                <!-- Eyelid (for blinking) -->
-                <ellipse class="eye-lid" id="lid-left" cx="68" cy="88" rx="16" ry="14" fill="#FFDBA4" transform-origin="68 78" transform="scaleY(0)"/>
-              </g>
-
-              <!-- RIGHT EYE GROUP -->
-              <g id="eye-right">
-                <ellipse class="eye-white" cx="112" cy="88" rx="16" ry="14"/>
-                <ellipse class="eye-pupil" id="pupil-right" cx="112" cy="89" rx="8" ry="9"/>
-                <circle class="eye-shine" cx="116" cy="85" r="3"/>
-                <ellipse class="eye-lid" id="lid-right" cx="112" cy="88" rx="16" ry="14" fill="#FFDBA4" transform-origin="112 78" transform="scaleY(0)"/>
-              </g>
-
-              <!-- EYEBROWS -->
-              <path class="eyebrow-path" id="brow-left" d="M 52 72 Q 62 66 78 70" stroke-width="3.5"/>
-              <path class="eyebrow-path" id="brow-right" d="M 102 70 Q 118 66 128 72" stroke-width="3.5"/>
-
-              <!-- NOSE -->
-              <path d="M 90 98 Q 84 108 88 112 Q 90 114 92 112 Q 96 108 90 98" fill="#E8A870" stroke="none"/>
-
-              <!-- MOUTH (changes based on state) -->
-              <!-- Default smile -->
-              <path class="mouth-path" id="mouth-smile" d="M 72 125 Q 90 137 108 125"/>
-              <!-- Open talking mouth (hidden by default) -->
-              <g id="mouth-open-group" style="display:none">
-                <ellipse class="mouth-open" cx="90" cy="128" rx="18" ry="10"/>
-                <ellipse class="teeth" cx="90" cy="122" rx="14" ry="4"/>
-                <ellipse class="tongue" cx="90" cy="133" rx="10" ry="5"/>
-              </g>
-              <!-- Laugh mouth (hidden) -->
-              <g id="mouth-laugh" style="display:none">
-                <path d="M 70 122 Q 90 142 110 122" fill="#CC6B4A" stroke="#8B4513" stroke-width="2" stroke-linecap="round"/>
-                <ellipse fill="#FFFFF0" cx="90" cy="126" rx="16" ry="6"/>
-              </g>
-              <!-- Thinking mouth (hidden) -->
-              <path class="mouth-path" id="mouth-think" d="M 75 128 Q 90 126 108 128" style="display:none"/>
-
-              <!-- CHEEKS (blush) -->
-              <ellipse class="cheek" id="cheek-left" cx="50" cy="108" rx="16" ry="10"/>
-              <ellipse class="cheek" id="cheek-right" cx="130" cy="108" rx="16" ry="10"/>
-
-              <!-- SWEAT DROP (thinking) -->
-              <g class="sweat" id="sweat-drop">
-                <circle fill="#7EC8E3" cx="138" cy="68" r="6"/>
-                <path fill="#7EC8E3" d="M 138 55 Q 133 62 138 68 Q 143 62 138 55"/>
-              </g>
-
-              <!-- SPARKLES (happy/laughing) -->
-              <g class="sparkle" id="sparkle-1" transform="translate(145,65)">
-                <path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z" fill="#f5a623"/>
-              </g>
-              <g class="sparkle" id="sparkle-2" transform="translate(35,70)">
-                <path d="M0,-6 L1.5,-1.5 L6,0 L1.5,1.5 L0,6 L-1.5,1.5 L-6,0 L-1.5,-1.5 Z" fill="#38d9f5"/>
-              </g>
-              <g class="sparkle" id="sparkle-3" transform="translate(155,105)">
-                <path d="M0,-5 L1.2,-1.2 L5,0 L1.2,1.2 L0,5 L-1.2,1.2 L-5,0 L-1.2,-1.2 Z" fill="#a78bfa"/>
-              </g>
-
-              <!-- Speaking lip waves (animated lines near mouth) -->
-              <path class="speaking-wave" id="sw1" d="M 65 148 Q 72 144 80 148"/>
-              <path class="speaking-wave" id="sw2" d="M 82 150 Q 90 146 98 150"/>
-              <path class="speaking-wave" id="sw3" d="M 100 148 Q 108 144 115 148"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="avatar-info">
-          <div class="voice-bar" id="voice-bar">
-            <div class="vb" style="height:6px"></div><div class="vb" style="height:10px"></div>
-            <div class="vb" style="height:4px"></div><div class="vb" style="height:14px"></div>
-            <div class="vb" style="height:8px"></div><div class="vb" style="height:5px"></div>
-            <div class="vb" style="height:12px"></div><div class="vb" style="height:7px"></div>
-            <div class="vb" style="height:10px"></div><div class="vb" style="height:4px"></div>
-          </div>
-          <div class="avatar-name">Karri Prasad</div>
-          <div class="avatar-role">AI Engineer · Open to Work</div>
-          <div class="avatar-status">
-            <span class="status-dot"></span>
-            <span id="avatar-status-txt">Ready to chat — click mic below</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- VOICE CONSOLE -->
-      <div class="voice-console">
-        <div class="vc-header">
-          <span class="vc-title">AI Avatar — Voice &amp; Chat</span>
-          <span class="vc-mode" id="mode-label">Idle</span>
-        </div>
-        <div class="vc-body">
-          <div class="vc-transcript" id="transcript">
-            <div class="vc-msg ai"><div class="sender">Karri</div>Hey! I'm Karri's AI avatar. Click the mic and talk to me, or type below. Ask me anything!</div>
-          </div>
-          <div class="vc-controls">
-            <button class="vc-btn vc-btn-voice" id="voice-btn" onclick="toggleVoice()">🎙 Tap to Talk</button>
-            <button class="vc-btn vc-btn-stop" onclick="stopAll()">■ Stop</button>
-          </div>
-          <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
-            <input id="text-input" type="text" placeholder="Or type here..."
-              style="flex:1;background:rgba(91,140,255,0.05);border:1px solid var(--border);border-radius:7px;padding:0.5rem 0.75rem;font-size:0.78rem;color:var(--text);font-family:var(--fb);outline:none;"
-              onkeydown="if(event.key==='Enter')sendText()"/>
-            <button onclick="sendText()" style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:0.5rem 0.85rem;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:var(--fb);">→</button>
-          </div>
-          <div class="chips">
-            <span class="chip" onclick="askChip('Hey! How are you doing?')">👋 Hey!</span>
-            <span class="chip" onclick="askChip('Tell me about yourself')">About you</span>
-            <span class="chip" onclick="askChip('What AI systems have you built?')">AI work</span>
-            <span class="chip" onclick="askChip('Are you open to work right now?')">Open to work?</span>
-            <span class="chip" onclick="askChip('What is your tech stack?')">Tech stack</span>
-            <span class="chip" onclick="askChip('Tell me about the HCA Healthcare project')">HCA project</span>
-          </div>
-          <div class="vc-hint" id="vc-hint">🎙 Tap mic → speak → wait for reply · Or type above</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ ABOUT ═══ -->
-<section class="sec alt" id="about">
-  <div class="sec-wrap">
-    <span class="sec-eye fi">About</span>
-    <h2 class="sec-h fi">The engineer who ships <em>real</em> AI</h2>
-    <p class="sec-sub fi">Not prototypes. Not demos. Production systems running at scale.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;" class="fi">
-      <div>
-        <p style="color:var(--muted);line-height:1.9;margin-bottom:1rem;">I'm embedded with clinical and operations teams at HCA Healthcare, designing AI systems that eliminate manual processes — like a LangGraph agent that reduced a 2-day triage workflow to near-real-time, approved for full rollout after a single live demo to hospital leadership.</p>
-        <p style="color:var(--muted);line-height:1.9;">I own end-to-end delivery: sit with the teams, understand what's actually slowing them down, translate that into an AI strategy, build it, and make sure it sticks. The closer I am to the people using what I build, the better the outcome.</p>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;"><span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+</span><span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Years XP</span></div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;"><span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">3</span><span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Cloud Platforms</span></div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;"><span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">500M+</span><span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Records/Day</span></div>
-        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;"><span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">2M+</span><span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Docs Processed</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SKILLS ═══ -->
-<section class="sec" id="skills">
-  <div class="sec-wrap">
-    <span class="sec-eye fi">Expertise</span>
-    <h2 class="sec-h fi">Technical <em>Skills</em></h2>
-    <div class="skills-grid">
-      <div class="sk-card fi"><div class="sk-head"><span class="sk-ico">🤖</span><span class="sk-name">Gen AI & Agents</span></div><div class="sk-tags"><span class="sk-t">LangChain</span><span class="sk-t">LangGraph</span><span class="sk-t">RAG Pipelines</span><span class="sk-t">LLM Fine-Tuning</span><span class="sk-t">LoRA / PEFT</span><span class="sk-t">Pinecone</span><span class="sk-t">Weaviate</span><span class="sk-t">Prompt Engineering</span><span class="sk-t">Hugging Face</span></div></div>
-      <div class="sk-card fi"><div class="sk-head"><span class="sk-ico">☁️</span><span class="sk-name">Cloud Platforms</span></div><div class="sk-tags"><span class="sk-t">GCP</span><span class="sk-t">AWS</span><span class="sk-t">Azure</span><span class="sk-t">Cloud Run</span><span class="sk-t">GKE / EKS / AKS</span><span class="sk-t">Cloud Dataflow</span><span class="sk-t">BigQuery</span><span class="sk-t">Terraform</span></div></div>
-      <div class="sk-card fi"><div class="sk-head"><span class="sk-ico">⚡</span><span class="sk-name">Data Engineering</span></div><div class="sk-tags"><span class="sk-t">Apache Beam</span><span class="sk-t">Kafka / Pub/Sub</span><span class="sk-t">Airflow</span><span class="sk-t">Debezium CDC</span><span class="sk-t">Delta Lake</span><span class="sk-t">PySpark</span><span class="sk-t">Great Expectations</span></div></div>
-      <div class="sk-card fi"><div class="sk-head"><span class="sk-ico">🐍</span><span class="sk-name">Languages & DevOps</span></div><div class="sk-tags"><span class="sk-t">Python (Expert)</span><span class="sk-t">SQL / BigQuery SQL</span><span class="sk-t">Shell / Bash</span><span class="sk-t">Docker</span><span class="sk-t">Kubernetes</span><span class="sk-t">CI/CD</span><span class="sk-t">Git</span></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ EXPERIENCE ═══ -->
-<section class="sec alt" id="experience">
-  <div class="sec-wrap">
-    <span class="sec-eye fi">Career</span>
-    <h2 class="sec-h fi"><em>Experience</em></h2>
-    <div class="timeline">
-      <div class="exp-item fi">
-        <div class="exp-top"><div class="exp-co">HCA Healthcare</div><span class="exp-dt">June 2024 — Present</span></div>
-        <div class="exp-ttl">Software Engineer — GCP Cloud Data Platform / AI Engineering</div>
-        <div class="exp-loc">📍 Remote</div>
-        <ul class="exp-ul">
-          <li>Designed and deployed a production LangGraph agentic workflow autonomously triaging clinical data requests — eliminating a 2-day manual process. Approved for full rollout after a single live demo to hospital leadership.</li>
-          <li>Built RAG-based schema intelligence system on BigQuery — clinical analysts self-serve dataset discovery without needing a data engineer.</li>
-          <li>Fine-tuned clinical NLP model (LoRA/PEFT) for +34% extraction accuracy; processing 2M+ documents with sub-second Pinecone retrieval latency.</li>
-          <li>Led Lakehouse architecture adoption (Delta Lake on GCS) — unified layer for pipelines and LLM agents alike.</li>
-          <li>500M+ records/day pipelines at 99.7% reliability; 45% BigQuery cost reduction.</li>
-        </ul>
-        <div class="exp-tags"><span class="exp-tag">LangGraph</span><span class="exp-tag">RAG</span><span class="exp-tag">LLM Fine-Tuning</span><span class="exp-tag">BigQuery</span><span class="exp-tag">GCP</span><span class="exp-tag">Kubernetes</span></div>
-      </div>
-      <div class="exp-item fi">
-        <div class="exp-top"><div class="exp-co">Citi</div><span class="exp-dt">July 2023 — May 2024</span></div>
-        <div class="exp-ttl">Data Engineer — Cloud Data Lake & Platform Operations</div>
-        <div class="exp-loc">📍 Irving, TX</div>
-        <ul class="exp-ul">
-          <li>CDC incremental ingestion (Debezium + Pub/Sub) — 92% reduction in ingestion window (6hr → 30min).</li>
-          <li>GKE Kubernetes deployment framework — 70% fewer deployment failures, days → &lt;1hr setup.</li>
-          <li>Led full Hadoop to GCP migration — 65% processing time reduction, full decommission achieved.</li>
-        </ul>
-        <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">Debezium</span><span class="exp-tag">Kubernetes</span><span class="exp-tag">BigQuery</span></div>
-      </div>
-      <div class="exp-item fi">
-        <div class="exp-top"><div class="exp-co">Accenture</div><span class="exp-dt">Aug 2020 — Jan 2022</span></div>
-        <div class="exp-ttl">Data Engineer — Cloud & Big Data Platform</div>
-        <div class="exp-loc">📍 Bengaluru, India</div>
-        <ul class="exp-ul">
-          <li>Full Hadoop ecosystem on 200+ node enterprise clusters; 55% processing load reduction.</li>
-          <li>Python/Shell automation cutting manual ops effort by 60%.</li>
-        </ul>
-        <div class="exp-tags"><span class="exp-tag">AWS</span><span class="exp-tag">Azure</span><span class="exp-tag">PySpark</span><span class="exp-tag">Hadoop</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ PROJECTS ═══ -->
-<section class="sec" id="projects">
-  <div class="sec-wrap">
-    <span class="sec-eye fi">Work</span>
-    <h2 class="sec-h fi">Key <em>Projects</em></h2>
-    <div class="proj-grid">
-      <div class="proj fi"><span class="proj-n">01</span><div class="proj-ttl">LLM Agentic Triage Workflow</div><div class="proj-org">@ HCA Healthcare</div><div class="proj-desc">LangGraph multi-step agent autonomously triages clinical data requests, calls APIs/BigQuery tools, routes to downstream systems or human reviewers.</div><div class="proj-impact">2-day process → near-real-time</div><div class="proj-stack"><span class="pst">LangGraph</span><span class="pst">BigQuery</span><span class="pst">GCP</span><span class="pst">Python</span></div></div>
-      <div class="proj fi"><span class="proj-n">02</span><div class="proj-ttl">RAG Schema Intelligence</div><div class="proj-org">@ HCA Healthcare</div><div class="proj-desc">Production RAG pipeline where an LLM agent understands the full BigQuery data model. Custom chunking strategy, Pinecone vector DB, LangChain retrieval chain.</div><div class="proj-impact">Analysts self-serve without data engineers</div><div class="proj-stack"><span class="pst">LangChain</span><span class="pst">Pinecone</span><span class="pst">BigQuery</span></div></div>
-      <div class="proj fi"><span class="proj-n">03</span><div class="proj-ttl">Clinical NLP Fine-Tuning</div><div class="proj-org">@ HCA Healthcare</div><div class="proj-desc">Transformer fine-tuned with LoRA/PEFT for structured field extraction. Deployed on Cloud Run / Kubernetes with automated retraining on data drift.</div><div class="proj-impact">+34% accuracy · 2M+ docs · sub-second latency</div><div class="proj-stack"><span class="pst">LoRA/PEFT</span><span class="pst">Cloud Run</span><span class="pst">Kubernetes</span></div></div>
-      <div class="proj fi"><span class="proj-n">04</span><div class="proj-ttl">Lakehouse Architecture</div><div class="proj-org">@ HCA Healthcare</div><div class="proj-desc">Recommended and led GCP Lakehouse (Delta Lake over GCS), replacing siloed zones with a versioned, unified layer for pipelines and AI agents.</div><div class="proj-impact">Stakeholder buy-in from one prototype demo</div><div class="proj-stack"><span class="pst">Delta Lake</span><span class="pst">GCS</span><span class="pst">Terraform</span></div></div>
-      <div class="proj fi"><span class="proj-n">05</span><div class="proj-ttl">CDC Ingestion Platform</div><div class="proj-org">@ Citi</div><div class="proj-desc">Replaced 6-hour full-table batch loads with sub-30-minute CDC incremental ingestion eliminating peak-hour upstream load entirely.</div><div class="proj-impact">92% reduction in ingestion window</div><div class="proj-stack"><span class="pst">Debezium</span><span class="pst">Pub/Sub</span><span class="pst">Dataflow</span></div></div>
-      <div class="proj fi"><span class="proj-n">06</span><div class="proj-ttl">Hadoop → GCP Migration</div><div class="proj-org">@ Citi</div><div class="proj-desc">Led full migration of on-premise Hadoop/Hive to GCP. Rewrote HQL as BigQuery SQL and MapReduce as Dataflow pipelines. Full decommission achieved.</div><div class="proj-impact">65% processing time reduction</div><div class="proj-stack"><span class="pst">GCP</span><span class="pst">BigQuery</span><span class="pst">Dataflow</span></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ CERTS ═══ -->
-<section class="sec alt" id="certs">
-  <div class="sec-wrap">
-    <span class="sec-eye fi">Credentials</span>
-    <h2 class="sec-h fi"><em>Certifications</em></h2>
-    <div class="certs-grid">
-      <div class="cert fi"><div class="cert-ico">☁️</div><div><div class="cert-name">AWS Solutions Architect – Associate</div><div class="cert-dt">July 2023 – July 2026</div><span class="cert-badge">Active</span></div></div>
-      <div class="cert fi"><div class="cert-ico">🔵</div><div><div class="cert-name">Azure Data Engineer Associate</div><div class="cert-dt">March 2024</div><span class="cert-badge">Active</span></div></div>
-      <div class="cert fi"><div class="cert-ico">⚡</div><div><div class="cert-name">Azure Databricks Associate</div><div class="cert-dt">October 2024</div><span class="cert-badge">Active</span></div></div>
-      <div class="cert fi"><div class="cert-ico">❄️</div><div><div class="cert-name">Snowflake SnowPro Core</div><div class="cert-dt">October 2024</div><span class="cert-badge">Active</span></div></div>
-      <div class="cert fi"><div class="cert-ico">📊</div><div><div class="cert-name">Certified Data Science Professional</div><div class="cert-dt">September 2023 · DataCamp</div><span class="cert-badge">Active</span></div></div>
-      <div class="cert fi"><div class="cert-ico">🔴</div><div><div class="cert-name">Google Professional Data Engineer</div><div class="cert-dt">In Progress</div><span class="cert-badge" style="color:var(--blue);border-color:rgba(91,140,255,0.3);background:rgba(91,140,255,0.08);">In Progress</span></div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ CONTACT ═══ -->
-<section class="sec" id="contact">
-  <div class="sec-wrap">
-    <div class="contact-card fi">
-      <h2>Let's Build Something <em style="font-style:italic;color:var(--blue);">Real</em></h2>
-      <p>I'm actively seeking AI/ML Engineer, and Senior Data Engineer roles. If you're building production AI systems and need someone who ships, reach out.</p>
-      <div class="c-links">
-        <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 ksprasadmvsa.1999@gmail.com</a>
-        <a class="c-link" href="tel:+18176015406">📱 +1 817-601-5406</a>
-        <a class="c-link" href="https://github.com/shyamkarri" target="_blank">💻 github.com/shyamkarri</a>
-        <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank">🔗 linkedin.com/in/shyam-karri</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>© 2025 Karri Prasad · Built with AI · Hosted on GitHub Pages</footer>
-
-<script>
-// ══════════════════════════════════════════════════════
-//  ⚙️  CONFIG — SET YOUR RENDER BACKEND URL HERE
-// ══════════════════════════════════════════════════════
-const BACKEND_URL = 'https://prasad-voice-agent.onrender.com'; // ← change after Render deploy
-
-// ══════════════════════════════════════════════════════
-//  CURSOR
-// ══════════════════════════════════════════════════════
-const cur = document.getElementById('cursor');
-const ring = document.getElementById('cursor-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
-setInterval(()=>{rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;ring.style.left=Math.round(rx)+'px';ring.style.top=Math.round(ry)+'px';},16);
-
-// ══════════════════════════════════════════════════════
-//  SCROLL FADE
-// ══════════════════════════════════════════════════════
-const obs = new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');}),{threshold:0.1});
-document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
-
-// ══════════════════════════════════════════════════════
-//  VOICE BARS
-// ══════════════════════════════════════════════════════
-function setVoiceBars(active){
-  document.querySelectorAll('.vb').forEach(b=>{
-    if(active){b.classList.add('active');b.style.height='';}
-    else{b.classList.remove('active');b.style.height=Math.floor(Math.random()*12+4)+'px';}
-  });
-}
-
-// ══════════════════════════════════════════════════════
-//  🎭  EMOJI FACE ANIMATOR
-// ══════════════════════════════════════════════════════
-const Face = {
-  // State machine: idle | listening | thinking | speaking | laughing
-  state: 'idle',
-
-  // Eye tracking (follows cursor gently)
-  eyeTarget: {x:0,y:0},
-  eyeCurrent: {x:0,y:0},
-
-  // Blink timer
-  blinkTimer: null,
-  isBlinking: false,
-
-  // Lip sync animation frame
-  lipSyncFrame: null,
-  lipPhase: 0,
-
-  init() {
-    // Mouse tracking for eye movement
-    document.addEventListener('mousemove', e => {
-      const face = document.getElementById('face-container');
-      if(!face) return;
-      const rect = face.getBoundingClientRect();
-      const cx = rect.left + rect.width/2;
-      const cy = rect.top + rect.height/2;
-      this.eyeTarget.x = Math.max(-5, Math.min(5, (e.clientX - cx) * 0.04));
-      this.eyeTarget.y = Math.max(-3, Math.min(3, (e.clientY - cy) * 0.03));
-    });
-
-    // Animate eye movement smoothly
-    setInterval(() => {
-      this.eyeCurrent.x += (this.eyeTarget.x - this.eyeCurrent.x) * 0.1;
-      this.eyeCurrent.y += (this.eyeTarget.y - this.eyeCurrent.y) * 0.1;
-      const pl = document.getElementById('pupil-left');
-      const pr = document.getElementById('pupil-right');
-      if(pl) pl.setAttribute('transform',`translate(${this.eyeCurrent.x},${this.eyeCurrent.y})`);
-      if(pr) pr.setAttribute('transform',`translate(${this.eyeCurrent.x},${this.eyeCurrent.y})`);
-    }, 30);
-
-    // Random blinking
-    this.scheduleBlink();
-  },
-
-  scheduleBlink() {
-    const delay = 2000 + Math.random() * 4000;
-    this.blinkTimer = setTimeout(() => {
-      this.blink();
-      this.scheduleBlink();
-    }, delay);
-  },
-
-  blink() {
-    if(this.isBlinking) return;
-    this.isBlinking = true;
-    const ll = document.getElementById('lid-left');
-    const lr = document.getElementById('lid-right');
-    // Close
-    if(ll) ll.setAttribute('transform','scaleY(1)');
-    if(lr) lr.setAttribute('transform','scaleY(1)');
-    setTimeout(()=>{
-      // Open
-      if(ll) ll.setAttribute('transform','scaleY(0)');
-      if(lr) lr.setAttribute('transform','scaleY(0)');
-      this.isBlinking = false;
-    }, 120);
-  },
-
-  // Force a double blink (happy)
-  doubleBlink() {
-    this.blink();
-    setTimeout(()=>this.blink(), 350);
-  },
-
-  setState(newState) {
-    this.state = newState;
-    // Reset all overlays
-    document.getElementById('mouth-smile').style.display = 'block';
-    document.getElementById('mouth-open-group').style.display = 'none';
-    document.getElementById('mouth-laugh').style.display = 'none';
-    document.getElementById('mouth-think').style.display = 'none';
-    document.getElementById('cheek-left').classList.remove('show');
-    document.getElementById('cheek-right').classList.remove('show');
-    document.getElementById('sweat-drop').classList.remove('show');
-    ['sparkle-1','sparkle-2','sparkle-3'].forEach(id=>document.getElementById(id).classList.remove('show'));
-    ['sw1','sw2','sw3'].forEach(id=>document.getElementById(id).classList.remove('active'));
-    if(this.lipSyncFrame) { cancelAnimationFrame(this.lipSyncFrame); this.lipSyncFrame = null; }
-    document.getElementById('face-container').style.animation = '';
-
-    switch(newState) {
-      case 'idle':
-        document.getElementById('mouth-smile').style.display = 'block';
-        document.getElementById('face-container').style.animation = 'face-idle 4s ease-in-out infinite';
-        break;
-
-      case 'listening':
-        // Raise eyebrows (attentive look)
-        document.getElementById('brow-left').setAttribute('d','M 52 68 Q 62 62 78 67');
-        document.getElementById('brow-right').setAttribute('d','M 102 67 Q 118 62 128 68');
-        document.getElementById('mouth-smile').setAttribute('d','M 74 127 Q 90 133 106 127');
-        // Slow pulse on face
-        document.getElementById('face-container').style.animation = 'face-idle 2s ease-in-out infinite';
-        break;
-
-      case 'thinking':
-        // One raised brow, slight frown
-        document.getElementById('brow-left').setAttribute('d','M 52 72 Q 62 66 78 70');
-        document.getElementById('brow-right').setAttribute('d','M 102 66 Q 118 62 128 68');
-        document.getElementById('mouth-smile').setAttribute('d','M 74 128 Q 90 125 108 128');
-        document.getElementById('sweat-drop').classList.add('show');
-        document.getElementById('mouth-think').style.display = 'block';
-        document.getElementById('mouth-smile').style.display = 'none';
-        break;
-
-      case 'speaking':
-        // Reset brows to normal
-        document.getElementById('brow-left').setAttribute('d','M 52 72 Q 62 66 78 70');
-        document.getElementById('brow-right').setAttribute('d','M 102 70 Q 118 66 128 72');
-        document.getElementById('mouth-smile').style.display = 'none';
-        document.getElementById('mouth-open-group').style.display = 'block';
-        // Animate mouth open/close and lip waves
-        this.animateLips();
-        break;
-
-      case 'laughing':
-        document.getElementById('mouth-smile').style.display = 'none';
-        document.getElementById('mouth-laugh').style.display = 'block';
-        document.getElementById('cheek-left').classList.add('show');
-        document.getElementById('cheek-right').classList.add('show');
-        ['sparkle-1','sparkle-2','sparkle-3'].forEach(id=>document.getElementById(id).classList.add('show'));
-        this.doubleBlink();
-        // Bounce animation
-        document.getElementById('face-container').style.animation = 'none';
-        let t=0;
-        const bounce = () => {
-          t += 0.15;
-          const y = Math.sin(t) * 5;
-          document.getElementById('face-container').style.transform = `translateY(${y}px)`;
-          if(this.state==='laughing') requestAnimationFrame(bounce);
-          else document.getElementById('face-container').style.transform = '';
-        };
-        requestAnimationFrame(bounce);
-        break;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karri Prasad — AI Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-  },
 
-  animateLips() {
-    // Alternate mouth open/close + lip waves for realistic speaking
-    let open = true;
-    const mouth = document.getElementById('mouth-open-group');
-    const mouthEllipse = mouth.querySelector('ellipse');
-    const sw1 = document.getElementById('sw1');
-    const sw2 = document.getElementById('sw2');
-    const sw3 = document.getElementById('sw3');
-    let phase = 0;
+    :root {
+      --bg: #060812;
+      --bg2: #090d1f;
+      --surface: #0f1326;
+      --card: #131729;
+      --border: rgba(120, 160, 255, 0.12);
+      --border2: rgba(120, 160, 255, 0.28);
+      --text: #eef0ff;
+      --muted: #6b7a9f;
+      --dim: #363d55;
+      --blue: #5b8cff;
+      --cyan: #38d9f5;
+      --violet: #a78bfa;
+      --green: #2dd4ac;
+      --amber: #f5a623;
+      --pink: #f472b6;
+      --glow: rgba(91, 140, 255, 0.2);
+      --glow2: rgba(56, 217, 245, 0.15);
+      --fh: 'Playfair Display', serif;
+      --fb: 'Outfit', sans-serif;
+      --fm: 'JetBrains Mono', monospace;
+    }
 
-    const loop = () => {
-      if(this.state !== 'speaking') {
-        mouth.style.display = 'none';
-        [sw1,sw2,sw3].forEach(e=>e.classList.remove('active'));
-        return;
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--fb);
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+      mix-blend-mode: screen;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(91, 140, 255, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s, width 0.25s, height 0.25s;
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(91, 140, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(91, 140, 255, 0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(100px);
+    }
+
+    .orb-a {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(91, 140, 255, 0.1) 0%, transparent 70%);
+      top: -200px;
+      left: -150px;
+    }
+
+    .orb-b {
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+    }
+
+    .orb-c {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 217, 245, 0.06) 0%, transparent 70%);
+      top: 40%;
+      right: 20%;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 200;
+      padding: 1.1rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(6, 8, 18, 0.7);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: var(--fm);
+      font-size: 0.8rem;
+      color: var(--blue);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-hire {
+      font-family: var(--fm);
+      font-size: 0.75rem;
+      color: var(--cyan);
+      border: 1px solid rgba(56, 217, 245, 0.3);
+      border-radius: 4px;
+      padding: 0.4rem 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .nav-hire:hover {
+      background: rgba(56, 217, 245, 0.08);
+      border-color: var(--cyan);
+    }
+
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .hero-left .eyebrow {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-title {
+      font-family: var(--fh);
+      font-size: clamp(3rem, 5.5vw, 5rem);
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--blue);
+    }
+
+    .hero-title .line2 {
+      display: block;
+      color: var(--muted);
+      font-size: 0.65em;
+      font-weight: 300;
+      margin-top: 0.3rem;
+      font-family: var(--fb);
+      letter-spacing: 2px;
+      font-style: normal;
+    }
+
+    .hero-bio {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hstat {
+      text-align: left;
+    }
+
+    .hstat-n {
+      font-family: var(--fh);
+      font-size: 2rem;
+      color: var(--text);
+      display: block;
+      font-weight: 700;
+    }
+
+    .hstat-l {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-glow {
+      background: var(--blue);
+      color: #fff;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.88rem;
+      letter-spacing: 0.5px;
+      transition: all 0.25s;
+      box-shadow: 0 0 30px rgba(91, 140, 255, 0.3);
+    }
+
+    .btn-glow:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 50px rgba(91, 140, 255, 0.5);
+    }
+
+    .btn-ghost {
+      color: var(--text);
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.88rem;
+      border: 1px solid var(--border2);
+      transition: all 0.25s;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-2px);
+    }
+
+    /* ── AVATAR ZONE ── */
+    .avatar-zone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .avatar-card {
+      position: relative;
+      width: 300px;
+      background: linear-gradient(160deg, rgba(19, 23, 41, 0.95) 0%, rgba(9, 13, 31, 0.9) 100%);
+      border: 1px solid var(--border2);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(91, 140, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    .avatar-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(91, 140, 255, 0.5), rgba(56, 217, 245, 0.3), transparent);
+      z-index: 3;
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(56, 217, 245, 0.6), transparent);
+      z-index: 4;
+      animation: scan 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scan {
+      0% {
+        top: 0%;
+        opacity: 0;
       }
-      phase += 0.18;
-      // Vary mouth opening with sine wave
-      const openY = 8 + Math.abs(Math.sin(phase)) * 8;
-      mouthEllipse.setAttribute('ry', openY);
-      // Wave lip sync indicators
-      if(Math.sin(phase) > 0.3) { sw1.classList.add('active'); sw2.classList.remove('active'); sw3.classList.add('active'); }
-      else if(Math.sin(phase) < -0.3) { sw1.classList.remove('active'); sw2.classList.add('active'); sw3.classList.remove('active'); }
-      else { sw1.classList.add('active'); sw2.classList.add('active'); sw3.classList.add('active'); }
-      this.lipSyncFrame = requestAnimationFrame(loop);
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 0.3;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* ─── EMOJI FACE AVATAR ─── */
+    .emoji-avatar-wrap {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #0f1326 0%, #1a1f40 50%, #0a0d1e 100%);
+      overflow: hidden;
+    }
+
+    /* Subtle glow behind face */
+    .emoji-avatar-wrap::before {
+      content: '';
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(91, 140, 255, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: face-glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes face-glow {
+      from {
+        opacity: 0.5;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+
+    /* The SVG face container */
+    .face-container {
+      position: relative;
+      z-index: 2;
+      width: 180px;
+      height: 180px;
+      animation: face-idle 4s ease-in-out infinite;
+    }
+
+    @keyframes face-idle {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      25% {
+        transform: translateY(-4px) rotate(0.5deg);
+      }
+
+      75% {
+        transform: translateY(2px) rotate(-0.5deg);
+      }
+    }
+
+    /* ── Face SVG elements ── */
+    .face-svg {
+      width: 180px;
+      height: 180px;
+      overflow: visible;
+    }
+
+    /* HEAD */
+    .head-circle {
+      fill: #FFDBA4;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+    }
+
+    /* EYES */
+    .eye-white {
+      fill: #fff;
+    }
+
+    .eye-pupil {
+      fill: #2d1a00;
+      transition: transform 0.15s;
+    }
+
+    .eye-shine {
+      fill: #fff;
+      opacity: 0.9;
+    }
+
+    .eye-lid {
+      fill: #FFDBA4;
+      transform-origin: center;
+      transition: transform 0.2s ease;
+    }
+
+    /* Blinking */
+    .blinking .eye-lid-left,
+    .blinking .eye-lid-right {
+      transform: scaleY(1) !important;
+    }
+
+    /* EYEBROWS */
+    .eyebrow-path {
+      stroke: #6B3A1F;
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      transition: d 0.3s ease;
+    }
+
+    /* MOUTH */
+    .mouth-path {
+      stroke: #8B4513;
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      transition: d 0.4s ease;
+    }
+
+    .mouth-open {
+      fill: #CC6B4A;
+      stroke: #8B4513;
+      stroke-width: 2;
+      transition: all 0.3s ease;
+    }
+
+    .teeth {
+      fill: #FFFFF0;
+    }
+
+    .tongue {
+      fill: #E86060;
+    }
+
+    /* CHEEKS */
+    .cheek {
+      fill: #FFB3B3;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .cheek.show {
+      opacity: 0.5;
+    }
+
+    /* SWEAT DROP (thinking) */
+    .sweat {
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .sweat.show {
+      opacity: 1;
+      animation: sweat-drop 1.5s ease-in-out infinite;
+    }
+
+    @keyframes sweat-drop {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(3px);
+      }
+    }
+
+    /* STARS / SPARKLES (happy) */
+    .sparkle {
+      opacity: 0;
+      transition: opacity 0.4s;
+      animation: sparkle-spin 2s linear infinite;
+    }
+
+    .sparkle.show {
+      opacity: 1;
+    }
+
+    @keyframes sparkle-spin {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(180deg) scale(1.2);
+      }
+
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
+    }
+
+    /* LIP SYNC – mouth shapes animated by JS */
+    .speaking-wave {
+      stroke: #8B4513;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      fill: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .speaking-wave.active {
+      opacity: 1;
+    }
+
+    /* Headphones (decoration) */
+    .headphone {
+      fill: none;
+      stroke: #5b8cff;
+      stroke-width: 4;
+      stroke-linecap: round;
+      opacity: 0.7;
+    }
+
+    .avatar-info {
+      padding: 1.25rem 1.5rem 1.5rem;
+      position: relative;
+      z-index: 3;
+    }
+
+    .avatar-name {
+      font-family: var(--fh);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .avatar-role {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .voice-bar {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 28px;
+      margin-bottom: 1rem;
+    }
+
+    .vb {
+      width: 4px;
+      border-radius: 2px;
+      background: var(--blue);
+      transition: height 0.1s ease;
+    }
+
+    .vb.active {
+      animation: wave-bar var(--d, 0.8s) ease-in-out infinite alternate;
+    }
+
+    @keyframes wave-bar {
+      from {
+        height: 4px;
+      }
+
+      to {
+        height: 22px;
+      }
+    }
+
+    .vb:nth-child(1) {
+      --d: 0.7s;
+    }
+
+    .vb:nth-child(2) {
+      --d: 0.5s;
+      animation-delay: 0.1s;
+    }
+
+    .vb:nth-child(3) {
+      --d: 0.6s;
+      animation-delay: 0.05s;
+    }
+
+    .vb:nth-child(4) {
+      --d: 0.4s;
+      animation-delay: 0.15s;
+    }
+
+    .vb:nth-child(5) {
+      --d: 0.8s;
+      animation-delay: 0.08s;
+    }
+
+    .vb:nth-child(6) {
+      --d: 0.5s;
+      animation-delay: 0.12s;
+    }
+
+    .vb:nth-child(7) {
+      --d: 0.65s;
+      animation-delay: 0.03s;
+    }
+
+    .vb:nth-child(8) {
+      --d: 0.45s;
+      animation-delay: 0.18s;
+    }
+
+    .vb:nth-child(9) {
+      --d: 0.7s;
+      animation-delay: 0.06s;
+    }
+
+    .vb:nth-child(10) {
+      --d: 0.55s;
+      animation-delay: 0.1s;
+    }
+
+    .avatar-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+
+      0%,
+      100% {
+        box-shadow: 0 0 8px var(--green);
+      }
+
+      50% {
+        box-shadow: 0 0 18px var(--green), 0 0 30px rgba(45, 212, 172, 0.3);
+      }
+    }
+
+    /* ── VOICE CONSOLE ── */
+    .voice-console {
+      width: 300px;
+      background: rgba(9, 13, 31, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .vc-header {
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(91, 140, 255, 0.04);
+    }
+
+    .vc-title {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--blue);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    .vc-mode {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    .vc-body {
+      padding: 1rem 1.2rem;
+    }
+
+    .vc-transcript {
+      min-height: 80px;
+      max-height: 130px;
+      overflow-y: auto;
+      margin-bottom: 0.9rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .vc-transcript::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .vc-transcript::-webkit-scrollbar-thumb {
+      background: var(--border2);
+    }
+
+    .vc-msg {
+      margin-bottom: 0.5rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.79rem;
+      animation: fade-in-msg 0.3s ease;
+    }
+
+    @keyframes fade-in-msg {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .vc-msg.user {
+      background: rgba(91, 140, 255, 0.1);
+      border-left: 2px solid var(--blue);
+    }
+
+    .vc-msg.ai {
+      background: rgba(56, 217, 245, 0.06);
+      border-left: 2px solid var(--cyan);
+      color: var(--text);
+    }
+
+    .vc-msg .sender {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .vc-controls {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .vc-btn {
+      flex: 1;
+      padding: 0.65rem;
+      border-radius: 8px;
+      border: none;
+      font-family: var(--fb);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .vc-btn-voice {
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff;
+    }
+
+    .vc-btn-voice:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 20px rgba(91, 140, 255, 0.4);
+    }
+
+    .vc-btn-voice.listening {
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      animation: pulse-listen 1.5s ease-in-out infinite;
+    }
+
+    .vc-btn-voice.speaking {
+      background: linear-gradient(135deg, var(--amber), var(--pink));
+      animation: pulse-speak 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse-listen {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(45, 212, 172, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(45, 212, 172, 0);
+      }
+    }
+
+    @keyframes pulse-speak {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(245, 166, 35, 0);
+      }
+    }
+
+    .vc-btn-stop {
+      background: rgba(244, 114, 182, 0.1);
+      border: 1px solid rgba(244, 114, 182, 0.25);
+      color: var(--pink);
+      font-size: 0.78rem;
+      flex: 0 0 auto;
+      padding: 0.65rem 0.8rem;
+    }
+
+    .vc-btn-stop:hover {
+      background: rgba(244, 114, 182, 0.2);
+    }
+
+    .vc-hint {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--dim);
+      text-align: center;
+      margin-top: 0.6rem;
+      letter-spacing: 0.5px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .chip {
+      background: rgba(91, 140, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.7rem;
+      font-family: var(--fm);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .chip:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    /* ── SECTIONS ── */
+    section.sec {
+      padding: 6rem 3rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    section.sec.alt {
+      background: var(--bg2);
+    }
+
+    .sec-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .sec-eye {
+      font-family: var(--fm);
+      font-size: 0.7rem;
+      color: var(--blue);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.8rem;
+    }
+
+    .sec-h {
+      font-family: var(--fh);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .sec-h em {
+      font-style: italic;
+      color: var(--blue);
+    }
+
+    .sec-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 3rem;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .sk-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s;
+    }
+
+    .sk-card:hover {
+      border-color: rgba(91, 140, 255, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px var(--glow);
+    }
+
+    .sk-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.1rem;
+    }
+
+    .sk-ico {
+      font-size: 1.4rem;
+    }
+
+    .sk-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .sk-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .sk-t {
+      background: rgba(91, 140, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 0.18rem 0.55rem;
+      font-size: 0.72rem;
+      font-family: var(--fm);
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .sk-t:hover {
+      background: rgba(91, 140, 255, 0.18);
+      color: var(--blue);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--blue), transparent);
+    }
+
+    .exp-item {
+      position: relative;
+      margin-bottom: 3.5rem;
+      padding-left: 1.5rem;
+    }
+
+    .exp-item::before {
+      content: '';
+      position: absolute;
+      left: -2.45rem;
+      top: 0.4rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 0 4px rgba(91, 140, 255, 0.15), 0 0 16px rgba(91, 140, 255, 0.3);
+    }
+
+    .exp-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .exp-co {
+      font-family: var(--fh);
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
+
+    .exp-dt {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--blue);
+      background: rgba(91, 140, 255, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.2rem 0.6rem;
+    }
+
+    .exp-ttl {
+      font-family: var(--fm);
+      font-size: 0.78rem;
+      color: var(--cyan);
+      margin-bottom: 0.3rem;
+    }
+
+    .exp-loc {
+      font-family: var(--fm);
+      font-size: 0.7rem;
+      color: var(--dim);
+      margin-bottom: 1rem;
+    }
+
+    .exp-ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .exp-ul li {
+      color: var(--muted);
+      font-size: 0.86rem;
+      padding-left: 1.1rem;
+      position: relative;
+      line-height: 1.7;
+    }
+
+    .exp-ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-size: 0.65rem;
+      top: 0.35rem;
+    }
+
+    .exp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .exp-tag {
+      background: rgba(45, 212, 172, 0.07);
+      border: 1px solid rgba(45, 212, 172, 0.18);
+      border-radius: 4px;
+      padding: 0.14rem 0.5rem;
+      font-size: 0.68rem;
+      font-family: var(--fm);
+      color: var(--green);
+    }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .proj {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 1.75rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .proj::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .proj:hover::before {
+      transform: scaleX(1);
+    }
+
+    .proj:hover {
+      border-color: rgba(91, 140, 255, 0.35);
+      transform: translateY(-5px);
+      box-shadow: 0 16px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .proj-n {
+      font-family: var(--fm);
+      font-size: 0.68rem;
+      color: var(--blue);
+      opacity: 0.5;
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+
+    .proj-ttl {
+      font-family: var(--fh);
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .proj-org {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .proj-desc {
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .proj-impact {
+      background: rgba(45, 212, 172, 0.06);
+      border: 1px solid rgba(45, 212, 172, 0.15);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      font-size: 0.76rem;
+      font-family: var(--fm);
+      color: var(--green);
+    }
+
+    .proj-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.9rem;
+    }
+
+    .pst {
+      background: rgba(167, 139, 250, 0.08);
+      border: 1px solid rgba(167, 139, 250, 0.18);
+      border-radius: 4px;
+      padding: 0.13rem 0.5rem;
+      font-size: 0.68rem;
+      font-family: var(--fm);
+      color: var(--violet);
+    }
+
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .cert {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transition: all 0.3s;
+    }
+
+    .cert:hover {
+      border-color: rgba(245, 166, 35, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .cert-ico {
+      font-size: 1.9rem;
+      flex-shrink: 0;
+    }
+
+    .cert-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      line-height: 1.3;
+      margin-bottom: 0.25rem;
+    }
+
+    .cert-dt {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: var(--fm);
+    }
+
+    .cert-badge {
+      display: inline-block;
+      margin-top: 0.4rem;
+      background: rgba(245, 166, 35, 0.08);
+      border: 1px solid rgba(245, 166, 35, 0.2);
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.65rem;
+      font-family: var(--fm);
+      color: var(--amber);
+    }
+
+    #contact {
+      text-align: center;
+    }
+
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 4rem 2.5rem;
+      max-width: 620px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(91, 140, 255, 0.06), transparent 60%);
+      pointer-events: none;
+    }
+
+    .contact-card h2 {
+      font-family: var(--fh);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 400;
+    }
+
+    .contact-card p {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
+    }
+
+    .c-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .c-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 0.7rem 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      transition: all 0.2s;
+      width: 100%;
+      max-width: 340px;
+      justify-content: center;
+    }
+
+    .c-link:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    footer {
+      padding: 2rem 3rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--dim);
+    }
+
+    .fi {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .fi.vis {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .avatar-card.speaking {
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(56, 217, 245, 0.4), 0 0 60px rgba(56, 217, 245, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    @media(max-width:900px) {
+      .hero-layout {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+
+      .avatar-zone {
+        margin-top: 2rem;
+      }
+
+      .hero-bio {
+        margin: 0 auto 2rem;
+      }
+
+      .hero-stats {
+        justify-content: center;
+      }
+
+      .hero-btns {
+        justify-content: center;
+      }
+
+      nav {
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section.sec {
+        padding: 4rem 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div class="bg-grid"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+
+  <nav>
+    <div class="nav-logo">Karri Prasad</div>
+    <div class="nav-links">
+      <a href="#about">About</a><a href="#skills">Skills</a>
+      <a href="#experience">Experience</a><a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a class="nav-hire" href="mailto:ksprasadmvsa.1999@gmail.com">Hire Me →</a>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-layout">
+      <div class="hero-left fi">
+        <span class="eyebrow">AI Engineer</span>
+        <h1 class="hero-title">Karri <em>Prasad</em><span class="line2">Building AI That Ships</span></h1>
+        <p class="hero-bio">5+ years building production LLM agents, RAG pipelines, and Lakehouse architectures across
+          GCP, AWS &amp; Azure. Currently at HCA Healthcare turning clinical workflows into AI-powered systems — no
+          demos, just real impact.</p>
+        <div class="hero-stats">
+          <div class="hstat"><span class="hstat-n">500M+</span><span class="hstat-l">Daily Records</span></div>
+          <div class="hstat"><span class="hstat-n">99.7%</span><span class="hstat-l">Reliability</span></div>
+          <div class="hstat"><span class="hstat-n">34%</span><span class="hstat-l">NLP Accuracy ↑</span></div>
+        </div>
+        <div class="hero-btns">
+          <a class="btn-glow" href="#" onclick="startVoice(); return false;">🎙 Talk to My AI Avatar</a>
+          <a class="btn-ghost" href="https://github.com/shyamkarri" target="_blank">GitHub ↗</a>
+          <a class="btn-ghost" href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <!-- AVATAR RIGHT SIDE -->
+      <div class="avatar-zone fi">
+        <div class="avatar-card" id="avatar-card">
+          <div class="scan-line"></div>
+
+          <!-- ✨ INTERACTIVE EMOJI FACE ✨ -->
+          <div class="emoji-avatar-wrap">
+            <div class="face-container" id="face-container">
+              <svg class="face-svg" id="face-svg" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+
+                <!-- Headphone arc left -->
+                <path class="headphone" d="M 30 90 Q 30 35 90 35" stroke-width="6" />
+                <!-- Headphone arc right -->
+                <path class="headphone" d="M 150 90 Q 150 35 90 35" stroke-width="6" />
+                <!-- Left ear pad -->
+                <rect class="headphone" x="18" y="80" width="18" height="26" rx="8" fill="rgba(91,140,255,0.2)"
+                  stroke="#5b8cff" stroke-width="3" />
+                <!-- Right ear pad -->
+                <rect class="headphone" x="144" y="80" width="18" height="26" rx="8" fill="rgba(91,140,255,0.2)"
+                  stroke="#5b8cff" stroke-width="3" />
+
+                <!-- FACE HEAD -->
+                <circle class="head-circle" cx="90" cy="95" r="68" />
+                <!-- Ear lobes -->
+                <ellipse fill="#F5C680" cx="22" cy="95" rx="7" ry="10" />
+                <ellipse fill="#F5C680" cx="158" cy="95" rx="7" ry="10" />
+
+                <!-- HAIR -->
+                <ellipse fill="#3D1F00" cx="90" cy="36" rx="52" ry="22" />
+                <rect fill="#3D1F00" x="40" y="36" width="100" height="18" rx="4" />
+
+                <!-- LEFT EYE GROUP -->
+                <g id="eye-left">
+                  <ellipse class="eye-white" cx="68" cy="88" rx="16" ry="14" />
+                  <ellipse class="eye-pupil" id="pupil-left" cx="68" cy="89" rx="8" ry="9" />
+                  <circle class="eye-shine" cx="72" cy="85" r="3" />
+                  <!-- Eyelid (for blinking) -->
+                  <ellipse class="eye-lid" id="lid-left" cx="68" cy="88" rx="16" ry="14" fill="#FFDBA4"
+                    transform-origin="68 78" transform="scaleY(0)" />
+                </g>
+
+                <!-- RIGHT EYE GROUP -->
+                <g id="eye-right">
+                  <ellipse class="eye-white" cx="112" cy="88" rx="16" ry="14" />
+                  <ellipse class="eye-pupil" id="pupil-right" cx="112" cy="89" rx="8" ry="9" />
+                  <circle class="eye-shine" cx="116" cy="85" r="3" />
+                  <ellipse class="eye-lid" id="lid-right" cx="112" cy="88" rx="16" ry="14" fill="#FFDBA4"
+                    transform-origin="112 78" transform="scaleY(0)" />
+                </g>
+
+                <!-- EYEBROWS -->
+                <path class="eyebrow-path" id="brow-left" d="M 52 72 Q 62 66 78 70" stroke-width="3.5" />
+                <path class="eyebrow-path" id="brow-right" d="M 102 70 Q 118 66 128 72" stroke-width="3.5" />
+
+                <!-- NOSE -->
+                <path d="M 90 98 Q 84 108 88 112 Q 90 114 92 112 Q 96 108 90 98" fill="#E8A870" stroke="none" />
+
+                <!-- MOUTH (changes based on state) -->
+                <!-- Default smile -->
+                <path class="mouth-path" id="mouth-smile" d="M 72 125 Q 90 137 108 125" />
+                <!-- Open talking mouth (hidden by default) -->
+                <g id="mouth-open-group" style="display:none">
+                  <ellipse class="mouth-open" cx="90" cy="128" rx="18" ry="10" />
+                  <ellipse class="teeth" cx="90" cy="122" rx="14" ry="4" />
+                  <ellipse class="tongue" cx="90" cy="133" rx="10" ry="5" />
+                </g>
+                <!-- Laugh mouth (hidden) -->
+                <g id="mouth-laugh" style="display:none">
+                  <path d="M 70 122 Q 90 142 110 122" fill="#CC6B4A" stroke="#8B4513" stroke-width="2"
+                    stroke-linecap="round" />
+                  <ellipse fill="#FFFFF0" cx="90" cy="126" rx="16" ry="6" />
+                </g>
+                <!-- Thinking mouth (hidden) -->
+                <path class="mouth-path" id="mouth-think" d="M 75 128 Q 90 126 108 128" style="display:none" />
+
+                <!-- CHEEKS (blush) -->
+                <ellipse class="cheek" id="cheek-left" cx="50" cy="108" rx="16" ry="10" />
+                <ellipse class="cheek" id="cheek-right" cx="130" cy="108" rx="16" ry="10" />
+
+                <!-- SWEAT DROP (thinking) -->
+                <g class="sweat" id="sweat-drop">
+                  <circle fill="#7EC8E3" cx="138" cy="68" r="6" />
+                  <path fill="#7EC8E3" d="M 138 55 Q 133 62 138 68 Q 143 62 138 55" />
+                </g>
+
+                <!-- SPARKLES (happy/laughing) -->
+                <g class="sparkle" id="sparkle-1" transform="translate(145,65)">
+                  <path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z" fill="#f5a623" />
+                </g>
+                <g class="sparkle" id="sparkle-2" transform="translate(35,70)">
+                  <path d="M0,-6 L1.5,-1.5 L6,0 L1.5,1.5 L0,6 L-1.5,1.5 L-6,0 L-1.5,-1.5 Z" fill="#38d9f5" />
+                </g>
+                <g class="sparkle" id="sparkle-3" transform="translate(155,105)">
+                  <path d="M0,-5 L1.2,-1.2 L5,0 L1.2,1.2 L0,5 L-1.2,1.2 L-5,0 L-1.2,-1.2 Z" fill="#a78bfa" />
+                </g>
+
+                <!-- Speaking lip waves (animated lines near mouth) -->
+                <path class="speaking-wave" id="sw1" d="M 65 148 Q 72 144 80 148" />
+                <path class="speaking-wave" id="sw2" d="M 82 150 Q 90 146 98 150" />
+                <path class="speaking-wave" id="sw3" d="M 100 148 Q 108 144 115 148" />
+              </svg>
+            </div>
+          </div>
+
+          <div class="avatar-info">
+            <div class="voice-bar" id="voice-bar">
+              <div class="vb" style="height:6px"></div>
+              <div class="vb" style="height:10px"></div>
+              <div class="vb" style="height:4px"></div>
+              <div class="vb" style="height:14px"></div>
+              <div class="vb" style="height:8px"></div>
+              <div class="vb" style="height:5px"></div>
+              <div class="vb" style="height:12px"></div>
+              <div class="vb" style="height:7px"></div>
+              <div class="vb" style="height:10px"></div>
+              <div class="vb" style="height:4px"></div>
+            </div>
+            <div class="avatar-name">Karri Prasad</div>
+            <div class="avatar-role">AI Engineer · Open to Work</div>
+            <div class="avatar-status">
+              <span class="status-dot"></span>
+              <span id="avatar-status-txt">Ready to chat — click mic below</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- VOICE CONSOLE -->
+        <div class="voice-console">
+          <div class="vc-header">
+            <span class="vc-title">AI Avatar — Voice &amp; Chat</span>
+            <span class="vc-mode" id="mode-label">Idle</span>
+          </div>
+          <div class="vc-body">
+            <div class="vc-transcript" id="transcript">
+              <div class="vc-msg ai">
+                <div class="sender">Karri</div>Hey! I'm Karri's AI avatar. Click the mic and talk to me, or type below.
+                Ask me anything!
+              </div>
+            </div>
+            <div class="vc-controls">
+              <button class="vc-btn vc-btn-voice" id="voice-btn" onclick="toggleVoice()">🎙 Tap to Talk</button>
+              <button class="vc-btn vc-btn-stop" onclick="stopAll()">■ Stop</button>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
+              <input id="text-input" type="text" placeholder="Or type here..."
+                style="flex:1;background:rgba(91,140,255,0.05);border:1px solid var(--border);border-radius:7px;padding:0.5rem 0.75rem;font-size:0.78rem;color:var(--text);font-family:var(--fb);outline:none;"
+                onkeydown="if(event.key==='Enter')sendText()" />
+              <button onclick="sendText()"
+                style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:0.5rem 0.85rem;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:var(--fb);">→</button>
+            </div>
+            <div class="chips">
+              <span class="chip" onclick="askChip('Hey! How are you doing?')">👋 Hey!</span>
+              <span class="chip" onclick="askChip('Tell me about yourself')">About you</span>
+              <span class="chip" onclick="askChip('What AI systems have you built?')">AI work</span>
+              <span class="chip" onclick="askChip('Are you open to work right now?')">Open to work?</span>
+              <span class="chip" onclick="askChip('What is your tech stack?')">Tech stack</span>
+              <span class="chip" onclick="askChip('Tell me about the HCA Healthcare project')">HCA project</span>
+            </div>
+            <div class="vc-hint" id="vc-hint">🎙 Tap mic → speak → wait for reply · Or type above</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ABOUT ═══ -->
+  <section class="sec alt" id="about">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">About</span>
+      <h2 class="sec-h fi">The engineer who ships <em>real</em> AI</h2>
+      <p class="sec-sub fi">Not prototypes. Not demos. Production systems running at scale.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;" class="fi">
+        <div>
+          <p style="color:var(--muted);line-height:1.9;margin-bottom:1rem;">I'm embedded with clinical and operations
+            teams at HCA Healthcare, designing AI systems that eliminate manual processes — like a LangGraph agent that
+            reduced a 2-day triage workflow to near-real-time, approved for full rollout after a single live demo to
+            hospital leadership.</p>
+          <p style="color:var(--muted);line-height:1.9;">I own end-to-end delivery: sit with the teams, understand
+            what's actually slowing them down, translate that into an AI strategy, build it, and make sure it sticks.
+            The closer I am to the people using what I build, the better the outcome.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+</span><span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Years
+              XP</span></div>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">3</span><span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Cloud
+              Platforms</span></div>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">500M+</span><span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Records/Day</span>
+          </div>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">2M+</span><span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Docs
+              Processed</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SKILLS ═══ -->
+  <section class="sec" id="skills">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">Expertise</span>
+      <h2 class="sec-h fi">Technical <em>Skills</em></h2>
+      <div class="skills-grid">
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">🤖</span><span class="sk-name">Gen AI & Agents</span></div>
+          <div class="sk-tags"><span class="sk-t">LangChain</span><span class="sk-t">LangGraph</span><span
+              class="sk-t">RAG Pipelines</span><span class="sk-t">LLM Fine-Tuning</span><span class="sk-t">LoRA /
+              PEFT</span><span class="sk-t">Pinecone</span><span class="sk-t">Weaviate</span><span class="sk-t">Prompt
+              Engineering</span><span class="sk-t">Hugging Face</span></div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">☁️</span><span class="sk-name">Cloud Platforms</span></div>
+          <div class="sk-tags"><span class="sk-t">GCP</span><span class="sk-t">AWS</span><span
+              class="sk-t">Azure</span><span class="sk-t">Cloud Run</span><span class="sk-t">GKE / EKS / AKS</span><span
+              class="sk-t">Cloud Dataflow</span><span class="sk-t">BigQuery</span><span class="sk-t">Terraform</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">⚡</span><span class="sk-name">Data Engineering</span></div>
+          <div class="sk-tags"><span class="sk-t">Apache Beam</span><span class="sk-t">Kafka / Pub/Sub</span><span
+              class="sk-t">Airflow</span><span class="sk-t">Debezium CDC</span><span class="sk-t">Delta Lake</span><span
+              class="sk-t">PySpark</span><span class="sk-t">Great Expectations</span></div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">🐍</span><span class="sk-name">Languages & DevOps</span></div>
+          <div class="sk-tags"><span class="sk-t">Python (Expert)</span><span class="sk-t">SQL / BigQuery
+              SQL</span><span class="sk-t">Shell / Bash</span><span class="sk-t">Docker</span><span
+              class="sk-t">Kubernetes</span><span class="sk-t">CI/CD</span><span class="sk-t">Git</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ EXPERIENCE ═══ -->
+  <section class="sec alt" id="experience">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">Career</span>
+      <h2 class="sec-h fi"><em>Experience</em></h2>
+      <div class="timeline">
+        <div class="exp-item fi">
+          <div class="exp-top">
+            <div class="exp-co">HCA Healthcare</div><span class="exp-dt">June 2024 — Present</span>
+          </div>
+          <div class="exp-ttl">Software Engineer — GCP Cloud Data Platform / AI Engineering</div>
+          <div class="exp-loc">📍 Remote</div>
+          <ul class="exp-ul">
+            <li>Designed and deployed a production LangGraph agentic workflow autonomously triaging clinical data
+              requests — eliminating a 2-day manual process. Approved for full rollout after a single live demo to
+              hospital leadership.</li>
+            <li>Built RAG-based schema intelligence system on BigQuery — clinical analysts self-serve dataset discovery
+              without needing a data engineer.</li>
+            <li>Fine-tuned clinical NLP model (LoRA/PEFT) for +34% extraction accuracy; processing 2M+ documents with
+              sub-second Pinecone retrieval latency.</li>
+            <li>Led Lakehouse architecture adoption (Delta Lake on GCS) — unified layer for pipelines and LLM agents
+              alike.</li>
+            <li>500M+ records/day pipelines at 99.7% reliability; 45% BigQuery cost reduction.</li>
+          </ul>
+          <div class="exp-tags"><span class="exp-tag">LangGraph</span><span class="exp-tag">RAG</span><span
+              class="exp-tag">LLM Fine-Tuning</span><span class="exp-tag">BigQuery</span><span
+              class="exp-tag">GCP</span><span class="exp-tag">Kubernetes</span></div>
+        </div>
+        <div class="exp-item fi">
+          <div class="exp-top">
+            <div class="exp-co">Citi</div><span class="exp-dt">July 2023 — May 2024</span>
+          </div>
+          <div class="exp-ttl">Data Engineer — Cloud Data Lake & Platform Operations</div>
+          <div class="exp-loc">📍 Irving, TX</div>
+          <ul class="exp-ul">
+            <li>CDC incremental ingestion (Debezium + Pub/Sub) — 92% reduction in ingestion window (6hr → 30min).</li>
+            <li>GKE Kubernetes deployment framework — 70% fewer deployment failures, days → &lt;1hr setup.</li>
+            <li>Led full Hadoop to GCP migration — 65% processing time reduction, full decommission achieved.</li>
+          </ul>
+          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">Debezium</span><span
+              class="exp-tag">Kubernetes</span><span class="exp-tag">BigQuery</span></div>
+        </div>
+        <div class="exp-item fi">
+          <div class="exp-top">
+            <div class="exp-co">Accenture</div><span class="exp-dt">Aug 2020 — Jan 2022</span>
+          </div>
+          <div class="exp-ttl">Data Engineer — Cloud & Big Data Platform</div>
+          <div class="exp-loc">📍 Bengaluru, India</div>
+          <ul class="exp-ul">
+            <li>Full Hadoop ecosystem on 200+ node enterprise clusters; 55% processing load reduction.</li>
+            <li>Python/Shell automation cutting manual ops effort by 60%.</li>
+          </ul>
+          <div class="exp-tags"><span class="exp-tag">AWS</span><span class="exp-tag">Azure</span><span
+              class="exp-tag">PySpark</span><span class="exp-tag">Hadoop</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROJECTS ═══ -->
+  <section class="sec" id="projects">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">Work</span>
+      <h2 class="sec-h fi">Key <em>Projects</em></h2>
+      <div class="proj-grid">
+        <div class="proj fi"><span class="proj-n">01</span>
+          <div class="proj-ttl">LLM Agentic Triage Workflow</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">LangGraph multi-step agent autonomously triages clinical data requests, calls
+            APIs/BigQuery tools, routes to downstream systems or human reviewers.</div>
+          <div class="proj-impact">2-day process → near-real-time</div>
+          <div class="proj-stack"><span class="pst">LangGraph</span><span class="pst">BigQuery</span><span
+              class="pst">GCP</span><span class="pst">Python</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">02</span>
+          <div class="proj-ttl">RAG Schema Intelligence</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">Production RAG pipeline where an LLM agent understands the full BigQuery data model.
+            Custom chunking strategy, Pinecone vector DB, LangChain retrieval chain.</div>
+          <div class="proj-impact">Analysts self-serve without data engineers</div>
+          <div class="proj-stack"><span class="pst">LangChain</span><span class="pst">Pinecone</span><span
+              class="pst">BigQuery</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">03</span>
+          <div class="proj-ttl">Clinical NLP Fine-Tuning</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">Transformer fine-tuned with LoRA/PEFT for structured field extraction. Deployed on
+            Cloud Run / Kubernetes with automated retraining on data drift.</div>
+          <div class="proj-impact">+34% accuracy · 2M+ docs · sub-second latency</div>
+          <div class="proj-stack"><span class="pst">LoRA/PEFT</span><span class="pst">Cloud Run</span><span
+              class="pst">Kubernetes</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">04</span>
+          <div class="proj-ttl">Lakehouse Architecture</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">Recommended and led GCP Lakehouse (Delta Lake over GCS), replacing siloed zones with a
+            versioned, unified layer for pipelines and AI agents.</div>
+          <div class="proj-impact">Stakeholder buy-in from one prototype demo</div>
+          <div class="proj-stack"><span class="pst">Delta Lake</span><span class="pst">GCS</span><span
+              class="pst">Terraform</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">05</span>
+          <div class="proj-ttl">CDC Ingestion Platform</div>
+          <div class="proj-org">@ Citi</div>
+          <div class="proj-desc">Replaced 6-hour full-table batch loads with sub-30-minute CDC incremental ingestion
+            eliminating peak-hour upstream load entirely.</div>
+          <div class="proj-impact">92% reduction in ingestion window</div>
+          <div class="proj-stack"><span class="pst">Debezium</span><span class="pst">Pub/Sub</span><span
+              class="pst">Dataflow</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">06</span>
+          <div class="proj-ttl">Hadoop → GCP Migration</div>
+          <div class="proj-org">@ Citi</div>
+          <div class="proj-desc">Led full migration of on-premise Hadoop/Hive to GCP. Rewrote HQL as BigQuery SQL and
+            MapReduce as Dataflow pipelines. Full decommission achieved.</div>
+          <div class="proj-impact">65% processing time reduction</div>
+          <div class="proj-stack"><span class="pst">GCP</span><span class="pst">BigQuery</span><span
+              class="pst">Dataflow</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CERTS ═══ -->
+  <section class="sec alt" id="certs">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">Credentials</span>
+      <h2 class="sec-h fi"><em>Certifications</em></h2>
+      <div class="certs-grid">
+        <div class="cert fi">
+          <div class="cert-ico">☁️</div>
+          <div>
+            <div class="cert-name">AWS Solutions Architect – Associate</div>
+            <div class="cert-dt">July 2023 – July 2026</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">🔵</div>
+          <div>
+            <div class="cert-name">Azure Data Engineer Associate</div>
+            <div class="cert-dt">March 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">⚡</div>
+          <div>
+            <div class="cert-name">Azure Databricks Associate</div>
+            <div class="cert-dt">October 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">❄️</div>
+          <div>
+            <div class="cert-name">Snowflake SnowPro Core</div>
+            <div class="cert-dt">October 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">📊</div>
+          <div>
+            <div class="cert-name">Certified Data Science Professional</div>
+            <div class="cert-dt">September 2023 · DataCamp</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">🔴</div>
+          <div>
+            <div class="cert-name">Google Professional Data Engineer</div>
+            <div class="cert-dt">In Progress</div><span class="cert-badge"
+              style="color:var(--blue);border-color:rgba(91,140,255,0.3);background:rgba(91,140,255,0.08);">In
+              Progress</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT ═══ -->
+  <section class="sec" id="contact">
+    <div class="sec-wrap">
+      <div class="contact-card fi">
+        <h2>Let's Build Something <em style="font-style:italic;color:var(--blue);">Real</em></h2>
+        <p>I'm actively seeking AI/ML Engineer, and Senior Data Engineer roles. If you're building production AI systems
+          and need someone who ships, reach out.</p>
+        <div class="c-links">
+          <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 ksprasadmvsa.1999@gmail.com</a>
+          <a class="c-link" href="tel:+18176015406">📱 +1 817-601-5406</a>
+          <a class="c-link" href="https://github.com/shyamkarri" target="_blank">💻 github.com/shyamkarri</a>
+          <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank">🔗
+            linkedin.com/in/shyam-karri</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>© 2025 Karri Prasad · Built with AI · Hosted on GitHub Pages</footer>
+
+  <script>
+    // ══════════════════════════════════════════════════════
+    //  ⚙️  CONFIG — SET YOUR RENDER BACKEND URL HERE
+    // ══════════════════════════════════════════════════════
+    const BACKEND_URL = 'https://prasad-voice-agent.onrender.com'; // ← change after Render deploy
+
+    // ══════════════════════════════════════════════════════
+    //  CURSOR
+    // ══════════════════════════════════════════════════════
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx + 'px'; cur.style.top = my + 'px'; });
+    setInterval(() => { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = Math.round(rx) + 'px'; ring.style.top = Math.round(ry) + 'px'; }, 16);
+
+    // ══════════════════════════════════════════════════════
+    //  SCROLL FADE
+    // ══════════════════════════════════════════════════════
+    const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }), { threshold: 0.1 });
+    document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+
+    // ══════════════════════════════════════════════════════
+    //  VOICE BARS
+    // ══════════════════════════════════════════════════════
+    function setVoiceBars(active) {
+      document.querySelectorAll('.vb').forEach(b => {
+        if (active) { b.classList.add('active'); b.style.height = ''; }
+        else { b.classList.remove('active'); b.style.height = Math.floor(Math.random() * 12 + 4) + 'px'; }
+      });
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  🎭  EMOJI FACE ANIMATOR
+    // ══════════════════════════════════════════════════════
+    const Face = {
+      // State machine: idle | listening | thinking | speaking | laughing
+      state: 'idle',
+
+      // Eye tracking (follows cursor gently)
+      eyeTarget: { x: 0, y: 0 },
+      eyeCurrent: { x: 0, y: 0 },
+
+      // Blink timer
+      blinkTimer: null,
+      isBlinking: false,
+
+      // Lip sync animation frame
+      lipSyncFrame: null,
+      lipPhase: 0,
+
+      init() {
+        // Mouse tracking for eye movement
+        document.addEventListener('mousemove', e => {
+          const face = document.getElementById('face-container');
+          if (!face) return;
+          const rect = face.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          this.eyeTarget.x = Math.max(-5, Math.min(5, (e.clientX - cx) * 0.04));
+          this.eyeTarget.y = Math.max(-3, Math.min(3, (e.clientY - cy) * 0.03));
+        });
+
+        // Animate eye movement smoothly
+        setInterval(() => {
+          this.eyeCurrent.x += (this.eyeTarget.x - this.eyeCurrent.x) * 0.1;
+          this.eyeCurrent.y += (this.eyeTarget.y - this.eyeCurrent.y) * 0.1;
+          const pl = document.getElementById('pupil-left');
+          const pr = document.getElementById('pupil-right');
+          if (pl) pl.setAttribute('transform', `translate(${this.eyeCurrent.x},${this.eyeCurrent.y})`);
+          if (pr) pr.setAttribute('transform', `translate(${this.eyeCurrent.x},${this.eyeCurrent.y})`);
+        }, 30);
+
+        // Random blinking
+        this.scheduleBlink();
+      },
+
+      scheduleBlink() {
+        const delay = 2000 + Math.random() * 4000;
+        this.blinkTimer = setTimeout(() => {
+          this.blink();
+          this.scheduleBlink();
+        }, delay);
+      },
+
+      blink() {
+        if (this.isBlinking) return;
+        this.isBlinking = true;
+        const ll = document.getElementById('lid-left');
+        const lr = document.getElementById('lid-right');
+        // Close
+        if (ll) ll.setAttribute('transform', 'scaleY(1)');
+        if (lr) lr.setAttribute('transform', 'scaleY(1)');
+        setTimeout(() => {
+          // Open
+          if (ll) ll.setAttribute('transform', 'scaleY(0)');
+          if (lr) lr.setAttribute('transform', 'scaleY(0)');
+          this.isBlinking = false;
+        }, 120);
+      },
+
+      // Force a double blink (happy)
+      doubleBlink() {
+        this.blink();
+        setTimeout(() => this.blink(), 350);
+      },
+
+      setState(newState) {
+        this.state = newState;
+        // Reset all overlays
+        document.getElementById('mouth-smile').style.display = 'block';
+        document.getElementById('mouth-open-group').style.display = 'none';
+        document.getElementById('mouth-laugh').style.display = 'none';
+        document.getElementById('mouth-think').style.display = 'none';
+        document.getElementById('cheek-left').classList.remove('show');
+        document.getElementById('cheek-right').classList.remove('show');
+        document.getElementById('sweat-drop').classList.remove('show');
+        ['sparkle-1', 'sparkle-2', 'sparkle-3'].forEach(id => document.getElementById(id).classList.remove('show'));
+        ['sw1', 'sw2', 'sw3'].forEach(id => document.getElementById(id).classList.remove('active'));
+        if (this.lipSyncFrame) { cancelAnimationFrame(this.lipSyncFrame); this.lipSyncFrame = null; }
+        document.getElementById('face-container').style.animation = '';
+
+        switch (newState) {
+          case 'idle':
+            document.getElementById('mouth-smile').style.display = 'block';
+            document.getElementById('face-container').style.animation = 'face-idle 4s ease-in-out infinite';
+            break;
+
+          case 'listening':
+            // Raise eyebrows (attentive look)
+            document.getElementById('brow-left').setAttribute('d', 'M 52 68 Q 62 62 78 67');
+            document.getElementById('brow-right').setAttribute('d', 'M 102 67 Q 118 62 128 68');
+            document.getElementById('mouth-smile').setAttribute('d', 'M 74 127 Q 90 133 106 127');
+            // Slow pulse on face
+            document.getElementById('face-container').style.animation = 'face-idle 2s ease-in-out infinite';
+            break;
+
+          case 'thinking':
+            // One raised brow, slight frown
+            document.getElementById('brow-left').setAttribute('d', 'M 52 72 Q 62 66 78 70');
+            document.getElementById('brow-right').setAttribute('d', 'M 102 66 Q 118 62 128 68');
+            document.getElementById('mouth-smile').setAttribute('d', 'M 74 128 Q 90 125 108 128');
+            document.getElementById('sweat-drop').classList.add('show');
+            document.getElementById('mouth-think').style.display = 'block';
+            document.getElementById('mouth-smile').style.display = 'none';
+            break;
+
+          case 'speaking':
+            // Reset brows to normal
+            document.getElementById('brow-left').setAttribute('d', 'M 52 72 Q 62 66 78 70');
+            document.getElementById('brow-right').setAttribute('d', 'M 102 70 Q 118 66 128 72');
+            document.getElementById('mouth-smile').style.display = 'none';
+            document.getElementById('mouth-open-group').style.display = 'block';
+            // Animate mouth open/close and lip waves
+            this.animateLips();
+            break;
+
+          case 'laughing':
+            document.getElementById('mouth-smile').style.display = 'none';
+            document.getElementById('mouth-laugh').style.display = 'block';
+            document.getElementById('cheek-left').classList.add('show');
+            document.getElementById('cheek-right').classList.add('show');
+            ['sparkle-1', 'sparkle-2', 'sparkle-3'].forEach(id => document.getElementById(id).classList.add('show'));
+            this.doubleBlink();
+            // Bounce animation
+            document.getElementById('face-container').style.animation = 'none';
+            let t = 0;
+            const bounce = () => {
+              t += 0.15;
+              const y = Math.sin(t) * 5;
+              document.getElementById('face-container').style.transform = `translateY(${y}px)`;
+              if (this.state === 'laughing') requestAnimationFrame(bounce);
+              else document.getElementById('face-container').style.transform = '';
+            };
+            requestAnimationFrame(bounce);
+            break;
+        }
+      },
+
+      animateLips() {
+        // Alternate mouth open/close + lip waves for realistic speaking
+        let open = true;
+        const mouth = document.getElementById('mouth-open-group');
+        const mouthEllipse = mouth.querySelector('ellipse');
+        const sw1 = document.getElementById('sw1');
+        const sw2 = document.getElementById('sw2');
+        const sw3 = document.getElementById('sw3');
+        let phase = 0;
+
+        const loop = () => {
+          if (this.state !== 'speaking') {
+            mouth.style.display = 'none';
+            [sw1, sw2, sw3].forEach(e => e.classList.remove('active'));
+            return;
+          }
+          phase += 0.18;
+          // Vary mouth opening with sine wave
+          const openY = 8 + Math.abs(Math.sin(phase)) * 8;
+          mouthEllipse.setAttribute('ry', openY);
+          // Wave lip sync indicators
+          if (Math.sin(phase) > 0.3) { sw1.classList.add('active'); sw2.classList.remove('active'); sw3.classList.add('active'); }
+          else if (Math.sin(phase) < -0.3) { sw1.classList.remove('active'); sw2.classList.add('active'); sw3.classList.remove('active'); }
+          else { sw1.classList.add('active'); sw2.classList.add('active'); sw3.classList.add('active'); }
+          this.lipSyncFrame = requestAnimationFrame(loop);
+        };
+        this.lipSyncFrame = requestAnimationFrame(loop);
+      },
+
+      // Detect laugh words to trigger laugh face
+      checkForLaugh(text) {
+        const laughWords = ['haha', 'lol', 'funny', 'laugh', 'joke', 'hehe', '😄', '😂', 'great', 'awesome', 'amazing', 'love'];
+        return laughWords.some(w => text.toLowerCase().includes(w));
+      }
     };
-    this.lipSyncFrame = requestAnimationFrame(loop);
-  },
 
-  // Detect laugh words to trigger laugh face
-  checkForLaugh(text) {
-    const laughWords = ['haha','lol','funny','laugh','joke','hehe','😄','😂','great','awesome','amazing','love'];
-    return laughWords.some(w => text.toLowerCase().includes(w));
-  }
-};
+    // Init face on load
+    Face.init();
 
-// Init face on load
-Face.init();
+    // ══════════════════════════════════════════════════════
+    //  STATE
+    // ══════════════════════════════════════════════════════
+    let history = [];
+    let isSpeaking = false;
+    let isListening = false;
+    let recognition = null;
+    let currentAudio = null;
 
-// ══════════════════════════════════════════════════════
-//  STATE
-// ══════════════════════════════════════════════════════
-let history = [];
-let isSpeaking = false;
-let isListening = false;
-let recognition = null;
-let currentAudio = null;
+    // ══════════════════════════════════════════════════════
+    //  PLAY AUDIO FROM BACKEND (base64 mp3)
+    // ══════════════════════════════════════════════════════
+    function playAudioBase64(b64, onEnd) {
+      try {
+        stopAudio();
+        const audio = new Audio('data:audio/mp3;base64,' + b64);
+        currentAudio = audio;
+        audio.onended = () => {
+          isSpeaking = false;
+          if (onEnd) onEnd();
+        };
+        audio.onerror = () => {
+          isSpeaking = false;
+          if (onEnd) onEnd();
+        };
+        audio.play().catch(() => {
+          // Autoplay blocked — fallback to Web Speech API
+          if (onEnd) onEnd();
+        });
+      } catch (e) {
+        if (onEnd) onEnd();
+      }
+    }
 
-// ══════════════════════════════════════════════════════
-//  PLAY AUDIO FROM BACKEND (base64 mp3)
-// ══════════════════════════════════════════════════════
-function playAudioBase64(b64, onEnd) {
-  try {
-    stopAudio();
-    const audio = new Audio('data:audio/mp3;base64,' + b64);
-    currentAudio = audio;
-    audio.onended = () => {
+    function stopAudio() {
+      if (currentAudio) {
+        try { currentAudio.pause(); currentAudio.currentTime = 0; } catch (e) { }
+        currentAudio = null;
+      }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    }
+
+    // Fallback: browser TTS
+    function speakFallback(text, onEnd) {
+      if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.95; utter.pitch = 1.0; utter.volume = 1;
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = ['Google UK English Male', 'Microsoft David', 'Daniel', 'Alex'];
+      let chosen = voices.find(v => preferred.some(p => v.name.includes(p))) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female')) || voices[0];
+      if (chosen) utter.voice = chosen;
+      utter.onend = () => { if (onEnd) onEnd(); };
+      window.speechSynthesis.speak(utter);
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  SPEAK — orchestrates face + audio + UI
+    // ══════════════════════════════════════════════════════
+    function startSpeaking(text, audioB64) {
+      isSpeaking = true;
+      setStatus('speaking', '🔊 Speaking...');
+      setVoiceBars(true);
+      document.getElementById('avatar-card').classList.add('speaking');
+      document.getElementById('mode-label').textContent = 'Speaking';
+      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice speaking';
+      document.getElementById('voice-btn').textContent = '🔊 Speaking...';
+
+      // Detect laugh content for face expression
+      if (Face.checkForLaugh(text)) {
+        Face.setState('laughing');
+        setTimeout(() => Face.setState('speaking'), 1200);
+      } else {
+        Face.setState('speaking');
+      }
+
+      const onEnd = () => {
+        isSpeaking = false;
+        setVoiceBars(false);
+        document.getElementById('avatar-card').classList.remove('speaking');
+        setStatus('ready', 'Ready — say something or type below');
+        document.getElementById('mode-label').textContent = 'Idle';
+        document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+        document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+        Face.setState('idle');
+        document.getElementById('voice-btn').disabled = false;
+      };
+
+      if (audioB64) {
+        playAudioBase64(audioB64, onEnd);
+      } else {
+        speakFallback(text, onEnd);
+      }
+    }
+
+    function stopAll() {
+      stopAudio();
       isSpeaking = false;
-      if(onEnd) onEnd();
-    };
-    audio.onerror = () => {
-      isSpeaking = false;
-      if(onEnd) onEnd();
-    };
-    audio.play().catch(() => {
-      // Autoplay blocked — fallback to Web Speech API
-      if(onEnd) onEnd();
-    });
-  } catch(e) {
-    if(onEnd) onEnd();
-  }
-}
+      setVoiceBars(false);
+      document.getElementById('avatar-card').classList.remove('speaking');
+      setStatus('ready', 'Stopped — ready when you are');
+      document.getElementById('mode-label').textContent = 'Idle';
+      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+      document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+      Face.setState('idle');
+      if (recognition) { try { recognition.stop(); } catch (e) { } }
+      isListening = false;
+    }
 
-function stopAudio() {
-  if(currentAudio) {
-    try { currentAudio.pause(); currentAudio.currentTime = 0; } catch(e){}
-    currentAudio = null;
-  }
-  if(window.speechSynthesis) window.speechSynthesis.cancel();
-}
+    // ══════════════════════════════════════════════════════
+    //  APPEND MESSAGE TO TRANSCRIPT
+    // ══════════════════════════════════════════════════════
+    function appendMsg(role, text) {
+      const t = document.getElementById('transcript');
+      const div = document.createElement('div');
+      div.className = 'vc-msg ' + role;
+      div.innerHTML = `<div class="sender">${role === 'user' ? 'You' : 'Karri'}</div>${text}`;
+      t.appendChild(div);
+      t.scrollTop = t.scrollHeight;
+    }
 
-// Fallback: browser TTS
-function speakFallback(text, onEnd) {
-  if(!window.speechSynthesis) { if(onEnd) onEnd(); return; }
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = 0.95; utter.pitch = 1.0; utter.volume = 1;
-  const voices = window.speechSynthesis.getVoices();
-  const preferred = ['Google UK English Male','Microsoft David','Daniel','Alex'];
-  let chosen = voices.find(v=>preferred.some(p=>v.name.includes(p))) || voices.find(v=>v.lang.startsWith('en')&&!v.name.toLowerCase().includes('female')) || voices[0];
-  if(chosen) utter.voice = chosen;
-  utter.onend = () => { if(onEnd) onEnd(); };
-  window.speechSynthesis.speak(utter);
-}
+    function setStatus(state, txt) {
+      document.getElementById('avatar-status-txt').textContent = txt;
+    }
 
-// ══════════════════════════════════════════════════════
-//  SPEAK — orchestrates face + audio + UI
-// ══════════════════════════════════════════════════════
-function startSpeaking(text, audioB64) {
-  isSpeaking = true;
-  setStatus('speaking','🔊 Speaking...');
-  setVoiceBars(true);
-  document.getElementById('avatar-card').classList.add('speaking');
-  document.getElementById('mode-label').textContent = 'Speaking';
-  document.getElementById('voice-btn').className='vc-btn vc-btn-voice speaking';
-  document.getElementById('voice-btn').textContent='🔊 Speaking...';
+    // ══════════════════════════════════════════════════════
+    //  MAIN PIPELINE: text → backend → TTS audio → speak
+    // ══════════════════════════════════════════════════════
+    async function handleMessage(userText) {
+      if (!userText.trim()) return;
+      appendMsg('user', userText);
+      setStatus('thinking', '⚙️ Thinking...');
+      document.getElementById('mode-label').textContent = 'Thinking';
+      document.getElementById('voice-btn').disabled = true;
+      Face.setState('thinking');
 
-  // Detect laugh content for face expression
-  if(Face.checkForLaugh(text)) {
-    Face.setState('laughing');
-    setTimeout(()=>Face.setState('speaking'), 1200);
-  } else {
-    Face.setState('speaking');
-  }
+      try {
+        const res = await fetch(`${BACKEND_URL}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: userText,
+            history: history
+          })
+        });
 
-  const onEnd = () => {
-    isSpeaking = false;
-    setVoiceBars(false);
-    document.getElementById('avatar-card').classList.remove('speaking');
-    setStatus('ready','Ready — say something or type below');
-    document.getElementById('mode-label').textContent = 'Idle';
-    document.getElementById('voice-btn').className='vc-btn vc-btn-voice';
-    document.getElementById('voice-btn').textContent='🎙 Tap to Talk';
-    Face.setState('idle');
-    document.getElementById('voice-btn').disabled = false;
-  };
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
 
-  if(audioB64) {
-    playAudioBase64(audioB64, onEnd);
-  } else {
-    speakFallback(text, onEnd);
-  }
-}
+        const reply = data.reply || "Sorry, I had a hiccup! Try asking again.";
+        const audioB64 = data.audio_base64 || '';
 
-function stopAll(){
-  stopAudio();
-  isSpeaking = false;
-  setVoiceBars(false);
-  document.getElementById('avatar-card').classList.remove('speaking');
-  setStatus('ready','Stopped — ready when you are');
-  document.getElementById('mode-label').textContent = 'Idle';
-  document.getElementById('voice-btn').className='vc-btn vc-btn-voice';
-  document.getElementById('voice-btn').textContent='🎙 Tap to Talk';
-  Face.setState('idle');
-  if(recognition){try{recognition.stop();}catch(e){}}
-  isListening = false;
-}
+        history.push({ role: 'user', content: userText });
+        history.push({ role: 'assistant', content: reply });
 
-// ══════════════════════════════════════════════════════
-//  APPEND MESSAGE TO TRANSCRIPT
-// ══════════════════════════════════════════════════════
-function appendMsg(role, text){
-  const t = document.getElementById('transcript');
-  const div = document.createElement('div');
-  div.className = 'vc-msg '+role;
-  div.innerHTML = `<div class="sender">${role==='user'?'You':'Karri'}</div>${text}`;
-  t.appendChild(div);
-  t.scrollTop = t.scrollHeight;
-}
+        appendMsg('ai', reply);
+        startSpeaking(reply, audioB64);
 
-function setStatus(state, txt){
-  document.getElementById('avatar-status-txt').textContent = txt;
-}
+      } catch (e) {
+        // Backend unreachable — fallback to browser TTS with a note
+        const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
+        appendMsg('ai', fallbackReply);
+        document.getElementById('voice-btn').disabled = false;
+        document.getElementById('mode-label').textContent = 'Offline';
+        Face.setState('idle');
+        speakFallback(fallbackReply, () => {
+          setStatus('ready', 'Backend offline — try again');
+        });
+      }
+    }
 
-// ══════════════════════════════════════════════════════
-//  MAIN PIPELINE: text → backend → TTS audio → speak
-// ══════════════════════════════════════════════════════
-async function handleMessage(userText){
-  if(!userText.trim()) return;
-  appendMsg('user', userText);
-  setStatus('thinking','⚙️ Thinking...');
-  document.getElementById('mode-label').textContent = 'Thinking';
-  document.getElementById('voice-btn').disabled = true;
-  Face.setState('thinking');
+    // ══════════════════════════════════════════════════════
+    //  TEXT INPUT
+    // ══════════════════════════════════════════════════════
+    function sendText() {
+      const inp = document.getElementById('text-input');
+      const val = inp.value.trim();
+      if (!val) return;
+      inp.value = '';
+      handleMessage(val);
+    }
 
-  try {
-    const res = await fetch(`${BACKEND_URL}/chat`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({
-        message: userText,
-        history: history
-      })
-    });
+    function askChip(q) { handleMessage(q); }
 
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
+    // ══════════════════════════════════════════════════════
+    //  VOICE INPUT (Web Speech API)
+    // ══════════════════════════════════════════════════════
+    function setupRecognition() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        document.getElementById('vc-hint').textContent = '⌨️ Voice not supported in this browser — please type below';
+        return null;
+      }
+      const r = new SR();
+      r.lang = 'en-US';
+      r.continuous = false;
+      r.interimResults = false;
+      r.onresult = e => {
+        const txt = e.results[0][0].transcript;
+        stopListening();
+        handleMessage(txt);
+      };
+      r.onerror = e => {
+        stopListening();
+        if (e.error !== 'aborted') setStatus('ready', 'Mic error — try typing instead');
+      };
+      r.onend = () => { if (isListening) stopListening(); };
+      return r;
+    }
 
-    const reply = data.reply || "Sorry, I had a hiccup! Try asking again.";
-    const audioB64 = data.audio_base64 || '';
+    function startListening() {
+      if (isSpeaking) stopAll();
+      if (!recognition) recognition = setupRecognition();
+      if (!recognition) return;
+      try {
+        recognition.start();
+        isListening = true;
+        setStatus('listening', '🎙 Listening...');
+        setVoiceBars(true);
+        document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice listening';
+        document.getElementById('voice-btn').textContent = '🔴 Listening...';
+        document.getElementById('mode-label').textContent = 'Listening';
+        Face.setState('listening');
+      } catch (e) { }
+    }
 
-    history.push({role:'user', content: userText});
-    history.push({role:'assistant', content: reply});
+    function stopListening() {
+      if (recognition) { try { recognition.stop(); } catch (e) { } }
+      isListening = false;
+      setVoiceBars(false);
+      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+      document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+      document.getElementById('mode-label').textContent = 'Idle';
+      if (!isSpeaking) Face.setState('idle');
+    }
 
-    appendMsg('ai', reply);
-    startSpeaking(reply, audioB64);
+    function toggleVoice() {
+      if (isListening) { stopListening(); }
+      else { startListening(); }
+    }
 
-  } catch(e) {
-    // Backend unreachable — fallback to browser TTS with a note
-    const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
-    appendMsg('ai', fallbackReply);
-    document.getElementById('voice-btn').disabled = false;
-    document.getElementById('mode-label').textContent = 'Offline';
-    Face.setState('idle');
-    speakFallback(fallbackReply, ()=>{
-      setStatus('ready','Backend offline — try again');
-    });
-  }
-}
+    function startVoice() {
+      document.getElementById('voice-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => startListening(), 600);
+    }
 
-// ══════════════════════════════════════════════════════
-//  TEXT INPUT
-// ══════════════════════════════════════════════════════
-function sendText(){
-  const inp = document.getElementById('text-input');
-  const val = inp.value.trim();
-  if(!val) return;
-  inp.value = '';
-  handleMessage(val);
-}
+    // ══════════════════════════════════════════════════════
+    //  GREETING ON PAGE LOAD — fetched from backend
+    // ══════════════════════════════════════════════════════
+    async function greetOnLoad() {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
 
-function askChip(q){ handleMessage(q); }
+      try {
+        const res = await fetch(`${BACKEND_URL}/greet`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        const greeting = data.reply;
+        const audioB64 = data.audio_base64 || '';
+        appendMsg('ai', greeting);
+        startSpeaking(greeting, audioB64);
+      } catch (e) {
+        // Timeout or error — meaning backend is sleeping/cold starting!
+        const warmGreeting = "Hello there! Thank you so much for visiting my portfolio. I am Karri's AI avatar. My backend brain is waking up right now, which takes about 20 seconds. I am so excited to chat with you, please bear with me for a moment!";
+        appendMsg('ai', warmGreeting);
+        speakFallback(warmGreeting, () => {
+          setStatus('ready', 'Backend waking up — try chatting soon!');
+        });
+        Face.setState('speaking');
+        setTimeout(() => Face.setState('idle'), 6000);
 
-// ══════════════════════════════════════════════════════
-//  VOICE INPUT (Web Speech API)
-// ══════════════════════════════════════════════════════
-function setupRecognition(){
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if(!SR){
-    document.getElementById('vc-hint').textContent = '⌨️ Voice not supported in this browser — please type below';
-    return null;
-  }
-  const r = new SR();
-  r.lang = 'en-US';
-  r.continuous = false;
-  r.interimResults = false;
-  r.onresult = e => {
-    const txt = e.results[0][0].transcript;
-    stopListening();
-    handleMessage(txt);
-  };
-  r.onerror = e => {
-    stopListening();
-    if(e.error !== 'aborted') setStatus('ready','Mic error — try typing instead');
-  };
-  r.onend = () => { if(isListening) stopListening(); };
-  return r;
-}
+        // Send a non-blocking ping to ensure Render wakes up
+        fetch(`${BACKEND_URL}/health`).catch(() => console.log("Waking up backend"));
+      }
+    }
 
-function startListening(){
-  if(isSpeaking) stopAll();
-  if(!recognition) recognition = setupRecognition();
-  if(!recognition) return;
-  try {
-    recognition.start();
-    isListening = true;
-    setStatus('listening','🎙 Listening...');
-    setVoiceBars(true);
-    document.getElementById('voice-btn').className='vc-btn vc-btn-voice listening';
-    document.getElementById('voice-btn').textContent='🔴 Listening...';
-    document.getElementById('mode-label').textContent = 'Listening';
-    Face.setState('listening');
-  } catch(e){}
-}
+    // Load voices cache + greet
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+      window.speechSynthesis.getVoices();
+    }
 
-function stopListening(){
-  if(recognition){ try{recognition.stop();}catch(e){} }
-  isListening = false;
-  setVoiceBars(false);
-  document.getElementById('voice-btn').className='vc-btn vc-btn-voice';
-  document.getElementById('voice-btn').textContent='🎙 Tap to Talk';
-  document.getElementById('mode-label').textContent = 'Idle';
-  if(!isSpeaking) Face.setState('idle');
-}
-
-function toggleVoice(){
-  if(isListening){ stopListening(); }
-  else { startListening(); }
-}
-
-function startVoice(){
-  document.getElementById('voice-btn').scrollIntoView({behavior:'smooth',block:'center'});
-  setTimeout(()=>startListening(),600);
-}
-
-// ══════════════════════════════════════════════════════
-//  GREETING ON PAGE LOAD — fetched from backend
-// ══════════════════════════════════════════════════════
-async function greetOnLoad(){
-  try {
-    const res = await fetch(`${BACKEND_URL}/greet`);
-    if(!res.ok) throw new Error();
-    const data = await res.json();
-    const greeting = data.reply;
-    const audioB64 = data.audio_base64 || '';
-    appendMsg('ai', greeting);
-    startSpeaking(greeting, audioB64);
-  } catch(e) {
-    // Fallback greeting if backend is sleeping
-    const greeting = "Hey hi! I'm Prasad — Karri Prasad. Welcome to my portfolio! Ask me anything about my AI work, skills, or background!";
-    appendMsg('ai', greeting);
-    speakFallback(greeting, ()=>{});
-    Face.setState('speaking');
-    setTimeout(()=>Face.setState('idle'), 5000);
-  }
-}
-
-// Load voices cache + greet
-if(window.speechSynthesis){
-  window.speechSynthesis.onvoiceschanged = ()=>window.speechSynthesis.getVoices();
-  window.speechSynthesis.getVoices();
-}
-
-// Wait 1.8s then greet
-setTimeout(greetOnLoad, 1800);
-</script>
+    // Wait 1.8s then greet
+    setTimeout(greetOnLoad, 1800);
+  </script>
 </body>
+
 </html>
