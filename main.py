@@ -8,7 +8,7 @@ import os
 import io
 import re
 import base64
-import anthropic
+from groq import Groq
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -37,8 +37,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ─── Anthropic Client ─────────────────────────────────────────────────────────
-client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+# ─── Groq Client (Llama Models) ───────────────────────────────────────────────
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
 # ─── Karri's System Prompt ────────────────────────────────────────────────────
 SYSTEM_PROMPT = """You are Karri Prasad's AI voice avatar on his portfolio website.
@@ -138,21 +138,23 @@ def health():
 # ─── Main chat + TTS endpoint ─────────────────────────────────────────────────
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest):
-    # Build message history for Claude
-    messages = [{"role": m.role, "content": m.content} for m in req.history]
+    # Build message history for Groq
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+    for m in req.history:
+        messages.append({"role": m.role, "content": m.content})
     messages.append({"role": "user", "content": req.message})
 
-    # Claude API call
+    # Groq API call (Llama 3)
     try:
-        response = client.messages.create(
-            model="claude-sonnet-4-20250514",
-            max_tokens=350,
-            system=SYSTEM_PROMPT,
+        response = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
             messages=messages,
+            max_tokens=350,
+            temperature=0.7
         )
-        reply_text = response.content[0].text
+        reply_text = response.choices[0].message.content
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Claude API error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Groq API error: {str(e)}")
 
     # TTS via gTTS (Google TTS — free, no key needed)
     try:
