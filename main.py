@@ -57,18 +57,24 @@ def log_chat(user_ip, user_message, ai_response):
     conn.close()
 
 # ─── RAG Setup ──────────────────────────────────────────────────────────────
-# Load Knowledge Base
-try:
-    with open("knowledge.txt", "r") as f:
-        knowledge_text = f.read()
-except FileNotFoundError:
-    knowledge_text = "Karri Prasad is an AI Engineer."
-
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-docs = text_splitter.create_documents([knowledge_text])
-
 embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", cache_folder="./.cache")
-vectorstore = FAISS.from_documents(docs, embeddings)
+
+# Load pre-computed FAISS index
+try:
+    vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+except Exception as e:
+    print(f"Warning: Could not load pre-computed FAISS index: {e}")
+    print("Falling back to creating it dynamically...")
+    try:
+        with open("knowledge.txt", "r") as f:
+            knowledge_text = f.read()
+    except FileNotFoundError:
+        knowledge_text = "Karri Prasad is an AI Engineer."
+    
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+    docs = text_splitter.create_documents([knowledge_text])
+    vectorstore = FAISS.from_documents(docs, embeddings)
+
 retriever = vectorstore.as_retriever(search_kwargs={"k": 4})
 
 # ─── LangChain Setup ────────────────────────────────────────────────────────
