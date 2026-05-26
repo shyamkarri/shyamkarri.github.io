@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.pyc
+.cache/
+faiss_index/
+sessions.db
+.env
+.git/
+.gitignore
