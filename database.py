@@ -259,7 +259,8 @@ def seed_db():
         if not db.query(AdminUser).filter_by(email=admin_email).first():
             db.add(AdminUser(
                 email=admin_email,
-                hashed_password=pwd_ctx.hash(admin_password),
+                # bcrypt max is 72 bytes — truncate to be safe
+                hashed_password = pwd_ctx.hash(admin_password[:72]),
                 name="Admin",
                 role="admin",
             ))
