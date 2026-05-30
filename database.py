@@ -1,12 +1,73 @@
 import os
 from datetime import datetime
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, Float, JSON, inspect, text
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import (
+    create_engine, Column, Integer, String, Text, DateTime,
+    Float, JSON, Boolean, ForeignKey, inspect, text, Enum
+)
+from sqlalchemy.orm import declarative_base, sessionmaker, relationship
+import enum
 
-# Declarative base
+# ─── Declarative Base ────────────────────────────────────────────────────────
 Base = declarative_base()
 
+# ─── Enums ───────────────────────────────────────────────────────────────────
+class ApplicationStatus(str, enum.Enum):
+    saved = "saved"
+    applied = "applied"
+    screening = "screening"
+    interview = "interview"
+    final_round = "final_round"
+    offer = "offer"
+    rejected = "rejected"
+
+class NotificationType(str, enum.Enum):
+    recruiter_email = "recruiter_email"
+    interview_invite = "interview_invite"
+    job_match = "job_match"
+    weekly_report = "weekly_report"
+    system = "system"
+
+class JobStatus(str, enum.Enum):
+    pending = "pending"
+    running = "running"
+    success = "success"
+    failed = "failed"
+    disabled = "disabled"
+
+class ReportType(str, enum.Enum):
+    weekly = "weekly"
+    monthly = "monthly"
+    agent = "agent"
+    job_search = "job_search"
+    application = "application"
+
+class ReportFormat(str, enum.Enum):
+    pdf = "pdf"
+    csv = "csv"
+    excel = "excel"
+
+class UserRole(str, enum.Enum):
+    admin = "admin"
+    user = "user"
+
+# ─── Models ──────────────────────────────────────────────────────────────────
+
+class AdminUser(Base):
+    """Dashboard admin user with JWT-based auth."""
+    __tablename__ = "admin_users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    email = Column(String(255), unique=True, nullable=False, index=True)
+    hashed_password = Column(String(512), nullable=False)
+    name = Column(String(255), nullable=True)
+    role = Column(String(50), default="admin", nullable=False)
+    is_active = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    last_login = Column(DateTime, nullable=True)
+
+
 class ConversationLog(Base):
+    """Existing session/message log — preserved as-is."""
     __tablename__ = "conversation_logs"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
@@ -21,43 +82,218 @@ class ConversationLog(Base):
     token_usage = Column(JSON, nullable=True)
     error_messages = Column(Text, nullable=True)
 
-# Database Connection Setup
+
+class AgentExecution(Base):
+    """Track individual agent/LLM executions with analytics."""
+    __tablename__ = "agent_executions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    timestamp = Column(DateTime, default=datetime.utcnow, index=True)
+    agent_name = Column(String(255), nullable=False, index=True)
+    workflow = Column(String(255), nullable=True)
+    session_id = Column(String(255), nullable=True, index=True)
+    input_text = Column(Text, nullable=True)
+    output_text = Column(Text, nullable=True)
+    latency_ms = Column(Float, nullable=True)
+    success = Column(Boolean, default=True)
+    error_message = Column(Text, nullable=True)
+    tool_used = Column(String(255), nullable=True)
+    model_used = Column(String(255), nullable=True)
+    token_usage = Column(JSON, nullable=True)
+    metadata_ = Column("metadata", JSON, nullable=True)
+
+
+class JobApplication(Base):
+    """Job application tracker for the kanban board."""
+    __tablename__ = "job_applications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    company_name = Column(String(255), nullable=False, index=True)
+    position = Column(String(255), nullable=False)
+    application_date = Column(DateTime, nullable=True)
+    status = Column(String(50), default="saved", nullable=False, index=True)
+    notes = Column(Text, nullable=True)
+    job_url = Column(String(512), nullable=True)
+    salary_range = Column(String(100), nullable=True)
+    location = Column(String(255), nullable=True)
+    remote = Column(Boolean, default=False)
+    contact_name = Column(String(255), nullable=True)
+    contact_email = Column(String(255), nullable=True)
+    # Interview stages stored as JSON list
+    interview_stages = Column(JSON, nullable=True)  # [{stage, date, notes, passed}]
+    # Offer details
+    offer_amount = Column(String(100), nullable=True)
+    offer_deadline = Column(DateTime, nullable=True)
+    priority = Column(Integer, default=0)  # 0=normal, 1=high, 2=urgent
+
+
+class Notification(Base):
+    """Notification center — stores alerts, summaries, reports ready."""
+    __tablename__ = "notifications"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    type = Column(String(50), nullable=False, index=True)
+    title = Column(String(512), nullable=False)
+    message = Column(Text, nullable=True)
+    is_read = Column(Boolean, default=False, index=True)
+    data = Column(JSON, nullable=True)       # extra payload (application_id, etc.)
+    email_sent = Column(Boolean, default=False)
+    user_email = Column(String(255), nullable=True)
+
+
+class SchedulerJob(Base):
+    """Cron job definitions and execution history."""
+    __tablename__ = "scheduler_jobs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    name = Column(String(255), nullable=False, unique=True)
+    description = Column(Text, nullable=True)
+    cron_expression = Column(String(100), nullable=True)
+    job_type = Column(String(100), nullable=False)   # "weekly_report", "sync", etc.
+    status = Column(String(50), default="pending", index=True)
+    enabled = Column(Boolean, default=True)
+    last_run = Column(DateTime, nullable=True)
+    next_run = Column(DateTime, nullable=True)
+    last_run_duration_ms = Column(Float, nullable=True)
+    last_error = Column(Text, nullable=True)
+    run_count = Column(Integer, default=0)
+    fail_count = Column(Integer, default=0)
+    config = Column(JSON, nullable=True)
+
+
+class SchedulerJobRun(Base):
+    """Individual run history for each scheduler job."""
+    __tablename__ = "scheduler_job_runs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    job_id = Column(Integer, ForeignKey("scheduler_jobs.id"), nullable=False, index=True)
+    started_at = Column(DateTime, default=datetime.utcnow, index=True)
+    finished_at = Column(DateTime, nullable=True)
+    status = Column(String(50), nullable=False)
+    duration_ms = Column(Float, nullable=True)
+    output = Column(Text, nullable=True)
+    error = Column(Text, nullable=True)
+
+    job = relationship("SchedulerJob", backref="runs")
+
+
+class Report(Base):
+    """Generated report records."""
+    __tablename__ = "reports"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    type = Column(String(50), nullable=False, index=True)
+    format = Column(String(20), nullable=False)
+    title = Column(String(255), nullable=False)
+    file_path = Column(String(512), nullable=True)
+    file_size_bytes = Column(Integer, nullable=True)
+    status = Column(String(50), default="pending")
+    summary = Column(JSON, nullable=True)    # key metrics included in report
+    generated_by = Column(String(255), nullable=True)
+
+
+# ─── Database Connection ──────────────────────────────────────────────────────
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
-    # Render PostgreSQL support
-    # Render sometimes provides "postgres://", but SQLAlchemy requires "postgresql://"
+    # Render provides "postgres://", SQLAlchemy needs "postgresql://"
     if DATABASE_URL.startswith("postgres://"):
         DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-    engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+    engine = create_engine(
+        DATABASE_URL,
+        pool_pre_ping=True,
+        pool_size=5,
+        max_overflow=10,
+    )
 else:
-    # Fallback to local SQLite
-    engine = create_engine("sqlite:///sessions.db", connect_args={"check_same_thread": False})
+    engine = create_engine(
+        "sqlite:///sessions.db",
+        connect_args={"check_same_thread": False}
+    )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 def init_db():
-    """Initialize DB and perform automatic schema migrations/column additions if necessary."""
-    # Check if table exists
+    """Create all tables. Safe to run multiple times (CREATE IF NOT EXISTS)."""
     inspector = inspect(engine)
-    if not inspector.has_table("conversation_logs"):
-        # Create all tables
-        Base.metadata.create_all(bind=engine)
-        print("Created conversation_logs table.")
-    else:
-        # Check for missing columns (automatic migrations)
+
+    # Create any missing tables
+    Base.metadata.create_all(bind=engine)
+
+    # ── Legacy migration: add any missing columns to conversation_logs ──
+    if inspector.has_table("conversation_logs"):
         existing_cols = {col["name"] for col in inspector.get_columns("conversation_logs")}
-        # Iterate over defined model columns and add missing ones
         with engine.begin() as conn:
             for column in ConversationLog.__table__.columns:
                 if column.name not in existing_cols:
-                    # SQLite has limited ALTER TABLE support but adding columns is fine
-                    # Define type string based on column type
                     type_str = str(column.type)
                     if "JSON" in type_str:
-                        # SQLite does not support JSON column type natively, it uses TEXT or JSON
                         type_str = "JSON" if "postgresql" in engine.url.drivername else "TEXT"
-                    
-                    alter_query = f'ALTER TABLE conversation_logs ADD COLUMN {column.name} {type_str}'
-                    conn.execute(text(alter_query))
-                    print(f"Added column {column.name} to conversation_logs table.")
+                    try:
+                        conn.execute(text(
+                            f"ALTER TABLE conversation_logs ADD COLUMN {column.name} {type_str}"
+                        ))
+                        print(f"[DB] Added column '{column.name}' to conversation_logs")
+                    except Exception as e:
+                        print(f"[DB] Column '{column.name}' migration skipped: {e}")
+
+    print("[DB] All tables initialized.")
+
+
+def seed_db():
+    """Insert default seed data (scheduler jobs, admin user placeholder)."""
+    from passlib.context import CryptContext
+    pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+    db = SessionLocal()
+    try:
+        # Seed default admin user if not present
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@karriprasad.ai")
+        admin_password = os.getenv("ADMIN_PASSWORD", "changeme123")
+        if not db.query(AdminUser).filter_by(email=admin_email).first():
+            db.add(AdminUser(
+                email=admin_email,
+                hashed_password=pwd_ctx.hash(admin_password),
+                name="Admin",
+                role="admin",
+            ))
+            print(f"[DB] Seeded admin user: {admin_email}")
+
+        # Seed default scheduler jobs
+        default_jobs = [
+            {
+                "name": "weekly_report",
+                "description": "Generate weekly analytics report every Monday at 8 AM",
+                "cron_expression": "0 8 * * 1",
+                "job_type": "weekly_report",
+                "enabled": True,
+            },
+            {
+                "name": "daily_notification_digest",
+                "description": "Send daily summary notification at 9 AM",
+                "cron_expression": "0 9 * * *",
+                "job_type": "daily_digest",
+                "enabled": True,
+            },
+            {
+                "name": "monthly_report",
+                "description": "Generate monthly report on 1st of each month",
+                "cron_expression": "0 7 1 * *",
+                "job_type": "monthly_report",
+                "enabled": True,
+            },
+        ]
+        for job_data in default_jobs:
+            if not db.query(SchedulerJob).filter_by(name=job_data["name"]).first():
+                db.add(SchedulerJob(**job_data))
+                print(f"[DB] Seeded scheduler job: {job_data['name']}")
+
+        db.commit()
+    finally:
+        db.close()

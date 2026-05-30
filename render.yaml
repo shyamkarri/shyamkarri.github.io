@@ -10,6 +10,27 @@ services:
         fromDatabase:
           name: conversation-logs-db
           property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@karriprasad.ai
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "1440"
+      - key: REPORTS_DIR
+        value: /tmp/reports
+      # Optional SMTP for email notifications (leave blank to disable)
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        value: noreply@karriprasad.ai
 
 databases:
   - name: conversation-logs-db

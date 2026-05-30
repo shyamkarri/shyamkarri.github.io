@@ -14,3 +14,11 @@ sentence-transformers==5.1.2
 faiss-cpu==1.13.0
 sqlalchemy==2.0.50
 psycopg2-binary==2.9.9
+# ── Dashboard additions ──────────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+apscheduler==3.10.4
+openpyxl==3.1.5
+reportlab==4.2.5
+aiofiles==24.1.0
+python-dateutil==2.9.0.post0
