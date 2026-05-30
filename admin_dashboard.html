@@ -1,0 +1,2112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Karri Prasad — AI Operations Dashboard</title>
+  <meta name="description" content="Premium AI Operations Dashboard — Session Logging, Agent Analytics, Application Tracker, Notifications, Scheduler, Reporting" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --bg:           #07090f;
+  --bg2:          #0b0e1a;
+  --surface:      #0f1221;
+  --card:         rgba(15,18,33,0.8);
+  --card-border:  rgba(99,130,255,0.12);
+  --card-hover:   rgba(99,130,255,0.18);
+  --sidebar:      rgba(7,9,15,0.96);
+  --text:         #e8eaf6;
+  --text-muted:   #6b7a9f;
+  --text-dim:     #3d4566;
+  --blue:         #6382ff;
+  --blue-glow:    rgba(99,130,255,0.25);
+  --cyan:         #38d9f5;
+  --violet:       #a78bfa;
+  --green:        #34d399;
+  --amber:        #fbbf24;
+  --red:          #f87171;
+  --pink:         #f472b6;
+  --gradient-1:   linear-gradient(135deg, #6382ff 0%, #a78bfa 100%);
+  --gradient-2:   linear-gradient(135deg, #38d9f5 0%, #6382ff 100%);
+  --gradient-3:   linear-gradient(135deg, #34d399 0%, #38d9f5 100%);
+  --gradient-4:   linear-gradient(135deg, #fbbf24 0%, #f472b6 100%);
+  --radius:       14px;
+  --radius-sm:    8px;
+  --radius-lg:    20px;
+  --sidebar-w:    240px;
+  --header-h:     60px;
+  --shadow:       0 8px 32px rgba(0,0,0,0.45);
+  --shadow-card:  0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+  --transition:   0.2s cubic-bezier(0.4,0,0.2,1);
+}
+[data-theme="light"] {
+  --bg:           #f0f2fa;
+  --bg2:          #e8eaf5;
+  --surface:      #ffffff;
+  --card:         rgba(255,255,255,0.9);
+  --card-border:  rgba(99,130,255,0.15);
+  --sidebar:      rgba(240,242,250,0.98);
+  --text:         #1a1d2e;
+  --text-muted:   #4b5580;
+  --text-dim:     #8892b0;
+}
+
+/* ─── Reset & Base ─── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+button{cursor:pointer;font-family:inherit;border:none;background:none;}
+input,select,textarea{font-family:inherit;color:var(--text);background:var(--surface);border:1px solid var(--card-border);border-radius:var(--radius-sm);padding:.5rem .75rem;font-size:.875rem;outline:none;width:100%;transition:border var(--transition);}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);}
+a{color:var(--blue);text-decoration:none;}
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--text-dim);border-radius:3px;}
+
+/* ─── Background orbs ─── */
+.bg-orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.35;}
+.orb-1{width:600px;height:600px;background:radial-gradient(circle,rgba(99,130,255,.2),transparent 70%);top:-150px;left:-100px;animation:orb-drift 20s ease-in-out infinite alternate;}
+.orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(167,139,250,.15),transparent 70%);bottom:-100px;right:-80px;animation:orb-drift 25s ease-in-out infinite alternate-reverse;}
+.orb-3{width:350px;height:350px;background:radial-gradient(circle,rgba(56,217,245,.1),transparent 70%);top:40%;right:20%;animation:orb-drift 18s ease-in-out infinite alternate;}
+@keyframes orb-drift{0%{transform:translate(0,0);}100%{transform:translate(40px,30px);}}
+
+/* ─── Login Screen ─── */
+#login-screen{
+  position:fixed;inset:0;z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg);
+}
+.login-card{
+  width:420px;max-width:90vw;
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius-lg);
+  padding:2.5rem;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(24px);
+  position:relative;
+  overflow:hidden;
+}
+.login-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--gradient-1);
+}
+.login-logo{
+  display:flex;align-items:center;gap:.75rem;margin-bottom:2rem;
+}
+.login-logo .logo-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--gradient-1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+}
+.login-logo span{font-weight:700;font-size:1.1rem;}
+.login-title{font-size:1.5rem;font-weight:700;margin-bottom:.25rem;}
+.login-sub{color:var(--text-muted);font-size:.875rem;margin-bottom:1.75rem;}
+.form-group{margin-bottom:1rem;}
+.form-label{display:block;font-size:.8rem;font-weight:500;color:var(--text-muted);margin-bottom:.375rem;letter-spacing:.5px;}
+.btn-primary{
+  width:100%;padding:.75rem;border-radius:var(--radius-sm);
+  background:var(--gradient-1);color:#fff;font-weight:600;font-size:.9rem;
+  transition:opacity var(--transition),transform var(--transition);
+  margin-top:.5rem;
+}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);}
+.login-hint{text-align:center;margin-top:1.25rem;color:var(--text-muted);font-size:.8rem;}
+.login-hint code{background:rgba(99,130,255,.15);padding:.1rem .35rem;border-radius:4px;font-family:'JetBrains Mono',monospace;color:var(--blue);}
+.login-error{color:var(--red);font-size:.8rem;margin-top:.5rem;display:none;}
+
+/* ─── App Shell ─── */
+#app{display:none;height:100vh;}
+
+/* ─── Sidebar ─── */
+.sidebar{
+  position:fixed;top:0;left:0;height:100vh;width:var(--sidebar-w);
+  background:var(--sidebar);
+  border-right:1px solid var(--card-border);
+  display:flex;flex-direction:column;
+  z-index:100;
+  backdrop-filter:blur(20px);
+  transition:transform var(--transition);
+}
+.sidebar-logo{
+  padding:1.25rem 1.25rem .75rem;
+  display:flex;align-items:center;gap:.75rem;
+  border-bottom:1px solid var(--card-border);
+}
+.sidebar-logo .logo-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:var(--gradient-1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;flex-shrink:0;
+}
+.sidebar-logo-text{font-weight:700;font-size:.9rem;line-height:1.2;}
+.sidebar-logo-sub{font-size:.7rem;color:var(--text-muted);}
+
+.sidebar-nav{flex:1;padding:.75rem .75rem;overflow-y:auto;}
+.nav-section{margin-bottom:1.5rem;}
+.nav-section-label{
+  font-size:.65rem;letter-spacing:1.5px;text-transform:uppercase;
+  color:var(--text-dim);font-weight:600;padding:.25rem .5rem;margin-bottom:.25rem;
+}
+.nav-item{
+  display:flex;align-items:center;gap:.65rem;
+  padding:.55rem .75rem;border-radius:var(--radius-sm);
+  font-size:.85rem;font-weight:500;color:var(--text-muted);
+  cursor:pointer;transition:all var(--transition);position:relative;
+  user-select:none;
+}
+.nav-item:hover{background:rgba(99,130,255,.08);color:var(--text);}
+.nav-item.active{background:rgba(99,130,255,.15);color:var(--blue);}
+.nav-item.active::before{
+  content:'';position:absolute;left:0;top:20%;height:60%;width:3px;
+  background:var(--blue);border-radius:0 3px 3px 0;
+}
+.nav-item .nav-icon{font-size:.95rem;width:18px;text-align:center;flex-shrink:0;}
+.nav-badge{
+  margin-left:auto;background:var(--red);color:#fff;
+  font-size:.65rem;font-weight:700;padding:.1rem .4rem;border-radius:20px;
+  min-width:18px;text-align:center;
+}
+
+.sidebar-footer{
+  padding:.75rem;border-top:1px solid var(--card-border);
+}
+.user-info{
+  display:flex;align-items:center;gap:.65rem;padding:.5rem .75rem;
+  border-radius:var(--radius-sm);cursor:pointer;
+  transition:background var(--transition);
+}
+.user-info:hover{background:rgba(99,130,255,.08);}
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--gradient-1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0;
+}
+.user-name{font-size:.82rem;font-weight:600;}
+.user-role{font-size:.7rem;color:var(--text-muted);}
+.sidebar-actions{display:flex;gap:.5rem;margin-top:.5rem;padding:0 .25rem;}
+.btn-icon{
+  flex:1;padding:.45rem;border-radius:var(--radius-sm);
+  font-size:.78rem;color:var(--text-muted);
+  border:1px solid var(--card-border);
+  transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:.3rem;
+}
+.btn-icon:hover{background:rgba(99,130,255,.1);color:var(--text);border-color:var(--blue);}
+
+/* ─── Main Content ─── */
+.main{
+  margin-left:var(--sidebar-w);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+.topbar{
+  position:sticky;top:0;z-index:50;
+  height:var(--header-h);
+  background:rgba(7,9,15,.8);
+  border-bottom:1px solid var(--card-border);
+  backdrop-filter:blur(20px);
+  display:flex;align-items:center;padding:0 1.75rem;gap:1rem;
+}
+.topbar-title{font-size:1rem;font-weight:700;flex:1;}
+.topbar-search{
+  position:relative;width:220px;
+}
+.topbar-search input{
+  padding:.4rem .75rem .4rem 2rem;
+  background:var(--surface);font-size:.8rem;
+  border-radius:var(--radius-sm);
+}
+.topbar-search::before{
+  content:'🔍';position:absolute;left:.6rem;top:50%;transform:translateY(-50%);
+  font-size:.75rem;pointer-events:none;
+}
+.topbar-actions{display:flex;gap:.5rem;align-items:center;}
+.btn-sm{
+  padding:.4rem .85rem;border-radius:var(--radius-sm);
+  font-size:.8rem;font-weight:500;transition:all var(--transition);
+  border:1px solid var(--card-border);color:var(--text-muted);
+}
+.btn-sm:hover{background:rgba(99,130,255,.1);border-color:var(--blue);color:var(--text);}
+.btn-sm.primary{background:var(--gradient-1);color:#fff;border:none;}
+.btn-sm.primary:hover{opacity:.9;}
+.notif-bell{position:relative;font-size:1.1rem;padding:.35rem;cursor:pointer;}
+.notif-dot{
+  position:absolute;top:2px;right:2px;
+  width:8px;height:8px;border-radius:50%;background:var(--red);
+  border:2px solid var(--bg);
+}
+
+.content{flex:1;padding:1.75rem;overflow-y:auto;}
+
+/* ─── Page Sections ─── */
+.page{display:none;}
+.page.active{display:block;animation:page-in .25s ease;}
+@keyframes page-in{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.page-header{margin-bottom:1.5rem;}
+.page-header h1{font-size:1.4rem;font-weight:700;margin-bottom:.25rem;}
+.page-header p{color:var(--text-muted);font-size:.875rem;}
+
+/* ─── KPI Cards ─── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem;}
+.kpi-card{
+  background:var(--card);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius);
+  padding:1.25rem 1.25rem 1rem;
+  box-shadow:var(--shadow-card);
+  backdrop-filter:blur(12px);
+  transition:all var(--transition);
+  position:relative;overflow:hidden;
+}
+.kpi-card:hover{border-color:var(--card-hover);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.kpi-card::after{
+  content:'';position:absolute;top:0;right:0;
+  width:80px;height:80px;
+  background:radial-gradient(circle,var(--kpi-color,rgba(99,130,255,.15)) 0%,transparent 70%);
+}
+.kpi-label{font-size:.72rem;font-weight:600;color:var(--text-muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:.65rem;}
+.kpi-value{font-size:1.8rem;font-weight:800;letter-spacing:-.5px;line-height:1;}
+.kpi-sub{font-size:.75rem;color:var(--text-muted);margin-top:.35rem;}
+.kpi-trend{font-size:.75rem;margin-top:.35rem;display:flex;align-items:center;gap:.25rem;}
+.kpi-trend.up{color:var(--green);}
+.kpi-trend.down{color:var(--red);}
+.kpi-icon{font-size:1.4rem;margin-bottom:.65rem;display:block;}
+
+/* ─── Chart Cards ─── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem;}
+.chart-grid.full{grid-template-columns:1fr;}
+.chart-card{
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:1.25rem;
+  box-shadow:var(--shadow-card);backdrop-filter:blur(12px);
+}
+.chart-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;}
+.chart-card-title{font-size:.9rem;font-weight:600;}
+.chart-card-sub{font-size:.75rem;color:var(--text-muted);}
+.chart-wrap{height:200px;position:relative;}
+
+/* ─── Tables ─── */
+.table-card{
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-card);backdrop-filter:blur(12px);
+  overflow:hidden;margin-bottom:1rem;
+}
+.table-header{
+  padding:1rem 1.25rem;border-bottom:1px solid var(--card-border);
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;
+}
+.table-header h3{font-size:.9rem;font-weight:600;}
+.table-controls{display:flex;gap:.5rem;align-items:center;}
+.table-controls input{width:180px;}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+thead th{
+  text-align:left;padding:.75rem 1.25rem;
+  font-size:.7rem;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
+  color:var(--text-muted);border-bottom:1px solid var(--card-border);
+  white-space:nowrap;
+}
+tbody td{padding:.7rem 1.25rem;border-bottom:1px solid rgba(99,130,255,.05);}
+tbody tr:hover td{background:rgba(99,130,255,.04);}
+tbody tr:last-child td{border-bottom:none;}
+.mono{font-family:'JetBrains Mono',monospace;font-size:.75rem;}
+
+/* ─── Status Badges ─── */
+.badge{
+  display:inline-flex;align-items:center;gap:.3rem;
+  padding:.2rem .6rem;border-radius:20px;font-size:.7rem;font-weight:600;
+  letter-spacing:.3px;white-space:nowrap;
+}
+.badge-blue{background:rgba(99,130,255,.15);color:var(--blue);}
+.badge-green{background:rgba(52,211,153,.15);color:var(--green);}
+.badge-amber{background:rgba(251,191,36,.15);color:var(--amber);}
+.badge-red{background:rgba(248,113,113,.15);color:var(--red);}
+.badge-violet{background:rgba(167,139,250,.15);color:var(--violet);}
+.badge-cyan{background:rgba(56,217,245,.15);color:var(--cyan);}
+.badge-muted{background:rgba(107,122,159,.15);color:var(--text-muted);}
+
+/* ─── Kanban Board ─── */
+.kanban{display:flex;gap:.75rem;overflow-x:auto;padding-bottom:1rem;}
+.kanban::-webkit-scrollbar{height:4px;}
+.kanban-col{
+  flex-shrink:0;width:220px;
+  background:rgba(15,18,33,.5);
+  border:1px solid var(--card-border);
+  border-radius:var(--radius);
+  overflow:hidden;
+}
+.kanban-col-header{
+  padding:.75rem 1rem;border-bottom:1px solid var(--card-border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.kanban-col-title{font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;}
+.kanban-count{
+  background:rgba(99,130,255,.2);color:var(--blue);
+  border-radius:10px;padding:.1rem .45rem;font-size:.7rem;font-weight:700;
+}
+.kanban-cards{padding:.65rem;min-height:100px;display:flex;flex-direction:column;gap:.5rem;}
+.kanban-card{
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);padding:.75rem;
+  cursor:pointer;transition:all var(--transition);
+}
+.kanban-card:hover{border-color:var(--blue);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,0,0,.3);}
+.kanban-card-company{font-size:.8rem;font-weight:600;margin-bottom:.2rem;}
+.kanban-card-position{font-size:.72rem;color:var(--text-muted);margin-bottom:.45rem;}
+.kanban-card-meta{display:flex;align-items:center;justify-content:space-between;}
+.kanban-card-date{font-size:.65rem;color:var(--text-dim);}
+.kanban-empty{
+  text-align:center;padding:1.5rem .5rem;color:var(--text-dim);font-size:.78rem;
+}
+
+/* ─── Activity Feed ─── */
+.feed{display:flex;flex-direction:column;gap:.5rem;max-height:380px;overflow-y:auto;}
+.feed-item{
+  display:flex;align-items:flex-start;gap:.75rem;padding:.75rem;
+  border-radius:var(--radius-sm);border:1px solid var(--card-border);
+  background:rgba(15,18,33,.4);transition:background var(--transition);
+}
+.feed-item:hover{background:rgba(99,130,255,.05);}
+.feed-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:.3rem;
+}
+.feed-dot.success{background:var(--green);}
+.feed-dot.error{background:var(--red);}
+.feed-dot.info{background:var(--blue);}
+.feed-dot.warn{background:var(--amber);}
+.feed-text{font-size:.8rem;flex:1;}
+.feed-time{font-size:.68rem;color:var(--text-dim);white-space:nowrap;}
+
+/* ─── Notification Panel ─── */
+.notif-list{display:flex;flex-direction:column;gap:.5rem;}
+.notif-item{
+  display:flex;align-items:flex-start;gap:.75rem;padding:1rem;
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);transition:all var(--transition);
+}
+.notif-item.unread{border-left:3px solid var(--blue);}
+.notif-item:hover{border-color:var(--card-hover);}
+.notif-icon{
+  width:36px;height:36px;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;flex-shrink:0;
+}
+.notif-body{flex:1;}
+.notif-title{font-size:.85rem;font-weight:600;margin-bottom:.2rem;}
+.notif-msg{font-size:.78rem;color:var(--text-muted);}
+.notif-meta{font-size:.68rem;color:var(--text-dim);margin-top:.35rem;}
+.notif-actions{display:flex;gap:.35rem;align-items:flex-start;flex-shrink:0;}
+
+/* ─── Empty State ─── */
+.empty-state{
+  text-align:center;padding:3rem 1rem;color:var(--text-muted);
+}
+.empty-state .empty-icon{font-size:3rem;margin-bottom:.75rem;display:block;opacity:.5;}
+.empty-state h3{font-weight:600;margin-bottom:.35rem;}
+.empty-state p{font-size:.85rem;}
+
+/* ─── Loading Skeleton ─── */
+.skeleton{
+  background:linear-gradient(90deg,var(--surface) 25%,rgba(99,130,255,.05) 50%,var(--surface) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.4s infinite;
+  border-radius:6px;
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.skeleton-kpi{height:90px;border-radius:var(--radius);}
+.skeleton-row{height:44px;margin-bottom:2px;}
+
+/* ─── Toast ─── */
+#toast-container{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;
+  display:flex;flex-direction:column;gap:.5rem;
+}
+.toast{
+  background:var(--surface);border:1px solid var(--card-border);
+  border-radius:var(--radius-sm);padding:.75rem 1.1rem;
+  box-shadow:var(--shadow);font-size:.82rem;
+  display:flex;align-items:center;gap:.65rem;
+  min-width:260px;max-width:380px;
+  animation:toast-in .3s ease;
+}
+@keyframes toast-in{from{opacity:0;transform:translateX(20px);}to{opacity:1;transform:translateX(0);}}
+.toast.success{border-left:3px solid var(--green);}
+.toast.error{border-left:3px solid var(--red);}
+.toast.info{border-left:3px solid var(--blue);}
+
+/* ─── Modal ─── */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;
+  display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(4px);
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--surface);border:1px solid var(--card-border);
+  border-radius:var(--radius-lg);padding:1.75rem;
+  width:540px;max-width:95vw;max-height:90vh;overflow-y:auto;
+  box-shadow:var(--shadow);
+  animation:modal-in .25s ease;
+}
+@keyframes modal-in{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
+.modal-title{font-size:1.05rem;font-weight:700;}
+.modal-close{color:var(--text-muted);font-size:1.2rem;padding:.25rem;cursor:pointer;}
+.modal-footer{display:flex;justify-content:flex-end;gap:.65rem;margin-top:1.25rem;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.form-group-modal{margin-bottom:.85rem;}
+.form-group-modal label{display:block;font-size:.78rem;font-weight:500;color:var(--text-muted);margin-bottom:.3rem;}
+
+/* ─── Dividers & Layout helpers ─── */
+.two-col{display:grid;grid-template-columns:1fr 320px;gap:1rem;align-items:start;}
+.flex-between{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;}
+.flex-gap{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;}
+.mt-1{margin-top:.5rem;}.mt-2{margin-top:1rem;}.mt-3{margin-top:1.5rem;}
+.mb-1{margin-bottom:.5rem;}.mb-2{margin-bottom:1rem;}
+hr.divider{border:none;border-top:1px solid var(--card-border);margin:1rem 0;}
+
+/* ─── Scheduler ─── */
+.job-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:1rem;}
+.job-card{
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:1.25rem;
+  box-shadow:var(--shadow-card);backdrop-filter:blur(12px);
+  transition:all var(--transition);
+}
+.job-card:hover{border-color:var(--card-hover);transform:translateY(-2px);}
+.job-card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.75rem;}
+.job-card-name{font-size:.9rem;font-weight:700;}
+.job-card-desc{font-size:.78rem;color:var(--text-muted);margin-bottom:.75rem;}
+.job-meta{display:flex;flex-direction:column;gap:.3rem;}
+.job-meta-item{font-size:.75rem;color:var(--text-muted);display:flex;gap:.5rem;}
+.job-meta-item b{color:var(--text);}
+.job-actions{display:flex;gap:.5rem;margin-top:1rem;}
+.btn-run{
+  flex:1;padding:.45rem;border-radius:var(--radius-sm);font-size:.78rem;
+  background:rgba(99,130,255,.1);color:var(--blue);font-weight:600;
+  border:1px solid rgba(99,130,255,.25);transition:all var(--transition);
+}
+.btn-run:hover{background:rgba(99,130,255,.2);}
+.toggle-switch{position:relative;width:36px;height:20px;cursor:pointer;}
+.toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-track{
+  position:absolute;inset:0;background:var(--card-border);
+  border-radius:20px;transition:background var(--transition);
+}
+.toggle-track::after{
+  content:'';position:absolute;top:2px;left:2px;
+  width:16px;height:16px;border-radius:50%;background:#fff;
+  transition:transform var(--transition);
+}
+.toggle-switch input:checked + .toggle-track{background:var(--blue);}
+.toggle-switch input:checked + .toggle-track::after{transform:translateX(16px);}
+
+/* ─── Reports ─── */
+.report-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin-bottom:1rem;}
+.report-card{
+  background:var(--card);border:1px solid var(--card-border);
+  border-radius:var(--radius);padding:1.25rem;
+  box-shadow:var(--shadow-card);transition:all var(--transition);
+}
+.report-card:hover{border-color:var(--card-hover);}
+.report-type-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  padding:.4rem .75rem;border-radius:var(--radius-sm);
+  font-size:.75rem;font-weight:700;margin-bottom:.75rem;
+}
+.report-title{font-size:.88rem;font-weight:600;margin-bottom:.35rem;}
+.report-meta{font-size:.75rem;color:var(--text-muted);margin-bottom:.75rem;}
+.report-summary{
+  background:var(--bg2);border-radius:var(--radius-sm);
+  padding:.65rem;margin-bottom:.75rem;
+}
+.report-summary-item{display:flex;justify-content:space-between;font-size:.75rem;padding:.2rem 0;}
+
+/* ─── Responsive ─── */
+.hamburger{display:none;font-size:1.2rem;cursor:pointer;padding:.35rem;}
+@media(max-width:900px){
+  :root{--sidebar-w:0px;}
+  .sidebar{transform:translateX(-240px);width:240px;}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .hamburger{display:block;}
+  .chart-grid{grid-template-columns:1fr;}
+  .two-col{grid-template-columns:1fr;}
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .form-row{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .kpi-grid{grid-template-columns:1fr;}
+  .content{padding:1rem;}
+  .topbar{padding:0 1rem;}
+}
+</style>
+</head>
+<body>
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- ═══════════════════ LOGIN SCREEN ═══════════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon">🤖</div>
+      <div><div style="font-weight:700">Karri Prasad</div><div style="font-size:.7rem;color:var(--text-muted)">AI Operations</div></div>
+    </div>
+    <h2 class="login-title">Welcome back</h2>
+    <p class="login-sub">Sign in to your operations dashboard</p>
+    <div class="form-group">
+      <label class="form-label">EMAIL</label>
+      <input type="email" id="login-email" placeholder="admin@karriprasad.ai" value="admin@karriprasad.ai" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">PASSWORD</label>
+      <input type="password" id="login-password" placeholder="••••••••••" value="changeme123" />
+    </div>
+    <div class="login-error" id="login-error">Invalid credentials. Please try again.</div>
+    <button class="btn-primary" id="login-btn">Sign In →</button>
+    <p class="login-hint">Default: <code>admin@karriprasad.ai</code> / <code>changeme123</code></p>
+  </div>
+</div>
+
+<!-- ═══════════════════ APP SHELL ═══════════════════ -->
+<div id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🤖</div>
+      <div>
+        <div class="sidebar-logo-text">Karri Prasad</div>
+        <div class="sidebar-logo-sub">AI Operations</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <div class="nav-item active" data-page="dashboard">
+          <span class="nav-icon">📊</span> Dashboard
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">AI Agent</div>
+        <div class="nav-item" data-page="sessions">
+          <span class="nav-icon">💬</span> Sessions
+        </div>
+        <div class="nav-item" data-page="analytics">
+          <span class="nav-icon">⚡</span> Agent Analytics
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Job Search</div>
+        <div class="nav-item" data-page="applications">
+          <span class="nav-icon">📋</span> Applications
+        </div>
+        <div class="nav-item" data-page="kanban">
+          <span class="nav-icon">🗂️</span> Kanban Board
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Operations</div>
+        <div class="nav-item" data-page="notifications">
+          <span class="nav-icon">🔔</span> Notifications
+          <span class="nav-badge" id="notif-badge" style="display:none">0</span>
+        </div>
+        <div class="nav-item" data-page="scheduler">
+          <span class="nav-icon">⏰</span> Scheduler
+        </div>
+        <div class="nav-item" data-page="reports">
+          <span class="nav-icon">📄</span> Reports
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">A</div>
+        <div>
+          <div class="user-name" id="user-display-name">Admin</div>
+          <div class="user-role" id="user-display-role">Administrator</div>
+        </div>
+      </div>
+      <div class="sidebar-actions">
+        <button class="btn-icon" id="theme-toggle" title="Toggle theme">🌙 Theme</button>
+        <button class="btn-icon" id="logout-btn" title="Logout">🚪 Logout</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">☰</button>
+      <div class="topbar-title" id="page-title">Dashboard</div>
+      <div class="topbar-search">
+        <input type="search" id="global-search" placeholder="Search..." />
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-sm primary" id="topbar-action-btn" style="display:none">+ Add</button>
+        <div class="notif-bell" id="notif-bell">🔔<span class="notif-dot" id="notif-dot" style="display:none"></span></div>
+        <button class="btn-sm" id="refresh-btn">↻ Refresh</button>
+      </div>
+    </header>
+
+    <div class="content" id="content">
+
+      <!-- ════ PAGE: DASHBOARD ════ -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-header">
+          <h1>Executive Dashboard</h1>
+          <p>Your complete AI operations at a glance</p>
+        </div>
+        <div class="kpi-grid" id="kpi-grid">
+          <div class="skeleton skeleton-kpi"></div>
+          <div class="skeleton skeleton-kpi"></div>
+          <div class="skeleton skeleton-kpi"></div>
+          <div class="skeleton skeleton-kpi"></div>
+          <div class="skeleton skeleton-kpi"></div>
+          <div class="skeleton skeleton-kpi"></div>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div><div class="chart-card-title">Sessions Over Time</div><div class="chart-card-sub">Last 30 days</div></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-sessions"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div><div class="chart-card-title">Agent Executions</div><div class="chart-card-sub">Last 7 days</div></div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-agents"></canvas></div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-card-title">Applications by Status</div>
+            </div>
+            <div class="chart-wrap" style="height:180px"><canvas id="chart-apps"></canvas></div>
+          </div>
+          <div class="table-card">
+            <div class="table-header"><h3>🚀 Activity Feed</h3></div>
+            <div style="padding:.75rem" class="feed" id="activity-feed">
+              <div class="skeleton skeleton-row"></div>
+              <div class="skeleton skeleton-row"></div>
+              <div class="skeleton skeleton-row"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ PAGE: SESSIONS ════ -->
+      <section class="page" id="page-sessions">
+        <div class="page-header">
+          <h1>Session Logging</h1>
+          <p>User conversation sessions and message history</p>
+        </div>
+        <div class="kpi-grid" id="session-kpi-grid">
+          <div class="kpi-card" style="--kpi-color:rgba(99,130,255,.2)">
+            <span class="kpi-icon">🗓️</span>
+            <div class="kpi-label">Total Sessions</div>
+            <div class="kpi-value" id="sk-total">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+            <span class="kpi-icon">💬</span>
+            <div class="kpi-label">Messages Today</div>
+            <div class="kpi-value" id="sk-today">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(56,217,245,.2)">
+            <span class="kpi-icon">⏱️</span>
+            <div class="kpi-label">Avg Response</div>
+            <div class="kpi-value" id="sk-avg">—</div>
+            <div class="kpi-sub">milliseconds</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(248,113,113,.2)">
+            <span class="kpi-icon">⚠️</span>
+            <div class="kpi-label">Errors</div>
+            <div class="kpi-value" id="sk-errors">—</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Recent Sessions</h3>
+            <div class="table-controls">
+              <input type="search" id="session-search" placeholder="Search sessions…" style="width:180px" />
+              <button class="btn-sm" id="session-refresh">↻</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr>
+                <th>Session ID</th><th>User</th><th>Messages</th>
+                <th>Duration</th><th>Last Active</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="sessions-tbody">
+                <tr><td colspan="7"><div class="skeleton skeleton-row"></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="padding:.75rem 1.25rem;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--text-muted);border-top:1px solid var(--card-border)">
+            <span id="sessions-count">Loading…</span>
+            <div class="flex-gap">
+              <button class="btn-sm" id="sessions-prev">← Prev</button>
+              <span id="sessions-page">1</span>
+              <button class="btn-sm" id="sessions-next">Next →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ PAGE: AGENT ANALYTICS ════ -->
+      <section class="page" id="page-analytics">
+        <div class="page-header">
+          <h1>Agent Analytics</h1>
+          <p>Execution metrics, success rates, and performance rankings</p>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card" style="--kpi-color:rgba(99,130,255,.2)">
+            <span class="kpi-icon">🤖</span>
+            <div class="kpi-label">Total Executions</div>
+            <div class="kpi-value" id="ag-total">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+            <span class="kpi-icon">✅</span>
+            <div class="kpi-label">Success Rate</div>
+            <div class="kpi-value" id="ag-success">—</div>
+            <div class="kpi-sub">percent</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(248,113,113,.2)">
+            <span class="kpi-icon">❌</span>
+            <div class="kpi-label">Failed</div>
+            <div class="kpi-value" id="ag-failed">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(56,217,245,.2)">
+            <span class="kpi-icon">⚡</span>
+            <div class="kpi-label">Avg Latency</div>
+            <div class="kpi-value" id="ag-latency">—</div>
+            <div class="kpi-sub">milliseconds</div>
+          </div>
+        </div>
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-card-title">Executions Over Time</div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-agent-daily"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div class="chart-card-title">Success vs Failure</div>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-agent-success"></canvas></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header"><h3>Agent Rankings</h3></div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr>
+                <th>Agent</th><th>Total Runs</th><th>Success</th><th>Failed</th>
+                <th>Success Rate</th><th>Avg Latency</th>
+              </tr></thead>
+              <tbody id="agents-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="table-card mt-2">
+          <div class="table-header"><h3>Live Activity Feed</h3>
+            <button class="btn-sm" id="agent-feed-refresh">↻ Refresh</button>
+          </div>
+          <div style="padding:.75rem" class="feed" id="agent-feed"></div>
+        </div>
+      </section>
+
+      <!-- ════ PAGE: APPLICATIONS ════ -->
+      <section class="page" id="page-applications">
+        <div class="page-header flex-between">
+          <div><h1>Application Tracker</h1><p>Manage your job applications pipeline</p></div>
+          <button class="btn-sm primary" id="new-app-btn">+ New Application</button>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card" style="--kpi-color:rgba(99,130,255,.2)">
+            <span class="kpi-icon">📋</span><div class="kpi-label">Total Applied</div>
+            <div class="kpi-value" id="app-total">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(251,191,36,.2)">
+            <span class="kpi-icon">🎤</span><div class="kpi-label">Interviews</div>
+            <div class="kpi-value" id="app-interviews">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+            <span class="kpi-icon">🎯</span><div class="kpi-label">Response Rate</div>
+            <div class="kpi-value" id="app-response-rate">—</div>
+            <div class="kpi-sub">percent</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(167,139,250,.2)">
+            <span class="kpi-icon">🏆</span><div class="kpi-label">Offer Rate</div>
+            <div class="kpi-value" id="app-offer-rate">—</div>
+            <div class="kpi-sub">percent</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <h3>All Applications</h3>
+            <div class="table-controls">
+              <select id="app-status-filter" style="width:130px">
+                <option value="">All Statuses</option>
+                <option value="saved">Saved</option>
+                <option value="applied">Applied</option>
+                <option value="screening">Screening</option>
+                <option value="interview">Interview</option>
+                <option value="final_round">Final Round</option>
+                <option value="offer">Offer</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <input type="search" id="app-search" placeholder="Search…" style="width:140px" />
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr>
+                <th>Company</th><th>Position</th><th>Status</th>
+                <th>Location</th><th>Applied</th><th>Priority</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="apps-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ PAGE: KANBAN ════ -->
+      <section class="page" id="page-kanban">
+        <div class="page-header flex-between">
+          <div><h1>Kanban Board</h1><p>Visual pipeline view of all applications</p></div>
+          <button class="btn-sm primary" id="kanban-add-btn">+ Add Application</button>
+        </div>
+        <div class="kanban" id="kanban-board"></div>
+      </section>
+
+      <!-- ════ PAGE: NOTIFICATIONS ════ -->
+      <section class="page" id="page-notifications">
+        <div class="page-header flex-between">
+          <div><h1>Notification Center</h1><p>Alerts, summaries, and system messages</p></div>
+          <div class="flex-gap">
+            <button class="btn-sm" id="mark-all-read">✓ Mark All Read</button>
+            <select id="notif-filter" style="width:150px">
+              <option value="">All Types</option>
+              <option value="recruiter_email">Recruiter Email</option>
+              <option value="interview_invite">Interview Invite</option>
+              <option value="job_match">Job Match</option>
+              <option value="weekly_report">Weekly Report</option>
+              <option value="system">System</option>
+            </select>
+          </div>
+        </div>
+        <div class="notif-list" id="notif-list"></div>
+      </section>
+
+      <!-- ════ PAGE: SCHEDULER ════ -->
+      <section class="page" id="page-scheduler">
+        <div class="page-header flex-between">
+          <div><h1>Scheduler</h1><p>Cron jobs, automated tasks, and execution history</p></div>
+          <button class="btn-sm primary" id="new-job-btn">+ New Job</button>
+        </div>
+        <div class="kpi-grid" id="scheduler-kpis">
+          <div class="kpi-card" style="--kpi-color:rgba(99,130,255,.2)">
+            <span class="kpi-icon">⏰</span><div class="kpi-label">Total Jobs</div>
+            <div class="kpi-value" id="sched-total">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+            <span class="kpi-icon">✅</span><div class="kpi-label">Active Jobs</div>
+            <div class="kpi-value" id="sched-active">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(248,113,113,.2)">
+            <span class="kpi-icon">❌</span><div class="kpi-label">Failed Jobs</div>
+            <div class="kpi-value" id="sched-failed">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(56,217,245,.2)">
+            <span class="kpi-icon">🚀</span><div class="kpi-label">Total Runs</div>
+            <div class="kpi-value" id="sched-runs">—</div>
+          </div>
+        </div>
+        <div class="job-grid" id="jobs-grid"></div>
+        <div class="table-card">
+          <div class="table-header"><h3>Execution History</h3>
+            <button class="btn-sm" id="sched-hist-refresh">↻</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Job ID</th><th>Started</th><th>Finished</th><th>Status</th><th>Duration</th><th>Output / Error</th></tr></thead>
+              <tbody id="sched-history-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ PAGE: REPORTS ════ -->
+      <section class="page" id="page-reports">
+        <div class="page-header flex-between">
+          <div><h1>Reports</h1><p>Generate and download analytics reports</p></div>
+          <button class="btn-sm primary" id="gen-report-btn">+ Generate Report</button>
+        </div>
+        <div class="report-grid" id="report-types-grid">
+          <!-- Generate quick buttons -->
+          <div class="report-card" style="border-color:rgba(99,130,255,.3)">
+            <div class="report-type-badge" style="background:rgba(99,130,255,.15);color:var(--blue)">📅 Weekly</div>
+            <div class="report-title">Weekly Analytics</div>
+            <div class="report-meta">Last 7 days of session, agent, and application data</div>
+            <div class="flex-gap">
+              <button class="btn-sm primary" onclick="generateReport('weekly','csv')">CSV</button>
+              <button class="btn-sm" onclick="generateReport('weekly','excel')">Excel</button>
+            </div>
+          </div>
+          <div class="report-card" style="border-color:rgba(167,139,250,.3)">
+            <div class="report-type-badge" style="background:rgba(167,139,250,.15);color:var(--violet)">📆 Monthly</div>
+            <div class="report-title">Monthly Summary</div>
+            <div class="report-meta">30-day comprehensive performance report</div>
+            <div class="flex-gap">
+              <button class="btn-sm primary" onclick="generateReport('monthly','csv')">CSV</button>
+              <button class="btn-sm" onclick="generateReport('monthly','excel')">Excel</button>
+            </div>
+          </div>
+          <div class="report-card" style="border-color:rgba(52,211,153,.3)">
+            <div class="report-type-badge" style="background:rgba(52,211,153,.15);color:var(--green)">🤖 Agent</div>
+            <div class="report-title">Agent Performance</div>
+            <div class="report-meta">Success rates, latency, and tool usage breakdown</div>
+            <div class="flex-gap">
+              <button class="btn-sm primary" onclick="generateReport('agent','csv')">CSV</button>
+            </div>
+          </div>
+          <div class="report-card" style="border-color:rgba(251,191,36,.3)">
+            <div class="report-type-badge" style="background:rgba(251,191,36,.15);color:var(--amber)">💼 Jobs</div>
+            <div class="report-title">Job Search Report</div>
+            <div class="report-meta">Application funnel, interview rates, and offer stats</div>
+            <div class="flex-gap">
+              <button class="btn-sm primary" onclick="generateReport('application','csv')">CSV</button>
+              <button class="btn-sm" onclick="generateReport('application','excel')">Excel</button>
+            </div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header"><h3>Generated Reports</h3>
+            <button class="btn-sm" id="reports-refresh">↻</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Title</th><th>Type</th><th>Format</th><th>Status</th><th>Created</th><th>Actions</th></tr></thead>
+              <tbody id="reports-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══════════════════ MODALS ═══════════════════ -->
+
+<!-- New Application Modal -->
+<div class="modal-overlay" id="app-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="app-modal-title">New Application</div>
+      <button class="modal-close" onclick="closeModal('app-modal')">✕</button>
+    </div>
+    <div class="form-row">
+      <div class="form-group-modal">
+        <label>Company Name *</label>
+        <input id="app-company" placeholder="e.g. Google" />
+      </div>
+      <div class="form-group-modal">
+        <label>Position *</label>
+        <input id="app-position" placeholder="e.g. Senior AI Engineer" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group-modal">
+        <label>Status</label>
+        <select id="app-status">
+          <option value="saved">Saved</option>
+          <option value="applied">Applied</option>
+          <option value="screening">Screening</option>
+          <option value="interview">Interview</option>
+          <option value="final_round">Final Round</option>
+          <option value="offer">Offer</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="form-group-modal">
+        <label>Location</label>
+        <input id="app-location" placeholder="e.g. Nashville, TN" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group-modal">
+        <label>Salary Range</label>
+        <input id="app-salary" placeholder="e.g. $120k–$150k" />
+      </div>
+      <div class="form-group-modal">
+        <label>Job URL</label>
+        <input id="app-url" placeholder="https://..." />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group-modal">
+        <label>Contact Name</label>
+        <input id="app-contact-name" placeholder="Recruiter name" />
+      </div>
+      <div class="form-group-modal">
+        <label>Contact Email</label>
+        <input id="app-contact-email" placeholder="recruiter@company.com" />
+      </div>
+    </div>
+    <div class="form-group-modal">
+      <label>Notes</label>
+      <textarea id="app-notes" rows="3" placeholder="Any notes about this opportunity…"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('app-modal')">Cancel</button>
+      <button class="btn-sm primary" id="save-app-btn">Save Application</button>
+    </div>
+  </div>
+</div>
+
+<!-- Session Detail Modal -->
+<div class="modal-overlay" id="session-modal">
+  <div class="modal" style="width:650px">
+    <div class="modal-header">
+      <div class="modal-title">Session Detail</div>
+      <button class="modal-close" onclick="closeModal('session-modal')">✕</button>
+    </div>
+    <div id="session-detail-content"></div>
+    <div class="modal-footer">
+      <button class="btn-sm" id="export-csv-btn">⬇ Export CSV</button>
+      <button class="btn-sm" id="export-json-btn">⬇ Export JSON</button>
+      <button class="btn-sm" onclick="closeModal('session-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- New Job Modal -->
+<div class="modal-overlay" id="job-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Scheduler Job</div>
+      <button class="modal-close" onclick="closeModal('job-modal')">✕</button>
+    </div>
+    <div class="form-group-modal"><label>Job Name *</label><input id="job-name" placeholder="e.g. weekly_report" /></div>
+    <div class="form-group-modal"><label>Job Type *</label>
+      <select id="job-type">
+        <option value="weekly_report">Weekly Report</option>
+        <option value="monthly_report">Monthly Report</option>
+        <option value="daily_digest">Daily Digest</option>
+        <option value="custom">Custom</option>
+      </select>
+    </div>
+    <div class="form-group-modal"><label>Cron Expression</label><input id="job-cron" placeholder="0 8 * * 1" /></div>
+    <div class="form-group-modal"><label>Description</label><textarea id="job-desc" rows="2"></textarea></div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('job-modal')">Cancel</button>
+      <button class="btn-sm primary" id="save-job-btn">Create Job</button>
+    </div>
+  </div>
+</div>
+
+<!-- Generate Report Modal -->
+<div class="modal-overlay" id="report-modal">
+  <div class="modal" style="width:400px">
+    <div class="modal-header">
+      <div class="modal-title">Generate Report</div>
+      <button class="modal-close" onclick="closeModal('report-modal')">✕</button>
+    </div>
+    <div class="form-group-modal"><label>Report Type</label>
+      <select id="rpt-type">
+        <option value="weekly">Weekly</option>
+        <option value="monthly">Monthly</option>
+        <option value="agent">Agent Performance</option>
+        <option value="application">Application</option>
+        <option value="job_search">Job Search</option>
+      </select>
+    </div>
+    <div class="form-group-modal"><label>Format</label>
+      <select id="rpt-format">
+        <option value="csv">CSV</option>
+        <option value="excel">Excel</option>
+      </select>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-sm" onclick="closeModal('report-modal')">Cancel</button>
+      <button class="btn-sm primary" id="confirm-report-btn">Generate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+let AUTH_TOKEN = localStorage.getItem('dashboard_token') || '';
+let currentUser = JSON.parse(localStorage.getItem('dashboard_user') || '{}');
+let currentPage = 'dashboard';
+let sessionsPage = 1;
+let currentSessionId = null;
+let editAppId = null;
+let chartInstances = {};
+
+// ─── API Base ─────────────────────────────────────────────────────────────────
+const API = window.location.origin;
+
+async function apiCall(path, options = {}) {
+  const headers = { 'Content-Type': 'application/json' };
+  if (AUTH_TOKEN) headers['Authorization'] = `Bearer ${AUTH_TOKEN}`;
+  const res = await fetch(`${API}${path}`, { headers, ...options });
+  if (res.status === 401) { logout(); return null; }
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(err || `HTTP ${res.status}`);
+  }
+  if (res.status === 204) return {};
+  return res.json();
+}
+
+// ─── Toast ────────────────────────────────────────────────────────────────────
+function toast(msg, type = 'info') {
+  const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.innerHTML = `<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  document.getElementById('toast-container').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+document.getElementById('login-btn').onclick = async () => {
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  document.getElementById('login-error').style.display = 'none';
+  try {
+    const res = await fetch(`${API}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    if (!res.ok) throw new Error('Invalid credentials');
+    const data = await res.json();
+    AUTH_TOKEN = data.access_token;
+    currentUser = data.user;
+    localStorage.setItem('dashboard_token', AUTH_TOKEN);
+    localStorage.setItem('dashboard_user', JSON.stringify(currentUser));
+    showApp();
+  } catch (e) {
+    document.getElementById('login-error').style.display = 'block';
+  }
+};
+
+document.getElementById('login-password').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-btn').click();
+});
+
+function logout() {
+  AUTH_TOKEN = '';
+  currentUser = {};
+  localStorage.removeItem('dashboard_token');
+  localStorage.removeItem('dashboard_user');
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+document.getElementById('logout-btn').onclick = logout;
+
+function showApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  // Update user info in sidebar
+  const u = currentUser;
+  document.getElementById('user-display-name').textContent = u.name || u.email || 'Admin';
+  document.getElementById('user-display-role').textContent = u.role || 'admin';
+  document.getElementById('user-avatar').textContent = (u.name || u.email || 'A')[0].toUpperCase();
+  loadPage('dashboard');
+  pollNotifications();
+}
+
+// Auto-login if token exists
+if (AUTH_TOKEN) {
+  showApp();
+}
+
+// ─── Navigation ───────────────────────────────────────────────────────────────
+const PAGE_TITLES = {
+  dashboard: 'Dashboard', sessions: 'Session Logging', analytics: 'Agent Analytics',
+  applications: 'Applications', kanban: 'Kanban Board', notifications: 'Notifications',
+  scheduler: 'Scheduler', reports: 'Reports'
+};
+const PAGE_ADD_ACTIONS = {
+  applications: true, kanban: true
+};
+
+document.querySelectorAll('.nav-item[data-page]').forEach(item => {
+  item.onclick = () => {
+    const page = item.dataset.page;
+    loadPage(page);
+    // close sidebar on mobile
+    if (window.innerWidth <= 900) document.getElementById('sidebar').classList.remove('open');
+  };
+});
+
+document.getElementById('hamburger').onclick = () => {
+  document.getElementById('sidebar').classList.toggle('open');
+};
+
+function loadPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.page === page));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === `page-${page}`));
+  document.getElementById('page-title').textContent = PAGE_TITLES[page] || page;
+  const addBtn = document.getElementById('topbar-action-btn');
+  addBtn.style.display = PAGE_ADD_ACTIONS[page] ? '' : 'none';
+  if (page === 'applications' || page === 'kanban') addBtn.onclick = openNewAppModal;
+  switch (page) {
+    case 'dashboard': loadDashboard(); break;
+    case 'sessions': loadSessions(); break;
+    case 'analytics': loadAnalytics(); break;
+    case 'applications': loadApplications(); break;
+    case 'kanban': loadKanban(); break;
+    case 'notifications': loadNotifications(); break;
+    case 'scheduler': loadScheduler(); break;
+    case 'reports': loadReports(); break;
+  }
+}
+
+document.getElementById('refresh-btn').onclick = () => loadPage(currentPage);
+
+// ─── Theme ────────────────────────────────────────────────────────────────────
+let darkMode = localStorage.getItem('theme') !== 'light';
+function applyTheme() {
+  document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+  document.getElementById('theme-toggle').textContent = darkMode ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('theme', darkMode ? 'dark' : 'light');
+}
+document.getElementById('theme-toggle').onclick = () => { darkMode = !darkMode; applyTheme(); };
+applyTheme();
+
+// ─── Chart helpers ────────────────────────────────────────────────────────────
+const CHART_COLORS = {
+  blue: 'rgba(99,130,255,1)', blueFill: 'rgba(99,130,255,0.15)',
+  green: 'rgba(52,211,153,1)', greenFill: 'rgba(52,211,153,0.15)',
+  red: 'rgba(248,113,113,1)', redFill: 'rgba(248,113,113,0.15)',
+  cyan: 'rgba(56,217,245,1)', cyanFill: 'rgba(56,217,245,0.15)',
+  violet: 'rgba(167,139,250,1)', amber: 'rgba(251,191,36,1)',
+};
+
+function makeLineChart(id, labels, datasets) {
+  if (chartInstances[id]) chartInstances[id].destroy();
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  chartInstances[id] = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: datasets.length > 1, labels: { color: '#6b7a9f', font: { size: 11 } } } },
+      scales: {
+        x: { grid: { color: 'rgba(99,130,255,0.06)' }, ticks: { color: '#6b7a9f', maxTicksLimit: 8, font: { size: 10 } } },
+        y: { grid: { color: 'rgba(99,130,255,0.06)' }, ticks: { color: '#6b7a9f', font: { size: 10 } } },
+      }
+    }
+  });
+}
+
+function makeBarChart(id, labels, datasets) {
+  if (chartInstances[id]) chartInstances[id].destroy();
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  chartInstances[id] = new Chart(ctx, {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: datasets.length > 1, labels: { color: '#6b7a9f', font: { size: 11 } } } },
+      scales: {
+        x: { grid: { color: 'rgba(99,130,255,0.06)' }, ticks: { color: '#6b7a9f', font: { size: 10 } } },
+        y: { grid: { color: 'rgba(99,130,255,0.06)' }, ticks: { color: '#6b7a9f', font: { size: 10 } } },
+      }
+    }
+  });
+}
+
+function makeDoughnut(id, labels, data, colors) {
+  if (chartInstances[id]) chartInstances[id].destroy();
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  chartInstances[id] = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data, backgroundColor: colors, borderWidth: 0, hoverOffset: 4 }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '65%',
+      plugins: { legend: { position: 'right', labels: { color: '#6b7a9f', font: { size: 10 }, padding: 12 } } }
+    }
+  });
+}
+
+function fmtDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+}
+function fmtDateTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleString('en-US', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+}
+function timeAgo(iso) {
+  if (!iso) return '—';
+  const secs = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+  if (secs < 60) return `${secs}s ago`;
+  if (secs < 3600) return `${Math.floor(secs/60)}m ago`;
+  if (secs < 86400) return `${Math.floor(secs/3600)}h ago`;
+  return `${Math.floor(secs/86400)}d ago`;
+}
+
+const STATUS_BADGES = {
+  saved:'badge-muted', applied:'badge-blue', screening:'badge-cyan',
+  interview:'badge-amber', final_round:'badge-violet', offer:'badge-green', rejected:'badge-red',
+  success:'badge-green', failed:'badge-red', pending:'badge-amber', running:'badge-blue',
+  disabled:'badge-muted', completed:'badge-green', generating:'badge-cyan',
+  healthy:'badge-green',
+};
+
+function badge(text, cls) {
+  return `<span class="badge ${cls || STATUS_BADGES[text] || 'badge-muted'}">${text}</span>`;
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+async function loadDashboard() {
+  try {
+    const data = await apiCall('/api/dashboard');
+    if (!data) return;
+    const { kpis, charts, activity_feed } = data;
+
+    document.getElementById('kpi-grid').innerHTML = `
+      <div class="kpi-card" style="--kpi-color:rgba(99,130,255,.2)">
+        <span class="kpi-icon">🗓️</span>
+        <div class="kpi-label">Total Sessions</div>
+        <div class="kpi-value">${kpis.sessions.total.toLocaleString()}</div>
+        <div class="kpi-sub">${kpis.sessions.today} today</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+        <span class="kpi-icon">💬</span>
+        <div class="kpi-label">Messages Today</div>
+        <div class="kpi-value">${kpis.messages.total.toLocaleString()}</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:rgba(56,217,245,.2)">
+        <span class="kpi-icon">⚡</span>
+        <div class="kpi-label">Avg Response</div>
+        <div class="kpi-value">${kpis.avg_duration.value}<span style="font-size:1rem">ms</span></div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:rgba(167,139,250,.2)">
+        <span class="kpi-icon">🤖</span>
+        <div class="kpi-label">Agent Executions</div>
+        <div class="kpi-value">${kpis.agent_executions.total.toLocaleString()}</div>
+        <div class="kpi-sub">${kpis.agent_executions.today} today</div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+        <span class="kpi-icon">✅</span>
+        <div class="kpi-label">Success Rate</div>
+        <div class="kpi-value">${kpis.success_rate.value}<span style="font-size:1rem">%</span></div>
+      </div>
+      <div class="kpi-card" style="--kpi-color:rgba(251,191,36,.2)">
+        <span class="kpi-icon">📋</span>
+        <div class="kpi-label">Applications</div>
+        <div class="kpi-value">${kpis.applications.total.toLocaleString()}</div>
+        <div class="kpi-sub">${kpis.applications.interviews} interviews · ${kpis.applications.offer_rate}% offers</div>
+      </div>
+    `;
+
+    // Charts
+    const sl = charts.sessions_timeseries;
+    makeLineChart('chart-sessions',
+      sl.map(d => fmtDate(d.date)),
+      [{ label: 'Sessions', data: sl.map(d => d.count),
+        borderColor: CHART_COLORS.blue, backgroundColor: CHART_COLORS.blueFill,
+        fill: true, tension: 0.4, pointRadius: 2 }]
+    );
+
+    const al = charts.agent_timeseries;
+    makeBarChart('chart-agents',
+      al.map(d => fmtDate(d.date)),
+      [{ label: 'Executions', data: al.map(d => d.count),
+        backgroundColor: CHART_COLORS.violetFill || 'rgba(167,139,250,0.5)',
+        borderColor: CHART_COLORS.violet, borderWidth: 1, borderRadius: 4 }]
+    );
+
+    const appStatus = charts.app_by_status;
+    const statusLabels = Object.keys(appStatus);
+    const statusColors = ['#6b7a9f','#6382ff','#38d9f5','#fbbf24','#a78bfa','#34d399','#f87171'];
+    makeDoughnut('chart-apps', statusLabels, statusLabels.map(k => appStatus[k]), statusColors);
+
+    // Activity feed
+    const feed = document.getElementById('activity-feed');
+    if (!activity_feed.length) {
+      feed.innerHTML = '<div class="empty-state"><span class="empty-icon">📭</span><h3>No activity yet</h3></div>';
+      return;
+    }
+    feed.innerHTML = activity_feed.map(f => `
+      <div class="feed-item">
+        <div class="feed-dot ${f.status}"></div>
+        <div class="feed-text">${f.text}</div>
+        <div class="feed-time">${timeAgo(f.time)}</div>
+      </div>
+    `).join('');
+  } catch (e) {
+    toast('Failed to load dashboard: ' + e.message, 'error');
+  }
+}
+
+// ─── SESSIONS ─────────────────────────────────────────────────────────────────
+let sessionsSearch = '';
+async function loadSessions() {
+  try {
+    const params = new URLSearchParams({ page: sessionsPage, limit: 20 });
+    if (sessionsSearch) params.set('search', sessionsSearch);
+    const data = await apiCall(`/api/sessions?${params}`);
+    if (!data) return;
+
+    // KPIs from dashboard
+    const dash = await apiCall('/api/dashboard');
+    if (dash) {
+      document.getElementById('sk-total').textContent = dash.kpis.sessions.total.toLocaleString();
+      document.getElementById('sk-today').textContent = dash.kpis.messages.total.toLocaleString();
+      document.getElementById('sk-avg').textContent = dash.kpis.avg_duration.value;
+      const errs = data.sessions.reduce((s, r) => s + (r.errors || 0), 0);
+      document.getElementById('sk-errors').textContent = errs;
+    }
+
+    const tbody = document.getElementById('sessions-tbody');
+    if (!data.sessions.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="empty-icon">💬</span><h3>No sessions found</h3></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = data.sessions.map(s => `
+      <tr>
+        <td><span class="mono">${s.session_id.slice(0,12)}…</span></td>
+        <td>${s.user_name || '<span style="color:var(--text-dim)">Anonymous</span>'}</td>
+        <td>${s.message_count}</td>
+        <td>${s.duration_seconds ? s.duration_seconds + 's' : '< 1s'}</td>
+        <td>${timeAgo(s.last_active)}</td>
+        <td>${s.errors ? badge('errors', 'badge-red') : badge('ok', 'badge-green')}</td>
+        <td>
+          <button class="btn-sm" onclick="viewSession('${s.session_id}')">View</button>
+          <button class="btn-sm" onclick="exportSession('${s.session_id}','csv')" title="Export CSV">⬇</button>
+        </td>
+      </tr>
+    `).join('');
+    document.getElementById('sessions-count').textContent = `${data.total} sessions total`;
+    document.getElementById('sessions-page').textContent = `Page ${sessionsPage}`;
+  } catch (e) {
+    toast('Failed to load sessions: ' + e.message, 'error');
+  }
+}
+
+document.getElementById('sessions-prev').onclick = () => { if (sessionsPage > 1) { sessionsPage--; loadSessions(); } };
+document.getElementById('sessions-next').onclick = () => { sessionsPage++; loadSessions(); };
+document.getElementById('session-refresh').onclick = () => { sessionsPage = 1; loadSessions(); };
+document.getElementById('session-search').oninput = function() {
+  sessionsSearch = this.value; sessionsPage = 1;
+  clearTimeout(this._t); this._t = setTimeout(loadSessions, 400);
+};
+
+async function viewSession(sid) {
+  currentSessionId = sid;
+  try {
+    const data = await apiCall(`/api/sessions/${sid}`);
+    if (!data) return;
+    const content = document.getElementById('session-detail-content');
+    content.innerHTML = `
+      <div style="margin-bottom:.75rem">
+        <span class="mono" style="font-size:.8rem;color:var(--text-muted)">Session: ${sid}</span>
+      </div>
+      <div class="feed" style="max-height:400px">
+        ${data.messages.map(m => `
+          <div class="feed-item" style="flex-direction:column;gap:.5rem">
+            <div style="display:flex;justify-content:space-between">
+              <span style="font-size:.7rem;color:var(--text-dim)">${fmtDateTime(m.timestamp)}</span>
+              <span style="font-size:.7rem;color:var(--text-muted)">${m.model_used || ''} · ${m.request_duration_ms}ms</span>
+            </div>
+            <div><strong style="color:var(--blue)">User:</strong> <span style="font-size:.82rem">${m.user_message || ''}</span></div>
+            ${m.assistant_response ? `<div><strong style="color:var(--cyan)">AI:</strong> <span style="font-size:.82rem">${m.assistant_response}</span></div>` : ''}
+            ${m.error ? `<div style="color:var(--red);font-size:.75rem">⚠ ${m.error}</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    `;
+    document.getElementById('export-csv-btn').onclick = () => exportSession(sid, 'csv');
+    document.getElementById('export-json-btn').onclick = () => exportSession(sid, 'json');
+    openModal('session-modal');
+  } catch (e) {
+    toast('Failed to load session: ' + e.message, 'error');
+  }
+}
+
+function exportSession(sid, fmt) {
+  window.open(`${API}/api/sessions/${sid}/export?format=${fmt}&token=${AUTH_TOKEN}`, '_blank');
+  // fallback with auth header not possible via window.open; download directly
+  fetch(`${API}/api/sessions/${sid}/export?format=${fmt}`, {
+    headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+  }).then(r => r.blob()).then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url;
+    a.download = `session_${sid}.${fmt}`; a.click();
+    URL.revokeObjectURL(url);
+    toast('Export downloaded', 'success');
+  }).catch(e => toast('Export failed: ' + e.message, 'error'));
+}
+
+// ─── AGENT ANALYTICS ─────────────────────────────────────────────────────────
+async function loadAnalytics() {
+  try {
+    const data = await apiCall('/api/agents/stats?days=30');
+    if (!data) return;
+    const { summary, agent_rankings, daily } = data;
+
+    document.getElementById('ag-total').textContent = summary.total.toLocaleString();
+    document.getElementById('ag-success').textContent = summary.success_rate;
+    document.getElementById('ag-failed').textContent = summary.failed.toLocaleString();
+    document.getElementById('ag-latency').textContent = Math.round(summary.avg_latency_ms);
+
+    // Charts
+    makeLineChart('chart-agent-daily',
+      daily.map(d => fmtDate(d.date)),
+      [
+        { label: 'Success', data: daily.map(d => d.success), borderColor: CHART_COLORS.green, backgroundColor: CHART_COLORS.greenFill, fill: true, tension: 0.4, pointRadius: 2 },
+        { label: 'Failed', data: daily.map(d => d.failed), borderColor: CHART_COLORS.red, backgroundColor: CHART_COLORS.redFill, fill: true, tension: 0.4, pointRadius: 2 },
+      ]
+    );
+
+    makeDoughnut('chart-agent-success',
+      ['Success', 'Failed'],
+      [summary.success, summary.failed],
+      [CHART_COLORS.green, CHART_COLORS.red]
+    );
+
+    // Rankings table
+    document.getElementById('agents-tbody').innerHTML = agent_rankings.length ? agent_rankings.map(a => `
+      <tr>
+        <td><strong>${a.name}</strong></td>
+        <td>${a.total}</td>
+        <td style="color:var(--green)">${a.success}</td>
+        <td style="color:var(--red)">${a.failed}</td>
+        <td>${badge(a.success_rate + '%', a.success_rate >= 90 ? 'badge-green' : a.success_rate >= 70 ? 'badge-amber' : 'badge-red')}</td>
+        <td>${Math.round(a.avg_latency_ms)}ms</td>
+      </tr>
+    `).join('') : '<tr><td colspan="6"><div class="empty-state"><span class="empty-icon">🤖</span><h3>No agent data</h3><p>Agent executions will appear here</p></div></td></tr>';
+
+    // Feed
+    await loadAgentFeed();
+  } catch (e) {
+    toast('Failed to load analytics: ' + e.message, 'error');
+  }
+}
+
+async function loadAgentFeed() {
+  try {
+    const feed = await apiCall('/api/agents/feed?limit=15');
+    if (!feed) return;
+    const el = document.getElementById('agent-feed');
+    if (!feed.length) {
+      el.innerHTML = '<div class="empty-state"><span class="empty-icon">⚡</span><h3>No agent activity</h3></div>';
+      return;
+    }
+    el.innerHTML = feed.map(f => `
+      <div class="feed-item">
+        <div class="feed-dot ${f.success ? 'success' : 'error'}"></div>
+        <div class="feed-text">
+          <strong>${f.agent_name}</strong>${f.workflow ? ' · ' + f.workflow : ''}
+          <span style="color:var(--text-muted);font-size:.75rem;margin-left:.5rem">${f.input_preview}</span>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div class="feed-time">${timeAgo(f.timestamp)}</div>
+          <div style="font-size:.7rem;color:var(--text-muted)">${f.latency_ms ? Math.round(f.latency_ms) + 'ms' : ''}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {}
+}
+
+document.getElementById('agent-feed-refresh').onclick = loadAgentFeed;
+
+// ─── APPLICATIONS ─────────────────────────────────────────────────────────────
+let appStatusFilter = '', appSearch = '';
+
+async function loadApplications() {
+  try {
+    const stats = await apiCall('/api/applications/stats/summary');
+    if (stats) {
+      document.getElementById('app-total').textContent = stats.total.toLocaleString();
+      document.getElementById('app-interviews').textContent = stats.interviews_scheduled.toLocaleString();
+      document.getElementById('app-response-rate').textContent = stats.response_rate;
+      document.getElementById('app-offer-rate').textContent = stats.offer_rate;
+    }
+
+    const params = new URLSearchParams({ limit: 100 });
+    if (appStatusFilter) params.set('status', appStatusFilter);
+    if (appSearch) params.set('search', appSearch);
+    const data = await apiCall(`/api/applications?${params}`);
+    if (!data) return;
+
+    const tbody = document.getElementById('apps-tbody');
+    if (!data.applications.length) {
+      tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><span class="empty-icon">📋</span><h3>No applications yet</h3><p>Start tracking your job applications</p></div></td></tr>`;
+      return;
+    }
+    const priorityIcons = ['', '🔥', '🚨'];
+    tbody.innerHTML = data.applications.map(a => `
+      <tr>
+        <td><strong>${a.company_name}</strong></td>
+        <td>${a.position}</td>
+        <td>${badge(a.status)}</td>
+        <td>${a.location || '—'} ${a.remote ? '🌐' : ''}</td>
+        <td>${a.application_date ? fmtDate(a.application_date) : '—'}</td>
+        <td>${priorityIcons[a.priority] || '—'}</td>
+        <td>
+          <button class="btn-sm" onclick="editApplication(${a.id})">Edit</button>
+          <button class="btn-sm" style="color:var(--red)" onclick="deleteApplication(${a.id})">🗑</button>
+        </td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    toast('Failed to load applications: ' + e.message, 'error');
+  }
+}
+
+document.getElementById('app-status-filter').onchange = function() { appStatusFilter = this.value; loadApplications(); };
+document.getElementById('app-search').oninput = function() {
+  appSearch = this.value; clearTimeout(this._t); this._t = setTimeout(loadApplications, 400);
+};
+
+function openNewAppModal() {
+  editAppId = null;
+  document.getElementById('app-modal-title').textContent = 'New Application';
+  ['app-company','app-position','app-location','app-salary','app-url','app-contact-name','app-contact-email','app-notes'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('app-status').value = 'saved';
+  openModal('app-modal');
+}
+
+async function editApplication(id) {
+  try {
+    const app = await apiCall(`/api/applications/${id}`);
+    if (!app) return;
+    editAppId = id;
+    document.getElementById('app-modal-title').textContent = 'Edit Application';
+    document.getElementById('app-company').value = app.company_name || '';
+    document.getElementById('app-position').value = app.position || '';
+    document.getElementById('app-status').value = app.status || 'saved';
+    document.getElementById('app-location').value = app.location || '';
+    document.getElementById('app-salary').value = app.salary_range || '';
+    document.getElementById('app-url').value = app.job_url || '';
+    document.getElementById('app-contact-name').value = app.contact_name || '';
+    document.getElementById('app-contact-email').value = app.contact_email || '';
+    document.getElementById('app-notes').value = app.notes || '';
+    openModal('app-modal');
+  } catch (e) {
+    toast('Failed to load application: ' + e.message, 'error');
+  }
+}
+
+async function deleteApplication(id) {
+  if (!confirm('Delete this application?')) return;
+  try {
+    await apiCall(`/api/applications/${id}`, { method: 'DELETE' });
+    toast('Application deleted', 'success');
+    loadApplications(); loadKanban();
+  } catch (e) {
+    toast('Delete failed: ' + e.message, 'error');
+  }
+}
+
+document.getElementById('save-app-btn').onclick = async () => {
+  const body = {
+    company_name: document.getElementById('app-company').value,
+    position: document.getElementById('app-position').value,
+    status: document.getElementById('app-status').value,
+    location: document.getElementById('app-location').value || null,
+    salary_range: document.getElementById('app-salary').value || null,
+    job_url: document.getElementById('app-url').value || null,
+    contact_name: document.getElementById('app-contact-name').value || null,
+    contact_email: document.getElementById('app-contact-email').value || null,
+    notes: document.getElementById('app-notes').value || null,
+  };
+  if (!body.company_name || !body.position) { toast('Company and Position are required', 'error'); return; }
+  try {
+    if (editAppId) {
+      await apiCall(`/api/applications/${editAppId}`, { method: 'PATCH', body: JSON.stringify(body) });
+      toast('Application updated', 'success');
+    } else {
+      await apiCall('/api/applications', { method: 'POST', body: JSON.stringify(body) });
+      toast('Application added', 'success');
+    }
+    closeModal('app-modal');
+    loadApplications(); loadKanban();
+  } catch (e) {
+    toast('Save failed: ' + e.message, 'error');
+  }
+};
+
+document.getElementById('new-app-btn').onclick = openNewAppModal;
+document.getElementById('kanban-add-btn').onclick = openNewAppModal;
+
+// ─── KANBAN ───────────────────────────────────────────────────────────────────
+const KANBAN_COLS = [
+  { key: 'saved', label: 'Saved', color: 'var(--text-muted)' },
+  { key: 'applied', label: 'Applied', color: 'var(--blue)' },
+  { key: 'screening', label: 'Screening', color: 'var(--cyan)' },
+  { key: 'interview', label: 'Interview', color: 'var(--amber)' },
+  { key: 'final_round', label: 'Final Round', color: 'var(--violet)' },
+  { key: 'offer', label: 'Offer 🎉', color: 'var(--green)' },
+  { key: 'rejected', label: 'Rejected', color: 'var(--red)' },
+];
+
+async function loadKanban() {
+  try {
+    const data = await apiCall('/api/applications/kanban');
+    if (!data) return;
+    const board = document.getElementById('kanban-board');
+    board.innerHTML = KANBAN_COLS.map(col => `
+      <div class="kanban-col">
+        <div class="kanban-col-header">
+          <div class="kanban-col-title" style="color:${col.color}">${col.label}</div>
+          <div class="kanban-count">${(data[col.key] || []).length}</div>
+        </div>
+        <div class="kanban-cards">
+          ${(data[col.key] || []).length === 0
+            ? `<div class="kanban-empty">Drop cards here</div>`
+            : (data[col.key] || []).map(a => `
+              <div class="kanban-card" onclick="editApplication(${a.id})">
+                <div class="kanban-card-company">${a.company_name}</div>
+                <div class="kanban-card-position">${a.position}</div>
+                <div class="kanban-card-meta">
+                  <span class="kanban-card-date">${a.application_date ? fmtDate(a.application_date) : a.updated_at ? timeAgo(a.updated_at) : ''}</span>
+                  ${a.location ? `<span style="font-size:.65rem;color:var(--text-dim)">${a.location}</span>` : ''}
+                </div>
+              </div>
+            `).join('')}
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    toast('Failed to load kanban: ' + e.message, 'error');
+  }
+}
+
+// ─── NOTIFICATIONS ────────────────────────────────────────────────────────────
+const NOTIF_ICONS = {
+  recruiter_email: { icon: '📧', cls: 'badge-cyan' },
+  interview_invite: { icon: '🎤', cls: 'badge-amber' },
+  job_match: { icon: '💼', cls: 'badge-violet' },
+  weekly_report: { icon: '📊', cls: 'badge-blue' },
+  system: { icon: '⚙️', cls: 'badge-muted' },
+};
+
+async function loadNotifications() {
+  try {
+    let url = '/api/notifications?limit=50';
+    const type = document.getElementById('notif-filter').value;
+    if (type) url += `&type=${type}`;
+    const data = await apiCall(url);
+    if (!data) return;
+
+    const unread = data.unread_count;
+    const badge_el = document.getElementById('notif-badge');
+    badge_el.textContent = unread; badge_el.style.display = unread ? '' : 'none';
+    document.getElementById('notif-dot').style.display = unread ? '' : 'none';
+
+    const list = document.getElementById('notif-list');
+    if (!data.notifications.length) {
+      list.innerHTML = `<div class="empty-state"><span class="empty-icon">🔔</span><h3>All caught up!</h3><p>No notifications</p></div>`;
+      return;
+    }
+    list.innerHTML = data.notifications.map(n => {
+      const meta = NOTIF_ICONS[n.type] || { icon: '•', cls: 'badge-muted' };
+      return `
+        <div class="notif-item ${n.is_read ? '' : 'unread'}">
+          <div class="notif-icon" style="background:rgba(99,130,255,.1)">${meta.icon}</div>
+          <div class="notif-body">
+            <div class="notif-title">${n.title}</div>
+            ${n.message ? `<div class="notif-msg">${n.message}</div>` : ''}
+            <div class="notif-meta">${fmtDateTime(n.created_at)} · ${badge(n.type, meta.cls)}</div>
+          </div>
+          <div class="notif-actions">
+            ${!n.is_read ? `<button class="btn-sm" onclick="markRead([${n.id}])">✓</button>` : ''}
+            <button class="btn-sm" style="color:var(--red)" onclick="deleteNotif(${n.id})">🗑</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    toast('Failed to load notifications: ' + e.message, 'error');
+  }
+}
+
+document.getElementById('notif-filter').onchange = loadNotifications;
+document.getElementById('mark-all-read').onclick = () => markRead(null);
+
+async function markRead(ids) {
+  try {
+    await apiCall('/api/notifications/mark-read', {
+      method: 'POST', body: JSON.stringify(ids || [])
+    });
+    toast('Marked as read', 'success');
+    loadNotifications();
+  } catch (e) {
+    toast('Failed: ' + e.message, 'error');
+  }
+}
+
+async function deleteNotif(id) {
+  try {
+    await apiCall(`/api/notifications/${id}`, { method: 'DELETE' });
+    loadNotifications();
+    toast('Deleted', 'success');
+  } catch (e) {}
+}
+
+function pollNotifications() {
+  setInterval(async () => {
+    try {
+      const data = await apiCall('/api/notifications?limit=1');
+      if (!data) return;
+      const unread = data.unread_count;
+      const el = document.getElementById('notif-badge');
+      el.textContent = unread; el.style.display = unread ? '' : 'none';
+      document.getElementById('notif-dot').style.display = unread ? '' : 'none';
+    } catch (e) {}
+  }, 30000);
+}
+
+document.getElementById('notif-bell').onclick = () => loadPage('notifications');
+
+// ─── SCHEDULER ────────────────────────────────────────────────────────────────
+async function loadScheduler() {
+  try {
+    const jobs = await apiCall('/api/scheduler/jobs');
+    if (!jobs) return;
+
+    const total = jobs.length;
+    const active = jobs.filter(j => j.enabled).length;
+    const failed = jobs.filter(j => j.status === 'failed').length;
+    const totalRuns = jobs.reduce((s, j) => s + (j.run_count || 0), 0);
+
+    document.getElementById('sched-total').textContent = total;
+    document.getElementById('sched-active').textContent = active;
+    document.getElementById('sched-failed').textContent = failed;
+    document.getElementById('sched-runs').textContent = totalRuns;
+
+    document.getElementById('jobs-grid').innerHTML = jobs.length ? jobs.map(j => `
+      <div class="job-card">
+        <div class="job-card-header">
+          <div>
+            <div class="job-card-name">${j.name}</div>
+            ${badge(j.status)}
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" ${j.enabled ? 'checked' : ''} onchange="toggleJob(${j.id},this.checked)" />
+            <div class="toggle-track"></div>
+          </label>
+        </div>
+        <div class="job-card-desc">${j.description || 'No description'}</div>
+        <div class="job-meta">
+          <div class="job-meta-item">⏰ Cron: <b>${j.cron_expression || 'manual'}</b></div>
+          <div class="job-meta-item">🕒 Last Run: <b>${j.last_run ? timeAgo(j.last_run) : 'Never'}</b></div>
+          <div class="job-meta-item">⏱️ Duration: <b>${j.last_run_duration_ms ? Math.round(j.last_run_duration_ms) + 'ms' : '—'}</b></div>
+          <div class="job-meta-item">📊 Runs: <b>${j.run_count || 0}</b> · Failed: <b>${j.fail_count || 0}</b></div>
+          ${j.last_error ? `<div class="job-meta-item" style="color:var(--red)">⚠ ${j.last_error.slice(0,60)}</div>` : ''}
+        </div>
+        <div class="job-actions">
+          <button class="btn-run" onclick="runJob(${j.id},'${j.name}')">▶ Run Now</button>
+        </div>
+      </div>
+    `).join('') : '<div class="empty-state"><span class="empty-icon">⏰</span><h3>No scheduler jobs</h3></div>';
+
+    await loadSchedulerHistory();
+  } catch (e) {
+    toast('Failed to load scheduler: ' + e.message, 'error');
+  }
+}
+
+async function toggleJob(id, enabled) {
+  try {
+    await apiCall(`/api/scheduler/jobs/${id}?enabled=${enabled}`, { method: 'PATCH' });
+    toast(`Job ${enabled ? 'enabled' : 'disabled'}`, 'success');
+  } catch (e) {
+    toast('Failed to update job: ' + e.message, 'error');
+  }
+}
+
+async function runJob(id, name) {
+  try {
+    await apiCall(`/api/scheduler/jobs/${id}/run`, { method: 'POST' });
+    toast(`Job '${name}' triggered`, 'success');
+    setTimeout(loadScheduler, 2000);
+  } catch (e) {
+    toast('Failed to run job: ' + e.message, 'error');
+  }
+}
+
+async function loadSchedulerHistory() {
+  try {
+    const runs = await apiCall('/api/scheduler/history?limit=30');
+    if (!runs) return;
+    const tbody = document.getElementById('sched-history-tbody');
+    if (!runs.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><span class="empty-icon">📜</span><h3>No history</h3></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = runs.map(r => `
+      <tr>
+        <td><span class="mono">#${r.job_id}</span></td>
+        <td>${fmtDateTime(r.started_at)}</td>
+        <td>${r.finished_at ? fmtDateTime(r.finished_at) : '—'}</td>
+        <td>${badge(r.status)}</td>
+        <td>${r.duration_ms ? Math.round(r.duration_ms) + 'ms' : '—'}</td>
+        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;font-size:.75rem;color:${r.error ? 'var(--red)' : 'var(--text-muted)'}">${r.error || r.output || '—'}</td>
+      </tr>
+    `).join('');
+  } catch (e) {}
+}
+
+document.getElementById('sched-hist-refresh').onclick = loadSchedulerHistory;
+document.getElementById('new-job-btn').onclick = () => openModal('job-modal');
+document.getElementById('save-job-btn').onclick = async () => {
+  const body = {
+    name: document.getElementById('job-name').value,
+    job_type: document.getElementById('job-type').value,
+    cron_expression: document.getElementById('job-cron').value || null,
+    description: document.getElementById('job-desc').value || null,
+  };
+  if (!body.name) { toast('Job name required', 'error'); return; }
+  try {
+    await apiCall('/api/scheduler/jobs', { method: 'POST', body: JSON.stringify(body) });
+    toast('Job created', 'success');
+    closeModal('job-modal');
+    loadScheduler();
+  } catch (e) {
+    toast('Failed: ' + e.message, 'error');
+  }
+};
+
+// ─── REPORTS ─────────────────────────────────────────────────────────────────
+async function loadReports() {
+  try {
+    const data = await apiCall('/api/reports?limit=20');
+    if (!data) return;
+    const tbody = document.getElementById('reports-tbody');
+    if (!data.reports.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-state"><span class="empty-icon">📄</span><h3>No reports generated yet</h3><p>Use the cards above to generate your first report</p></div></td></tr>';
+      return;
+    }
+    const fmtColors = { csv: 'badge-green', excel: 'badge-amber', pdf: 'badge-red', json: 'badge-blue' };
+    tbody.innerHTML = data.reports.map(r => `
+      <tr>
+        <td><strong>${r.title}</strong></td>
+        <td>${badge(r.type, 'badge-blue')}</td>
+        <td>${badge(r.format, fmtColors[r.format] || 'badge-muted')}</td>
+        <td>${badge(r.status)}</td>
+        <td>${fmtDateTime(r.created_at)}</td>
+        <td>${r.status === 'completed' ? `<button class="btn-sm primary" onclick="downloadReport(${r.id})">⬇ Download</button>` : '—'}</td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    toast('Failed to load reports: ' + e.message, 'error');
+  }
+}
+
+document.getElementById('reports-refresh').onclick = loadReports;
+document.getElementById('gen-report-btn').onclick = () => openModal('report-modal');
+document.getElementById('confirm-report-btn').onclick = async () => {
+  const type = document.getElementById('rpt-type').value;
+  const format = document.getElementById('rpt-format').value;
+  await generateReport(type, format);
+  closeModal('report-modal');
+};
+
+async function generateReport(type, format) {
+  try {
+    const res = await apiCall('/api/reports/generate', {
+      method: 'POST',
+      body: JSON.stringify({ type, format })
+    });
+    if (res) {
+      toast(`Report generating (ID: ${res.id})… refresh in a moment`, 'info');
+      setTimeout(loadReports, 3000);
+    }
+  } catch (e) {
+    toast('Report generation failed: ' + e.message, 'error');
+  }
+}
+
+function downloadReport(id) {
+  fetch(`${API}/api/reports/${id}/download`, {
+    headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+  }).then(r => {
+    const disp = r.headers.get('Content-Disposition') || '';
+    const fname = disp.match(/filename=(.+)/)?.[1] || `report_${id}`;
+    return r.blob().then(blob => ({ blob, fname }));
+  }).then(({ blob, fname }) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = fname; a.click();
+    URL.revokeObjectURL(url);
+    toast('Downloaded', 'success');
+  }).catch(e => toast('Download failed: ' + e.message, 'error'));
+}
+
+// ─── Modal helpers ────────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.onclick = e => { if (e.target === overlay) overlay.classList.remove('open'); };
+});
+
+// ─── Global search ────────────────────────────────────────────────────────────
+document.getElementById('global-search').oninput = function() {
+  const q = this.value.toLowerCase();
+  if (!q) return;
+  if (currentPage === 'sessions') {
+    document.getElementById('session-search').value = q;
+    document.getElementById('session-search').dispatchEvent(new Event('input'));
+  } else if (currentPage === 'applications') {
+    document.getElementById('app-search').value = q;
+    document.getElementById('app-search').dispatchEvent(new Event('input'));
+  }
+};
+
+// ─── Keyboard shortcuts ───────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+});
+</script>
+</body>
+</html>
