@@ -254,6 +254,10 @@ def _run_job(job_name: str, job_type: str):
             output = _generate_report_data("monthly", db)
         elif job_type == "daily_digest":
             output = _send_daily_digest(db)
+        elif job_type == "gmail_auto_responder":
+            from gmail_responder import check_and_reply_emails
+            check_and_reply_emails(db, retrieval_chain)
+            output = "Gmail check complete"
 
         duration_ms = (time.time() - start) * 1000
         run_record.status = "success"

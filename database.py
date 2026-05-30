@@ -276,6 +276,13 @@ def seed_db():
                 "enabled": True,
             },
             {
+                "name": "gmail_auto_responder",
+                "description": "Check Gmail for job/recruiter emails and auto-reply every 10 minutes",
+                "cron_expression": "*/10 * * * *",
+                "job_type": "gmail_auto_responder",
+                "enabled": True,
+            },
+            {
                 "name": "daily_notification_digest",
                 "description": "Send daily summary notification at 9 AM",
                 "cron_expression": "0 9 * * *",
