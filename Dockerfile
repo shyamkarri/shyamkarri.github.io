@@ -16,10 +16,6 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy all application code
 COPY . .
 
-# Run the build_index.py script during the docker build phase.
-# This will download the HF model into /app/.cache and create the FAISS index in /app/faiss_index
-RUN python build_index.py
-
 # Expose port (Render sets the PORT environment variable)
 # 10000 is Render's default fallback if $PORT is not set
 EXPOSE 10000

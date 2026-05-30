@@ -30,7 +30,7 @@ from passlib.context import CryptContext
 
 # LangChain
 from langchain_groq import ChatGroq
-from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEndpointEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains import create_retrieval_chain
@@ -163,7 +163,10 @@ init_db()
 seed_db()
 
 # ─── RAG Setup ───────────────────────────────────────────────────────────────
-embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", cache_folder="./.cache")
+embeddings = HuggingFaceEndpointEmbeddings(
+    model="sentence-transformers/all-MiniLM-L6-v2",
+    huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
+)
 
 try:
     vectorstore = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
