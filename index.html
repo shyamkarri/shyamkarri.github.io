@@ -2243,17 +2243,23 @@
       Face.setState('thinking');
 
       try {
+        const session_id = sessionStorage.getItem('chat_session_id') || null;
         const res = await fetch(`${BACKEND_URL}/chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             message: userText,
-            history: history
+            history: history,
+            session_id: session_id
           })
         });
 
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
+
+        if (data.session_id) {
+          sessionStorage.setItem('chat_session_id', data.session_id);
+        }
 
         const reply = data.reply || "Sorry, I had a hiccup! Try asking again.";
         const audioB64 = data.audio_base64 || '';
@@ -2360,10 +2366,18 @@
       const timeoutId = setTimeout(() => controller.abort(), 2000);
 
       try {
-        const res = await fetch(`${BACKEND_URL}/greet`, { signal: controller.signal });
+        const session_id = sessionStorage.getItem('chat_session_id') || '';
+        const url = new URL(`${BACKEND_URL}/greet`);
+        if (session_id) {
+          url.searchParams.append('session_id', session_id);
+        }
+        const res = await fetch(url.toString(), { signal: controller.signal });
         clearTimeout(timeoutId);
         if (!res.ok) throw new Error();
         const data = await res.json();
+        if (data.session_id) {
+          sessionStorage.setItem('chat_session_id', data.session_id);
+        }
         const greeting = data.reply;
         const audioB64 = data.audio_base64 || '';
         appendMsg('ai', greeting);
