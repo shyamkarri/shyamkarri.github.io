@@ -526,6 +526,32 @@ def root():
 def health():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
+@app.get("/api/test-gmail")
+def test_gmail(db=Depends(get_db)):
+    from gmail_responder import check_and_reply_emails
+    import io
+    
+    log_capture_string = io.StringIO()
+    handler = logging.StreamHandler(log_capture_string)
+    handler.setLevel(logging.INFO)
+    
+    # Add handler to capture logs
+    responder_logger = logging.getLogger("gmail_responder")
+    responder_logger.addHandler(handler)
+    
+    try:
+        check_and_reply_emails(db, retrieval_chain)
+    except Exception as e:
+        responder_logger.error(f"Error executing auto responder: {e}")
+    finally:
+        responder_logger.removeHandler(handler)
+        
+    logs = log_capture_string.getvalue().strip().split("\n")
+    return {
+        "status": "completed",
+        "logs": logs if logs != [""] else ["No output generated. Credentials might not be set or no unseen emails found."]
+    }
+
 @app.post("/chat", response_model=ChatResponse)
 async def chat(req: ChatRequest, request: Request, db=Depends(get_db)):
     start_time = time.time()
