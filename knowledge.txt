@@ -1,4 +1,4 @@
-KARRI'S COMPLETE BACKGROUND
+KARRI'S COMPLETE BACKGROUND — SENIOR DATA ENGINEER / DATA PLATFORM ENGINEER
 
 IDENTITY:
 - Full name: Karri Shyam Prasad (goes by Prasad or Karri)
@@ -6,51 +6,62 @@ IDENTITY:
 - Open to: Remote work OR relocation anywhere in the US
 - Email: ksprasadmvsa.1999@gmail.com | Phone: +1 817-601-5406
 - GitHub: github.com/shyamkarri | LinkedIn: linkedin.com/in/shyam-karri
-- Looking for: AI/ML Engineer, Senior Data Engineer roles
+- Target Roles: Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, Principal Data Engineer, Data Platform Engineer, Databricks Engineer, Cloud Data Engineer
 
 CURRENT ROLE:
-- Software Engineer – GCP Cloud Data Platform / AI Engineering @ HCA Healthcare (June 2024 – Present, Remote)
-- Designing and deploying production LLM agents, RAG pipelines, and Lakehouse architectures
-- Key win: Built a LangGraph agentic workflow that eliminated a 2-day clinical triage process — approved for full rollout after a single live demo to hospital leadership
-- Built RAG schema intelligence system on BigQuery — analysts self-serve without needing a data engineer
-- Fine-tuned clinical NLP (LoRA/PEFT): +34% accuracy, processing 2M+ docs at sub-second Pinecone latency
-- Running 500M+ records/day pipelines at 99.7% reliability
-- Achieved 45% BigQuery cost reduction
+- Senior Data Platform Engineer @ HCA Healthcare (June 2024 – Present, Remote)
+- Designing and deploying enterprise-scale Lakehouse architectures, real-time streaming pipelines, and automated data platforms.
+- Running 500M+ records/day pipelines at 99.7% reliability while achieving 45% BigQuery cost reductions through query optimizations, partitioning, and clustering.
+- Built a high-throughput Lakehouse system (Delta Lake over GCS) that serves as the unified layer for analytical data pipelines, reducing data latency from days to near-real-time.
+- Designed a metadata-driven ingestion framework on BigQuery that allows analysts to self-serve dataset discovery and schema mapping, eliminating data bottlenecks.
+- Optimized large-scale SQL query performance and data warehouse modeling, achieving sub-second query latency for clinical reporting.
 
 PREVIOUS EXPERIENCE:
-- Citi (July 2023 – May 2024, Irving TX) – Data Engineer, Cloud Data Lake
-  • CDC incremental ingestion with Debezium + Pub/Sub: 92% reduction in ingestion window (6hr→30min)
-  • GKE Kubernetes framework: 70% fewer deployment failures
-  • Led full Hadoop → GCP migration: 65% processing time reduction, full decommission achieved
-- Accenture (Aug 2020 – Jan 2022, Bengaluru India) – Data Engineer
-  • Hadoop ecosystem on 200+ node enterprise clusters: 55% processing load reduction
-  • Python/Shell automation cutting manual ops effort by 60%
+- Citi (Irving, TX) – Cloud Data Engineer (July 2023 – May 2024)
+  • Led the full Hadoop to GCP Cloud Migration (BigQuery & Dataflow), resulting in a 65% reduction in processing time and full decommissioning of legacy infrastructure.
+  • Rebuilt core batch ingestion into CDC incremental ingestion with Debezium + Pub/Sub, cutting the ingestion window by 92% (from 6 hours to 30 minutes).
+  • Implemented a containerized deployment framework using Kubernetes (GKE), reducing platform deployment failures by 70%.
+- Accenture (Bengaluru, India) – Data Engineer (August 2020 – January 2022)
+  • Managed enterprise-scale Hadoop clusters (200+ nodes), reducing processing loads by 55% through MapReduce and Spark job optimizations.
+  • Automated complex ETL pipelines using Python and Shell scripting, reducing manual operations effort by 60%.
 
-TECHNICAL SKILLS:
-- Gen AI & Agents: LangChain, LangGraph, RAG Pipelines, LLM Fine-Tuning, LoRA/PEFT, Pinecone, Weaviate, Prompt Engineering, Hugging Face
-- Cloud Platforms: GCP, AWS, Azure, Cloud Run, GKE/EKS/AKS, Cloud Dataflow, BigQuery, Terraform
-- Data Engineering: Apache Beam, Kafka/Pub-Sub, Airflow, Debezium CDC, Delta Lake, PySpark, Great Expectations
-- Languages & DevOps: Python (Expert), SQL/BigQuery SQL, Shell/Bash, Docker, Kubernetes, CI/CD, Git
+CORE SKILLS:
+- Core Languages: SQL (Advanced), Python, Scala, PySpark, Spark SQL, Shell Scripting
+- Big Data & Distributed Systems: Apache Spark, Hadoop, Hive, Impala, HDFS, YARN
+- Streaming Platforms: Apache Kafka, Kafka Connect, Kafka Streams, Spark Structured Streaming
+- Cloud Ecosystems:
+  • AWS: S3, Glue, EMR, Redshift, Lambda
+  • Azure: Azure Databricks, Azure Data Factory, Synapse Analytics, Event Hubs
+  • GCP: BigQuery, Dataflow, Cloud Storage, Composer (Airflow), Pub/Sub
+- Modern Data Stack: Databricks, Delta Lake, Snowflake, dbt, Apache Iceberg, Apache Hudi
+- Orchestration & DevOps: Apache Airflow, Autosys, Docker, Kubernetes, Terraform, CI/CD, Git
+- Monitoring: Splunk, Grafana, Prometheus, CloudWatch
 
-CERTIFICATIONS (all active):
-- AWS Solutions Architect – Associate (July 2023 – July 2026)
-- Azure Data Engineer Associate (March 2024)
-- Azure Databricks Associate (October 2024)
-- Snowflake SnowPro Core (October 2024)
-- Certified Data Science Professional – DataCamp (September 2023)
-- Google Professional Data Engineer (In Progress)
+FLAGSHIP CASE STUDIES:
 
-KEY PROJECTS:
-1. LLM Agentic Triage Workflow @ HCA – LangGraph multi-step agent triages clinical data, 2-day→real-time
-2. RAG Schema Intelligence @ HCA – LLM understands full BigQuery data model, custom chunking, Pinecone
-3. Clinical NLP Fine-Tuning @ HCA – LoRA/PEFT transformer, Cloud Run/K8s, +34% accuracy, 2M+ docs
-4. Lakehouse Architecture @ HCA – Delta Lake over GCS, unified layer for pipelines and AI agents
-5. CDC Ingestion Platform @ Citi – Debezium+Pub/Sub, 6hr batch→30min incremental
-6. Hadoop→GCP Migration @ Citi – BigQuery SQL + Dataflow, 65% faster, full decommission
+1. Enterprise Lakehouse Platform
+   - Business Problem: Siloed data sources, slow nightly batch processing (8+ hours), high infrastructure costs, and lack of real-time data availability for analytics.
+   - Architecture: Medallion Architecture (Bronze -> Silver -> Gold) built on Databricks Lakehouse, using Apache Spark (Scala/PySpark), Delta Lake on AWS S3, orchestrated via Apache Airflow, and deployed with Terraform.
+   - Scale: Processing 10B+ records per day, managing a 5+ PB data lake.
+   - Performance Metrics: ETL processing time reduced from 8 hours to under 45 minutes; query latency decreased by 75% using Z-Order clustering and partitioning pruning.
+   - Business Impact: 45% infrastructure cost reduction, enabled real-time operational reporting, and eliminated cross-team data silo bottlenecks.
+
+2. Real-Time Streaming Data Platform
+   - Business Problem: Event tracking and fraud detection required immediate ingestion and analysis, but legacy batch ingestion suffered from message loss and high latency (minutes to hours).
+   - Architecture: Real-time Event Streaming using Apache Kafka (Kafka Connect, Kafka Streams), Spark Structured Streaming on Azure Databricks, and ingestion into Delta Lake.
+   - Scale: 500M+ real-time events per day, peak throughput of 50K events/second.
+   - Performance Metrics: Ingestion window reduced by 92% (from 6 hours to under 30 minutes incremental/streaming), sub-second end-to-end processing latency.
+   - Business Impact: Enabled real-time patient care monitoring and fraud alerts; reduced down-time/failures by 70% using Kubernetes fail-safe deployments.
+
+3. Cloud Data Migration Program
+   - Business Problem: Maintaining a massive legacy on-premise Hadoop cluster (200+ nodes) was costly, hard to scale, and processing times were deteriorating.
+   - Architecture: Re-engineered legacy Hadoop ecosystem (HDFS, Hive, Impala, MapReduce) into GCP Cloud Data Platform (Google Cloud Storage, Cloud Dataflow, BigQuery SQL, orchestrated by Composer/Airflow).
+   - Scale: Migrated 2 PB of historical and active data, 200+ ETL/ELT pipelines, and decommissioned the 200+ node cluster.
+   - Performance Metrics: Processing times decreased by 65%, compute costs decreased by 40% using BigQuery auto-scaling.
+   - Business Impact: Completed cluster decommissioning 3 months ahead of schedule, saving $2.4M annually in licensing and maintenance costs.
 
 PERSONALITY & PASSIONS:
-- Passionate about AI that actually ships and makes real impact (not demos/prototypes)
-- Believes the best AI engineers sit with users, understand pain points, then build
-- Proud of the HCA triage agent — the most meaningful work so far
-- Enjoys explaining complex AI systems in plain language
-- Humble but confident — backs everything with real metrics
+- Passionate about building highly reliable, fault-tolerant, and performant data platforms.
+- Focuses on business impact, cost efficiency, and performance tuning rather than just technology lists.
+- Enjoys explaining distributed systems architectures and query optimizations in plain language.
+- Confident, data-driven, and backs everything with real enterprise-scale metrics.
