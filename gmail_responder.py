@@ -76,9 +76,16 @@ def check_and_reply_emails(db, retrieval_chain):
                         msg = email.message_from_bytes(response_part[1])
                         
                         # Extract Headers
-                        subject = clean_header(msg["Subject"])
+                        subject = clean_header(msg["Subject"]) or "Job Inquiry"
                         from_sender = clean_header(msg["From"])
                         msg_id = msg["Message-ID"]
+
+                        # Parse recipient email address properly
+                        import email.utils
+                        sender_name, sender_email = email.utils.parseaddr(from_sender)
+
+                        if not sender_email:
+                            continue
 
                         # Extract Body
                         body = ""
@@ -100,7 +107,7 @@ def check_and_reply_emails(db, retrieval_chain):
 
                         # Check if it is a job/recruiter email
                         if is_job_related(subject, body):
-                            logger.info(f"[Gmail Auto-Responder] Processing job-related email from: {from_sender}")
+                            logger.info(f"[Gmail Auto-Responder] Processing job-related email from: {sender_email}")
                             
                             # Use retrieval_chain to draft professional response
                             query = f"Here is an email I received from a recruiter/job context.\nSender: {from_sender}\nSubject: {subject}\nBody:\n{body}\n\nPlease draft a professional response to this email in first person. Acknowledge the opportunity, answer any specific questions if details exist in context, and offer to coordinate a call."
@@ -114,20 +121,20 @@ def check_and_reply_emails(db, retrieval_chain):
 
                             if reply_text:
                                 # Send SMTP Reply
-                                send_reply(gmail_user, gmail_pass, from_sender, subject, msg_id, reply_text)
+                                send_reply(gmail_user, gmail_pass, sender_email, subject, msg_id, reply_text)
                                 
                                 # Log to database as Notification
                                 from database import Notification
                                 notif = Notification(
                                     type="recruiter_email",
                                     title=f"Auto-replied to recruiter: {subject}",
-                                    message=f"Sent auto-reply to {from_sender}.\n\nResponse:\n{reply_text}",
-                                    data={"sender": from_sender, "original_subject": subject}
+                                    message=f"Sent auto-reply to {sender_email}.\n\nResponse:\n{reply_text}",
+                                    data={"sender": sender_email, "original_subject": subject}
                                 )
                                 db.add(notif)
                                 db.commit()
                         else:
-                            logger.info(f"[Gmail Auto-Responder] Skipped non-job email: {subject} from {from_sender}")
+                            logger.info(f"[Gmail Auto-Responder] Skipped non-job email: {subject} from {sender_email}")
 
                         # Mark email as read
                         mail.store(e_id, "+FLAGS", "\\Seen")

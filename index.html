@@ -4,7 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Karri Prasad — AI Engineer</title>
+  <title>Karri Prasad — Senior Data Engineer &amp; Data Platform Architect</title>
+  <meta name="description" content="Portfolio of Karri Prasad, a Senior Data Engineer and Data Platform Architect. Expert in Databricks, Apache Spark, Snowflake, Apache Kafka, AWS, Azure, and GCP." />
+  <meta name="keywords" content="Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, Databricks Engineer, Spark Engineer, Kafka Engineer, Data Platform Engineer, Cloud Data Engineer, BigQuery Engineer, Snowflake Engineer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
@@ -37,6 +39,99 @@
       --fh: 'Playfair Display', serif;
       --fb: 'Outfit', sans-serif;
       --fm: 'JetBrains Mono', monospace;
+    }
+
+    body.light-mode {
+      --bg: #f8fafc;
+      --bg2: #f1f5f9;
+      --surface: #e2e8f0;
+      --card: #ffffff;
+      --border: rgba(15, 23, 42, 0.08);
+      --border2: rgba(15, 23, 42, 0.16);
+      --text: #0f172a;
+      --muted: #475569;
+      --dim: #64748b;
+      --blue: #1d4ed8;
+      --cyan: #0891b2;
+      --violet: #6d28d9;
+      --green: #047857;
+      --amber: #b45309;
+      --pink: #be185d;
+      --glow: rgba(37, 99, 235, 0.05);
+      --glow2: rgba(6, 182, 212, 0.03);
+    }
+
+    body.light-mode .head-circle {
+      fill: #ffedd5;
+    }
+    body.light-mode .face-container {
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    }
+    body.light-mode .emoji-avatar-wrap {
+      background: linear-gradient(160deg, #f1f5f9 0%, #e2e8f0 100%);
+    }
+    body.light-mode .voice-console {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (hover: none) {
+      body {
+        cursor: auto !important;
+      }
+      #cursor, #cursor-ring {
+        display: none !important;
+      }
+    }
+
+    /* ── PIPELINE FLOW DIAGRAMS ── */
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1.5rem 0;
+      background: rgba(91, 140, 255, 0.03);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .flow-node {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      text-align: center;
+      min-width: 95px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .flow-node .node-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .flow-node .node-sub {
+      font-size: 0.6rem;
+      color: var(--cyan);
+      font-family: var(--fm);
+      margin-top: 0.15rem;
+    }
+
+    .flow-arrow {
+      color: var(--blue);
+      font-size: 1.1rem;
+      animation: pulse-arrow 1.5s infinite alternate;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse-arrow {
+      from { transform: translateX(-3px); opacity: 0.6; }
+      to { transform: translateX(3px); opacity: 1; }
     }
 
     html {
@@ -1401,13 +1496,7 @@
       }
 
       section.sec {
-        padding: 4rem 1.5rem;
-      }
-    }
-  </style>
-</head>
-
-<body>
+       <body>
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
   <div class="bg-grid"></div>
@@ -1418,29 +1507,33 @@
   <nav>
     <div class="nav-logo">Karri Prasad</div>
     <div class="nav-links">
-      <a href="#about">About</a><a href="#skills">Skills</a>
-      <a href="#experience">Experience</a><a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#expertise">Expertise</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#certs">Certifications</a>
       <a href="#contact">Contact</a>
     </div>
-    <a class="nav-hire" href="mailto:ksprasadmvsa.1999@gmail.com">Hire Me →</a>
+    <div style="display:flex;align-items:center;gap:1.5rem;">
+      <button id="theme-toggle" aria-label="Toggle dark mode" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;transition:color 0.2s;">🌙</button>
+      <a class="nav-hire" href="mailto:ksprasadmvsa.1999@gmail.com">Hire Me →</a>
+    </div>
   </nav>
 
   <section id="hero">
     <div class="hero-layout">
       <div class="hero-left fi">
-        <span class="eyebrow">AI Engineer</span>
-        <h1 class="hero-title">Karri <em>Prasad</em><span class="line2">Building AI That Ships</span></h1>
-        <p class="hero-bio">5+ years building production LLM agents, RAG pipelines, and Lakehouse architectures across
-          GCP, AWS &amp; Azure. Currently at HCA Healthcare turning clinical workflows into AI-powered systems — no
-          demos, just real impact.</p>
+        <span class="eyebrow">Senior Data Engineer &amp; Data Platform Architect</span>
+        <h1 class="hero-title">Karri <em>Prasad</em><span class="line2">Engineering Data Platforms at Scale</span></h1>
+        <p class="hero-bio">5+ years designing and implementing high-throughput, low-latency distributed systems and Lakehouses across AWS, Azure, and GCP. Specializing in Spark query tuning, real-time streaming with Kafka, and petabyte-scale cloud migrations.</p>
         <div class="hero-stats">
-          <div class="hstat"><span class="hstat-n">500M+</span><span class="hstat-l">Daily Records</span></div>
-          <div class="hstat"><span class="hstat-n">99.7%</span><span class="hstat-l">Reliability</span></div>
-          <div class="hstat"><span class="hstat-n">34%</span><span class="hstat-l">NLP Accuracy ↑</span></div>
+          <div class="hstat"><span class="hstat-n">10B+</span><span class="hstat-l">Daily Records</span></div>
+          <div class="hstat"><span class="hstat-n">99.99%</span><span class="hstat-l">Pipeline SLA</span></div>
+          <div class="hstat"><span class="hstat-n">65%</span><span class="hstat-l">Compute Cost ↓</span></div>
         </div>
         <div class="hero-btns">
-          <a class="btn-glow" href="#" onclick="startVoice(); return false;">🎙 Talk to My AI Avatar</a>
-          <a class="btn-ghost" href="https://github.com/shyamkarri" target="_blank">GitHub ↗</a>
+          <a class="btn-glow" href="#" onclick="startVoice(); return false;">🎙 Talk to My AI Assistant</a>
+          <a class="btn-ghost" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
           <a class="btn-ghost" href="#contact">Contact</a>
         </div>
       </div>
@@ -1454,7 +1547,6 @@
           <div class="emoji-avatar-wrap">
             <div class="face-container" id="face-container">
               <svg class="face-svg" id="face-svg" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-
                 <!-- Headphone arc left -->
                 <path class="headphone" d="M 30 90 Q 30 35 90 35" stroke-width="6" />
                 <!-- Headphone arc right -->
@@ -1502,35 +1594,31 @@
                 <!-- NOSE -->
                 <path d="M 90 98 Q 84 108 88 112 Q 90 114 92 112 Q 96 108 90 98" fill="#E8A870" stroke="none" />
 
-                <!-- MOUTH (changes based on state) -->
-                <!-- Default smile -->
+                <!-- MOUTH -->
                 <path class="mouth-path" id="mouth-smile" d="M 72 125 Q 90 137 108 125" />
-                <!-- Open talking mouth (hidden by default) -->
                 <g id="mouth-open-group" style="display:none">
                   <ellipse class="mouth-open" cx="90" cy="128" rx="18" ry="10" />
                   <ellipse class="teeth" cx="90" cy="122" rx="14" ry="4" />
                   <ellipse class="tongue" cx="90" cy="133" rx="10" ry="5" />
                 </g>
-                <!-- Laugh mouth (hidden) -->
                 <g id="mouth-laugh" style="display:none">
                   <path d="M 70 122 Q 90 142 110 122" fill="#CC6B4A" stroke="#8B4513" stroke-width="2"
                     stroke-linecap="round" />
                   <ellipse fill="#FFFFF0" cx="90" cy="126" rx="16" ry="6" />
                 </g>
-                <!-- Thinking mouth (hidden) -->
                 <path class="mouth-path" id="mouth-think" d="M 75 128 Q 90 126 108 128" style="display:none" />
 
-                <!-- CHEEKS (blush) -->
+                <!-- CHEEKS -->
                 <ellipse class="cheek" id="cheek-left" cx="50" cy="108" rx="16" ry="10" />
                 <ellipse class="cheek" id="cheek-right" cx="130" cy="108" rx="16" ry="10" />
 
-                <!-- SWEAT DROP (thinking) -->
+                <!-- SWEAT DROP -->
                 <g class="sweat" id="sweat-drop">
                   <circle fill="#7EC8E3" cx="138" cy="68" r="6" />
                   <path fill="#7EC8E3" d="M 138 55 Q 133 62 138 68 Q 143 62 138 55" />
                 </g>
 
-                <!-- SPARKLES (happy/laughing) -->
+                <!-- SPARKLES -->
                 <g class="sparkle" id="sparkle-1" transform="translate(145,65)">
                   <path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z" fill="#f5a623" />
                 </g>
@@ -1541,7 +1629,7 @@
                   <path d="M0,-5 L1.2,-1.2 L5,0 L1.2,1.2 L0,5 L-1.2,1.2 L-5,0 L-1.2,-1.2 Z" fill="#a78bfa" />
                 </g>
 
-                <!-- Speaking lip waves (animated lines near mouth) -->
+                <!-- Speaking waves -->
                 <path class="speaking-wave" id="sw1" d="M 65 148 Q 72 144 80 148" />
                 <path class="speaking-wave" id="sw2" d="M 82 150 Q 90 146 98 150" />
                 <path class="speaking-wave" id="sw3" d="M 100 148 Q 108 144 115 148" />
@@ -1563,7 +1651,7 @@
               <div class="vb" style="height:4px"></div>
             </div>
             <div class="avatar-name">Karri Prasad</div>
-            <div class="avatar-role">AI Engineer · Open to Work</div>
+            <div class="avatar-role">Senior Data Engineer · Open to Work</div>
             <div class="avatar-status">
               <span class="status-dot"></span>
               <span id="avatar-status-txt">Ready to chat — click mic below</span>
@@ -1574,14 +1662,13 @@
         <!-- VOICE CONSOLE -->
         <div class="voice-console">
           <div class="vc-header">
-            <span class="vc-title">AI Avatar — Voice &amp; Chat</span>
+            <span class="vc-title">AI Portfolio Assistant</span>
             <span class="vc-mode" id="mode-label">Idle</span>
           </div>
           <div class="vc-body">
             <div class="vc-transcript" id="transcript">
               <div class="vc-msg ai">
-                <div class="sender">Karri</div>Hey! I'm Karri's AI avatar. Click the mic and talk to me, or type below.
-                Ask me anything!
+                <div class="sender">Karri</div>Hey! I'm Prasad's AI assistant. Ask me anything about my data engineering experience, case studies, or tech stack!
               </div>
             </div>
             <div class="vc-controls">
@@ -1596,12 +1683,10 @@
                 style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:0.5rem 0.85rem;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:var(--fb);">→</button>
             </div>
             <div class="chips">
-              <span class="chip" onclick="askChip('Hey! How are you doing?')">👋 Hey!</span>
-              <span class="chip" onclick="askChip('Tell me about yourself')">About you</span>
-              <span class="chip" onclick="askChip('What AI systems have you built?')">AI work</span>
-              <span class="chip" onclick="askChip('Are you open to work right now?')">Open to work?</span>
-              <span class="chip" onclick="askChip('What is your tech stack?')">Tech stack</span>
-              <span class="chip" onclick="askChip('Tell me about the HCA Healthcare project')">HCA project</span>
+              <span class="chip" onclick="askChip('What is your core tech stack?')">💻 Tech Stack</span>
+              <span class="chip" onclick="askChip('Tell me about the Enterprise Lakehouse case study')">🏢 Lakehouse Project</span>
+              <span class="chip" onclick="askChip('What was your role in the Citi Hadoop migration?')">☁️ Cloud Migration</span>
+              <span class="chip" onclick="askChip('How do you optimize Spark query performance?')">⚡ Spark Tuning</span>
             </div>
             <div class="vc-hint" id="vc-hint">🎙 Tap mic → speak → wait for reply · Or type above</div>
           </div>
@@ -1613,214 +1698,375 @@
   <!-- ═══ ABOUT ═══ -->
   <section class="sec alt" id="about">
     <div class="sec-wrap">
-      <span class="sec-eye fi">About</span>
-      <h2 class="sec-h fi">The engineer who ships <em>real</em> AI</h2>
-      <p class="sec-sub fi">Not prototypes. Not demos. Production systems running at scale.</p>
+      <span class="sec-eye fi">About Me</span>
+      <h2 class="sec-h fi">Architecting Resilient <em>Data Foundations</em></h2>
+      <p class="sec-sub fi">Maximizing throughput, lowering compute costs, and ensuring strict pipeline SLAs.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;" class="fi">
         <div>
-          <p style="color:var(--muted);line-height:1.9;margin-bottom:1rem;">I'm embedded with clinical and operations
-            teams at HCA Healthcare, designing AI systems that eliminate manual processes — like a LangGraph agent that
-            reduced a 2-day triage workflow to near-real-time, approved for full rollout after a single live demo to
-            hospital leadership.</p>
-          <p style="color:var(--muted);line-height:1.9;">I own end-to-end delivery: sit with the teams, understand
-            what's actually slowing them down, translate that into an AI strategy, build it, and make sure it sticks.
-            The closer I am to the people using what I build, the better the outcome.</p>
+          <p style="color:var(--muted);line-height:1.9;margin-bottom:1rem;">I am a Senior Data Platform Engineer dedicated to building highly performant, fault-tolerant data infrastructures. I specialize in designing and deploying unified Lakehouse architectures that bridge the gap between high-velocity event streams and production-ready data lakes.</p>
+          <p style="color:var(--muted);line-height:1.9;">Currently at HCA Healthcare, I lead data platform efficiency and optimization initiatives, managing pipelines that process over 500 million records daily. From tuning Spark shuffle partitions and implementing Z-Order clustering to decommissioning legacy clusters and designing CDC pipelines, my focus is always on delivering measurable business impact and optimizing cloud spend.</p>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div
-            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span
-              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+</span><span
-              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Years
-              XP</span></div>
-          <div
-            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span
-              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">3</span><span
-              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Cloud
-              Platforms</span></div>
-          <div
-            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span
-              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">500M+</span><span
-              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Records/Day</span>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+</span>
+            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Years XP</span>
           </div>
-          <div
-            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span
-              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">2M+</span><span
-              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Docs
-              Processed</span></div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">3</span>
+            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Clouds Managed</span>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">10B+</span>
+            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Records / Day</span>
+          </div>
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+ PB</span>
+            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Data Lakes</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ SKILLS ═══ -->
-  <section class="sec" id="skills">
+  <!-- ═══ EXPERTISE ═══ -->
+  <section class="sec" id="expertise">
     <div class="sec-wrap">
-      <span class="sec-eye fi">Expertise</span>
-      <h2 class="sec-h fi">Technical <em>Skills</em></h2>
-      <div class="skills-grid">
+      <span class="sec-eye fi">Capability</span>
+      <h2 class="sec-h fi">Technical &amp; Architecture <em>Expertise</em></h2>
+      <p class="sec-sub fi">Deep expertise in distributed computing, storage layer optimization, and enterprise cloud infrastructure.</p>
+      
+      <h3 style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--blue); padding-left:0.75rem;" class="fi">Technical Skillset</h3>
+      <div class="skills-grid" style="margin-bottom:3.5rem;">
         <div class="sk-card fi">
-          <div class="sk-head"><span class="sk-ico">🤖</span><span class="sk-name">Gen AI & Agents</span></div>
-          <div class="sk-tags"><span class="sk-t">LangChain</span><span class="sk-t">LangGraph</span><span
-              class="sk-t">RAG Pipelines</span><span class="sk-t">LLM Fine-Tuning</span><span class="sk-t">LoRA /
-              PEFT</span><span class="sk-t">Pinecone</span><span class="sk-t">Weaviate</span><span class="sk-t">Prompt
-              Engineering</span><span class="sk-t">Hugging Face</span></div>
-        </div>
-        <div class="sk-card fi">
-          <div class="sk-head"><span class="sk-ico">☁️</span><span class="sk-name">Cloud Platforms</span></div>
-          <div class="sk-tags"><span class="sk-t">GCP</span><span class="sk-t">AWS</span><span
-              class="sk-t">Azure</span><span class="sk-t">Cloud Run</span><span class="sk-t">GKE / EKS / AKS</span><span
-              class="sk-t">Cloud Dataflow</span><span class="sk-t">BigQuery</span><span class="sk-t">Terraform</span>
+          <div class="sk-head"><span class="sk-ico">🖥️</span><span class="sk-name">Languages &amp; Core</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">SQL</span><span class="sk-t">Advanced SQL</span><span class="sk-t">Python</span>
+            <span class="sk-t">Scala</span><span class="sk-t">PySpark</span><span class="sk-t">Spark SQL</span>
+            <span class="sk-t">Shell Scripting</span>
           </div>
         </div>
         <div class="sk-card fi">
-          <div class="sk-head"><span class="sk-ico">⚡</span><span class="sk-name">Data Engineering</span></div>
-          <div class="sk-tags"><span class="sk-t">Apache Beam</span><span class="sk-t">Kafka / Pub/Sub</span><span
-              class="sk-t">Airflow</span><span class="sk-t">Debezium CDC</span><span class="sk-t">Delta Lake</span><span
-              class="sk-t">PySpark</span><span class="sk-t">Great Expectations</span></div>
+          <div class="sk-head"><span class="sk-ico">🐘</span><span class="sk-name">Big Data &amp; Storage</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">Apache Spark</span><span class="sk-t">Hadoop</span><span class="sk-t">Hive</span>
+            <span class="sk-t">Impala</span><span class="sk-t">HDFS</span><span class="sk-t">YARN</span>
+          </div>
         </div>
         <div class="sk-card fi">
-          <div class="sk-head"><span class="sk-ico">🐍</span><span class="sk-name">Languages & DevOps</span></div>
-          <div class="sk-tags"><span class="sk-t">Python (Expert)</span><span class="sk-t">SQL / BigQuery
-              SQL</span><span class="sk-t">Shell / Bash</span><span class="sk-t">Docker</span><span
-              class="sk-t">Kubernetes</span><span class="sk-t">CI/CD</span><span class="sk-t">Git</span></div>
+          <div class="sk-head"><span class="sk-ico">⚡</span><span class="sk-name">Streaming Systems</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">Apache Kafka</span><span class="sk-t">Kafka Connect</span><span class="sk-t">Kafka Streams</span>
+            <span class="sk-t">Spark Structured Streaming</span><span class="sk-t">Azure Event Hubs</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">☁️</span><span class="sk-name">Cloud Infrastructure</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">AWS (S3, EMR, Redshift, Glue, Lambda)</span>
+            <span class="sk-t">GCP (BigQuery, Dataflow, Cloud Storage, Composer)</span>
+            <span class="sk-t">Azure (Databricks, ADF, Synapse Analytics)</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">❄️</span><span class="sk-name">Modern Data Stack</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">Databricks</span><span class="sk-t">Delta Lake</span><span class="sk-t">Snowflake</span>
+            <span class="sk-t">dbt</span><span class="sk-t">Apache Iceberg</span><span class="sk-t">Apache Hudi</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">⚙️</span><span class="sk-name">Orchestration &amp; DevOps</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">Apache Airflow</span><span class="sk-t">Autosys</span><span class="sk-t">Docker</span>
+            <span class="sk-t">Kubernetes (EKS/GKE)</span><span class="sk-t">Terraform</span><span class="sk-t">Git / CI-CD</span>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;" class="fi">Architectural Strengths</h3>
+      <div class="skills-grid">
+        <div class="sk-card fi" style="border-left:2px solid var(--blue);">
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Medallion Lakehouse Architecture</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Implementing Bronze (raw), Silver (cleansed/conformed), and Gold (aggregated business-level) tables utilizing ACID transactions on Delta Lake/Iceberg for single sources of truth.</p>
+        </div>
+        <div class="sk-card fi" style="border-left:2px solid var(--cyan);">
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Real-Time Data Ingestion &amp; CDC</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Designing decoupled streaming pipelines using Debezium CDC and Kafka to stream transactional updates into downstream Lakehouses with sub-second latencies.</p>
+        </div>
+        <div class="sk-card fi" style="border-left:2px solid var(--violet);">
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Distributed Optimization &amp; Clustering</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Tuning Apache Spark executors, partition sizes, Z-Order clustering keys, and cache storage to resolve data skew and drastically reduce cloud compute overhead.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROJECTS & CASE STUDIES ═══ -->
+  <section class="sec alt" id="projects">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">Work</span>
+      <h2 class="sec-h fi">Featured Case Studies &amp; <em>Projects</em></h2>
+      <p class="sec-sub fi">Review my architecture implementations, performance metrics, and quantitative business impacts.</p>
+      
+      <!-- Flagship Case Studies -->
+      <h3 style="font-family:var(--fh); font-size:1.7rem; font-weight:400; margin-bottom:2rem; border-left:3px solid var(--blue); padding-left:0.75rem;" class="fi">Flagship Programs</h3>
+      
+      <div class="proj-grid" style="grid-template-columns: 1fr; gap: 2.5rem; margin-bottom: 4rem;">
+        
+        <!-- Case Study A -->
+        <div class="proj fi" style="border-left: 4px solid var(--blue);">
+          <span class="proj-n">CASE STUDY A</span>
+          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Enterprise Databricks Lakehouse Platform</div>
+          <div class="proj-org">AWS / Databricks / Spark SQL / Airflow</div>
+          
+          <div class="pipeline-flow">
+            <div class="flow-node">
+              <div class="node-title">ERP &amp; RDBMS</div>
+              <div class="node-sub">Sources</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--amber);">
+              <div class="node-title">Bronze Delta</div>
+              <div class="node-sub">Raw Landing</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--blue);">
+              <div class="node-title">Silver Delta</div>
+              <div class="node-sub">Conformed</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--green);">
+              <div class="node-title">Gold Delta</div>
+              <div class="node-sub">Aggregations</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node">
+              <div class="node-title">Redshift / BI</div>
+              <div class="node-sub">Serving</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Legacy silos led to duplicate processing, data inconsistencies, and extremely slow nightly batch jobs (8+ hours), delaying key executive operational dashboards.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies Used</strong>
+              <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
+                <span class="pst">Databricks</span><span class="pst">Delta Lake</span><span class="pst">PySpark</span><span class="pst">Scala</span><span class="pst">Airflow</span><span class="pst">Terraform</span>
+              </div>
+            </div>
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp; Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data Volume:</strong> 10B+ daily transactions, 5+ PB overall data volume.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;"><strong>Performance:</strong> Reduced processing time from 8 hours to under 45 minutes. Query scan time was cut by 75% via Z-Order clustering and partitioning tuning.</p>
+              <div class="proj-impact">Business Impact: Saved 45% in infrastructure costs ($380K/year) and enabled real-time reporting.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study B -->
+        <div class="proj fi" style="border-left: 4px solid var(--cyan);">
+          <span class="proj-n">CASE STUDY B</span>
+          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Real-Time Streaming Event Platform</div>
+          <div class="proj-org">Apache Kafka / Spark Structured Streaming / Azure Databricks</div>
+          
+          <div class="pipeline-flow">
+            <div class="flow-node">
+              <div class="node-title">App Events</div>
+              <div class="node-sub">IoT Streams</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--violet);">
+              <div class="node-title">Apache Kafka</div>
+              <div class="node-sub">Broker</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--cyan);">
+              <div class="node-title">Spark Stream</div>
+              <div class="node-sub">Exactly-Once</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--green);">
+              <div class="node-title">Delta Tables</div>
+              <div class="node-sub">Micro-Batches</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node">
+              <div class="node-title">Synapse / API</div>
+              <div class="node-sub">Real-Time</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">High-frequency monitoring and fraud alerts suffered from high processing latency (minutes to hours) and data loss during peak load.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies Used</strong>
+              <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
+                <span class="pst">Apache Kafka</span><span class="pst">Kafka Connect</span><span class="pst">Spark Streaming</span><span class="pst">Azure Databricks</span><span class="pst">Kubernetes</span>
+              </div>
+            </div>
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp; Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data Volume:</strong> 500M+ event streams/day, peaking at 50K events/second.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;"><strong>Performance:</strong> Sub-second processing latency; CDC ingestion windows slashed by 92% (from 6 hours batch to under 30 minutes incremental streaming).</p>
+              <div class="proj-impact">Business Impact: Eliminated message loss completely; reduced operational failures by 70%.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study C -->
+        <div class="proj fi" style="border-left: 4px solid var(--violet);">
+          <span class="proj-n">CASE STUDY C</span>
+          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Hadoop to GCP Migration Program</div>
+          <div class="proj-org">Google Cloud Platform / BigQuery / Cloud Dataflow</div>
+          
+          <div class="pipeline-flow">
+            <div class="flow-node">
+              <div class="node-title">On-Prem Hadoop</div>
+              <div class="node-sub">HDFS &amp; Hive</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--blue);">
+              <div class="node-title">GCS Storage</div>
+              <div class="node-sub">Landing Bucket</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--violet);">
+              <div class="node-title">Cloud Dataflow</div>
+              <div class="node-sub">Apache Beam</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--green);">
+              <div class="node-title">BigQuery DWH</div>
+              <div class="node-sub">Serverless SQL</div>
+            </div>
+          </div>
+
+          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Maintaining an on-premise Hadoop cluster (200+ nodes) was capital intensive, difficult to scale, and suffered from severe disk and compute bottlenecks.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies Used</strong>
+              <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
+                <span class="pst">GCP</span><span class="pst">BigQuery</span><span class="pst">Cloud Dataflow</span><span class="pst">Apache Beam</span><span class="pst">Composer (Airflow)</span>
+              </div>
+            </div>
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp; Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data Volume:</strong> Migrated 2 PB of structured and unstructured data; rebuilt 200+ pipelines.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;"><strong>Performance:</strong> Processing runtimes decreased by 65%; compute costs reduced by 40% through automatic scaling.</p>
+              <div class="proj-impact">Business Impact: Cluster decommissioned 3 months early, saving $2.4M annually in ops costs.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Supporting Projects -->
+      <h3 style="font-family:var(--fh); font-size:1.4rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;" class="fi">Other Key Achievements</h3>
+      <div class="proj-grid">
+        <div class="proj fi"><span class="proj-n">04</span>
+          <div class="proj-ttl">Metadata-Driven Ingestion Engine</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">Engineered a metadata-driven landing framework that automates source schema discovery, maps data types automatically, and registers tables dynamically.</div>
+          <div class="proj-impact">Enabled analyst self-service ingestion</div>
+          <div class="proj-stack"><span class="pst">BigQuery</span><span class="pst">Python</span><span class="pst">Cloud Functions</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">05</span>
+          <div class="proj-ttl">High-Throughput CDC Ingestion</div>
+          <div class="proj-org">@ Citi</div>
+          <div class="proj-desc">Designed an incremental Change Data Capture (CDC) system capture engine, decoupling heavy read operations from transaction-heavy core banking databases.</div>
+          <div class="proj-impact">92% reduction in database load</div>
+          <div class="proj-stack"><span class="pst">Debezium</span><span class="pst">Kafka Connect</span><span class="pst">GCP Pub/Sub</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">06</span>
+          <div class="proj-ttl">Data Lakehouse Storage Layer</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">Implemented and standardized GCS-based Delta Lake storage formats, replacing siloed folders with structured transactional tables using schema enforcement.</div>
+          <div class="proj-impact">99.7% pipeline operational reliability</div>
+          <div class="proj-stack"><span class="pst">Delta Lake</span><span class="pst">Terraform</span><span class="pst">Google Cloud Storage</span></div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ EXPERIENCE ═══ -->
-  <section class="sec alt" id="experience">
+  <section class="sec" id="experience">
     <div class="sec-wrap">
       <span class="sec-eye fi">Career</span>
-      <h2 class="sec-h fi"><em>Experience</em></h2>
+      <h2 class="sec-h fi">Professional <em>Experience</em></h2>
       <div class="timeline">
         <div class="exp-item fi">
           <div class="exp-top">
             <div class="exp-co">HCA Healthcare</div><span class="exp-dt">June 2024 — Present</span>
           </div>
-          <div class="exp-ttl">Software Engineer — GCP Cloud Data Platform / AI Engineering</div>
-          <div class="exp-loc">📍 Remote</div>
+          <div class="exp-ttl">Senior Data Platform Engineer</div>
+          <div class="exp-loc">📍 Remote, US</div>
           <ul class="exp-ul">
-            <li>Designed and deployed a production LangGraph agentic workflow autonomously triaging clinical data
-              requests — eliminating a 2-day manual process. Approved for full rollout after a single live demo to
-              hospital leadership.</li>
-            <li>Built RAG-based schema intelligence system on BigQuery — clinical analysts self-serve dataset discovery
-              without needing a data engineer.</li>
-            <li>Fine-tuned clinical NLP model (LoRA/PEFT) for +34% extraction accuracy; processing 2M+ documents with
-              sub-second Pinecone retrieval latency.</li>
-            <li>Led Lakehouse architecture adoption (Delta Lake on GCS) — unified layer for pipelines and LLM agents
-              alike.</li>
-            <li>500M+ records/day pipelines at 99.7% reliability; 45% BigQuery cost reduction.</li>
+            <li>Architect and support high-throughput cloud data platform pipelines processing 500M+ events daily across GCP and hybrid environments.</li>
+            <li>Optimized BigQuery resources and partitioning strategies, saving 45% in operational compute and query overhead costs.</li>
+            <li>Standardized GCS Delta Lakehouse architectures, consolidating corporate reporting layers and establishing data quality schemas.</li>
+            <li>Deployed metadata-driven ingestion pipelines, allowing clinical and analytics units to self-serve landing data schemas automatically.</li>
           </ul>
-          <div class="exp-tags"><span class="exp-tag">LangGraph</span><span class="exp-tag">RAG</span><span
-              class="exp-tag">LLM Fine-Tuning</span><span class="exp-tag">BigQuery</span><span
-              class="exp-tag">GCP</span><span class="exp-tag">Kubernetes</span></div>
+          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">BigQuery</span><span class="exp-tag">Delta Lake</span><span class="exp-tag">Spark SQL</span><span class="exp-tag">Terraform</span><span class="exp-tag">Kubernetes</span></div>
         </div>
         <div class="exp-item fi">
           <div class="exp-top">
             <div class="exp-co">Citi</div><span class="exp-dt">July 2023 — May 2024</span>
           </div>
-          <div class="exp-ttl">Data Engineer — Cloud Data Lake & Platform Operations</div>
+          <div class="exp-ttl">Cloud Data Engineer — Cloud Data Lake</div>
           <div class="exp-loc">📍 Irving, TX</div>
           <ul class="exp-ul">
-            <li>CDC incremental ingestion (Debezium + Pub/Sub) — 92% reduction in ingestion window (6hr → 30min).</li>
-            <li>GKE Kubernetes deployment framework — 70% fewer deployment failures, days → &lt;1hr setup.</li>
-            <li>Led full Hadoop to GCP migration — 65% processing time reduction, full decommission achieved.</li>
+            <li>Re-engineered legacy batch pipelines into stream-ingested Change Data Capture (Debezium CDC + Pub/Sub), decreasing raw database ingestion windows by 92% (from 6 hours to 30 minutes).</li>
+            <li>Executed cloud migration of 2 PB historical Hadoop database files to Google Cloud BigQuery and Dataflow, achieving 65% processing speed improvements and full Hadoop cluster decommissioning.</li>
+            <li>Built automated CI/CD container deployment architectures using Google Kubernetes Engine (GKE), reducing test deployment failure occurrences by 70%.</li>
           </ul>
-          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">Debezium</span><span
-              class="exp-tag">Kubernetes</span><span class="exp-tag">BigQuery</span></div>
+          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">Debezium CDC</span><span class="exp-tag">Kafka / PubSub</span><span class="exp-tag">BigQuery</span><span class="exp-tag">Dataflow</span><span class="exp-tag">GKE</span></div>
         </div>
         <div class="exp-item fi">
           <div class="exp-top">
             <div class="exp-co">Accenture</div><span class="exp-dt">Aug 2020 — Jan 2022</span>
           </div>
-          <div class="exp-ttl">Data Engineer — Cloud & Big Data Platform</div>
+          <div class="exp-ttl">Data Engineer — Cloud &amp; Big Data Platform</div>
           <div class="exp-loc">📍 Bengaluru, India</div>
           <ul class="exp-ul">
-            <li>Full Hadoop ecosystem on 200+ node enterprise clusters; 55% processing load reduction.</li>
-            <li>Python/Shell automation cutting manual ops effort by 60%.</li>
+            <li>Administered on-premise MapReduce, Hive, and Spark jobs running across 200+ node enterprise clusters, reducing total processing load by 55% via query and partition tuning.</li>
+            <li>Automated operational infrastructure tasks using Python and Shell scripting, eliminating manual database administration workflows by 60%.</li>
           </ul>
-          <div class="exp-tags"><span class="exp-tag">AWS</span><span class="exp-tag">Azure</span><span
-              class="exp-tag">PySpark</span><span class="exp-tag">Hadoop</span></div>
+          <div class="exp-tags"><span class="exp-tag">PySpark</span><span class="exp-tag">Hadoop</span><span class="exp-tag">Hive</span><span class="exp-tag">AWS EMR</span><span class="exp-tag">Python</span><span class="exp-tag">Shell Scripting</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ PROJECTS ═══ -->
-  <section class="sec" id="projects">
-    <div class="sec-wrap">
-      <span class="sec-eye fi">Work</span>
-      <h2 class="sec-h fi">Key <em>Projects</em></h2>
-      <div class="proj-grid">
-        <div class="proj fi"><span class="proj-n">01</span>
-          <div class="proj-ttl">LLM Agentic Triage Workflow</div>
-          <div class="proj-org">@ HCA Healthcare</div>
-          <div class="proj-desc">LangGraph multi-step agent autonomously triages clinical data requests, calls
-            APIs/BigQuery tools, routes to downstream systems or human reviewers.</div>
-          <div class="proj-impact">2-day process → near-real-time</div>
-          <div class="proj-stack"><span class="pst">LangGraph</span><span class="pst">BigQuery</span><span
-              class="pst">GCP</span><span class="pst">Python</span></div>
-        </div>
-        <div class="proj fi"><span class="proj-n">02</span>
-          <div class="proj-ttl">RAG Schema Intelligence</div>
-          <div class="proj-org">@ HCA Healthcare</div>
-          <div class="proj-desc">Production RAG pipeline where an LLM agent understands the full BigQuery data model.
-            Custom chunking strategy, Pinecone vector DB, LangChain retrieval chain.</div>
-          <div class="proj-impact">Analysts self-serve without data engineers</div>
-          <div class="proj-stack"><span class="pst">LangChain</span><span class="pst">Pinecone</span><span
-              class="pst">BigQuery</span></div>
-        </div>
-        <div class="proj fi"><span class="proj-n">03</span>
-          <div class="proj-ttl">Clinical NLP Fine-Tuning</div>
-          <div class="proj-org">@ HCA Healthcare</div>
-          <div class="proj-desc">Transformer fine-tuned with LoRA/PEFT for structured field extraction. Deployed on
-            Cloud Run / Kubernetes with automated retraining on data drift.</div>
-          <div class="proj-impact">+34% accuracy · 2M+ docs · sub-second latency</div>
-          <div class="proj-stack"><span class="pst">LoRA/PEFT</span><span class="pst">Cloud Run</span><span
-              class="pst">Kubernetes</span></div>
-        </div>
-        <div class="proj fi"><span class="proj-n">04</span>
-          <div class="proj-ttl">Lakehouse Architecture</div>
-          <div class="proj-org">@ HCA Healthcare</div>
-          <div class="proj-desc">Recommended and led GCP Lakehouse (Delta Lake over GCS), replacing siloed zones with a
-            versioned, unified layer for pipelines and AI agents.</div>
-          <div class="proj-impact">Stakeholder buy-in from one prototype demo</div>
-          <div class="proj-stack"><span class="pst">Delta Lake</span><span class="pst">GCS</span><span
-              class="pst">Terraform</span></div>
-        </div>
-        <div class="proj fi"><span class="proj-n">05</span>
-          <div class="proj-ttl">CDC Ingestion Platform</div>
-          <div class="proj-org">@ Citi</div>
-          <div class="proj-desc">Replaced 6-hour full-table batch loads with sub-30-minute CDC incremental ingestion
-            eliminating peak-hour upstream load entirely.</div>
-          <div class="proj-impact">92% reduction in ingestion window</div>
-          <div class="proj-stack"><span class="pst">Debezium</span><span class="pst">Pub/Sub</span><span
-              class="pst">Dataflow</span></div>
-        </div>
-        <div class="proj fi"><span class="proj-n">06</span>
-          <div class="proj-ttl">Hadoop → GCP Migration</div>
-          <div class="proj-org">@ Citi</div>
-          <div class="proj-desc">Led full migration of on-premise Hadoop/Hive to GCP. Rewrote HQL as BigQuery SQL and
-            MapReduce as Dataflow pipelines. Full decommission achieved.</div>
-          <div class="proj-impact">65% processing time reduction</div>
-          <div class="proj-stack"><span class="pst">GCP</span><span class="pst">BigQuery</span><span
-              class="pst">Dataflow</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ CERTS ═══ -->
+  <!-- ═══ CERTIFICATIONS ═══ -->
   <section class="sec alt" id="certs">
     <div class="sec-wrap">
       <span class="sec-eye fi">Credentials</span>
-      <h2 class="sec-h fi"><em>Certifications</em></h2>
+      <h2 class="sec-h fi">Professional <em>Certifications</em></h2>
       <div class="certs-grid">
+        <div class="cert fi">
+          <div class="cert-ico">⚡</div>
+          <div>
+            <div class="cert-name">Azure Databricks Associate</div>
+            <div class="cert-dt">Issued: October 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">❄️</div>
+          <div>
+            <div class="cert-name">Snowflake SnowPro Core</div>
+            <div class="cert-dt">Issued: October 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">🔵</div>
+          <div>
+            <div class="cert-name">Azure Data Engineer Associate</div>
+            <div class="cert-dt">Issued: March 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
         <div class="cert fi">
           <div class="cert-ico">☁️</div>
           <div>
@@ -1829,31 +2075,10 @@
           </div>
         </div>
         <div class="cert fi">
-          <div class="cert-ico">🔵</div>
-          <div>
-            <div class="cert-name">Azure Data Engineer Associate</div>
-            <div class="cert-dt">March 2024</div><span class="cert-badge">Active</span>
-          </div>
-        </div>
-        <div class="cert fi">
-          <div class="cert-ico">⚡</div>
-          <div>
-            <div class="cert-name">Azure Databricks Associate</div>
-            <div class="cert-dt">October 2024</div><span class="cert-badge">Active</span>
-          </div>
-        </div>
-        <div class="cert fi">
-          <div class="cert-ico">❄️</div>
-          <div>
-            <div class="cert-name">Snowflake SnowPro Core</div>
-            <div class="cert-dt">October 2024</div><span class="cert-badge">Active</span>
-          </div>
-        </div>
-        <div class="cert fi">
           <div class="cert-ico">📊</div>
           <div>
             <div class="cert-name">Certified Data Science Professional</div>
-            <div class="cert-dt">September 2023 · DataCamp</div><span class="cert-badge">Active</span>
+            <div class="cert-dt">Issued: September 2023 · DataCamp</div><span class="cert-badge">Active</span>
           </div>
         </div>
         <div class="cert fi">
@@ -1861,39 +2086,58 @@
           <div>
             <div class="cert-name">Google Professional Data Engineer</div>
             <div class="cert-dt">In Progress</div><span class="cert-badge"
-              style="color:var(--blue);border-color:rgba(91,140,255,0.3);background:rgba(91,140,255,0.08);">In
-              Progress</span>
+              style="color:var(--blue);border-color:rgba(91,140,255,0.3);background:rgba(91,140,255,0.08);">In Progress</span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ CONTACT ═══ -->
+  <!-- ═══ CONTACT & RESUME ═══ -->
   <section class="sec" id="contact">
     <div class="sec-wrap">
       <div class="contact-card fi">
-        <h2>Let's Build Something <em style="font-style:italic;color:var(--blue);">Real</em></h2>
-        <p>I'm actively seeking AI/ML Engineer, and Senior Data Engineer roles. If you're building production AI systems
-          and need someone who ships, reach out.</p>
+        <h2>Let's Build Data Platforms <em style="font-style:italic;color:var(--blue);">at Scale</em></h2>
+        <p>I am looking for Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, and Data Platform Architect opportunities. If you need clean, high-performance data architectures that cut compute costs and scale seamlessly, let's connect.</p>
+        
+        <div style="margin-bottom: 2.5rem;">
+          <a class="btn-glow" href="https://github.com/shyamkarri/shyamkarri.github.io/raw/main/resume.pdf" download style="display: inline-flex; align-items: center; gap: 8px;">
+            📄 Download Professional Resume (PDF)
+          </a>
+        </div>
+
         <div class="c-links">
           <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 ksprasadmvsa.1999@gmail.com</a>
           <a class="c-link" href="tel:+18176015406">📱 +1 817-601-5406</a>
-          <a class="c-link" href="https://github.com/shyamkarri" target="_blank">💻 github.com/shyamkarri</a>
-          <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank">🔗
-            linkedin.com/in/shyam-karri</a>
+          <a class="c-link" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻 github.com/shyamkarri</a>
+          <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank" rel="noopener noreferrer">🔗 linkedin.com/in/shyam-karri</a>
         </div>
       </div>
     </div>
   </section>
 
-  <footer>© 2025 Karri Prasad · Built with AI · Hosted on GitHub Pages</footer>
+  <footer>© 2026 Karri Prasad · Senior Data Platform Architect · Hosted on GitHub Pages</footer>
 
   <script>
     // ══════════════════════════════════════════════════════
     //  ⚙️  CONFIG — SET YOUR RENDER BACKEND URL HERE
     // ══════════════════════════════════════════════════════
     const BACKEND_URL = 'https://prasad-voice-agent.onrender.com'; // ← change after Render deploy
+
+    // ══════════════════════════════════════════════════════
+    //  THEME TOGGLE (LIGHT / DARK)
+    // ══════════════════════════════════════════════════════
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light-mode');
+      const isLight = document.body.classList.contains('light-mode');
+      themeToggle.textContent = isLight ? '☀️' : '🌙';
+      localStorage.setItem('portfolio-theme', isLight ? 'light' : 'dark');
+    });
+    if (localStorage.getItem('portfolio-theme') === 'light') {
+      document.body.classList.add('light-mode');
+      themeToggle.textContent = '☀️';
+    }
 
     // ══════════════════════════════════════════════════════
     //  CURSOR
@@ -1924,23 +2168,15 @@
     //  🎭  EMOJI FACE ANIMATOR
     // ══════════════════════════════════════════════════════
     const Face = {
-      // State machine: idle | listening | thinking | speaking | laughing
       state: 'idle',
-
-      // Eye tracking (follows cursor gently)
       eyeTarget: { x: 0, y: 0 },
       eyeCurrent: { x: 0, y: 0 },
-
-      // Blink timer
       blinkTimer: null,
       isBlinking: false,
-
-      // Lip sync animation frame
       lipSyncFrame: null,
       lipPhase: 0,
 
       init() {
-        // Mouse tracking for eye movement
         document.addEventListener('mousemove', e => {
           const face = document.getElementById('face-container');
           if (!face) return;
@@ -1951,7 +2187,6 @@
           this.eyeTarget.y = Math.max(-3, Math.min(3, (e.clientY - cy) * 0.03));
         });
 
-        // Animate eye movement smoothly
         setInterval(() => {
           this.eyeCurrent.x += (this.eyeTarget.x - this.eyeCurrent.x) * 0.1;
           this.eyeCurrent.y += (this.eyeTarget.y - this.eyeCurrent.y) * 0.1;
@@ -1961,7 +2196,6 @@
           if (pr) pr.setAttribute('transform', `translate(${this.eyeCurrent.x},${this.eyeCurrent.y})`);
         }, 30);
 
-        // Random blinking
         this.scheduleBlink();
       },
 
@@ -1978,18 +2212,15 @@
         this.isBlinking = true;
         const ll = document.getElementById('lid-left');
         const lr = document.getElementById('lid-right');
-        // Close
         if (ll) ll.setAttribute('transform', 'scaleY(1)');
         if (lr) lr.setAttribute('transform', 'scaleY(1)');
         setTimeout(() => {
-          // Open
           if (ll) ll.setAttribute('transform', 'scaleY(0)');
           if (lr) lr.setAttribute('transform', 'scaleY(0)');
           this.isBlinking = false;
         }, 120);
       },
 
-      // Force a double blink (happy)
       doubleBlink() {
         this.blink();
         setTimeout(() => this.blink(), 350);
@@ -1997,7 +2228,6 @@
 
       setState(newState) {
         this.state = newState;
-        // Reset all overlays
         document.getElementById('mouth-smile').style.display = 'block';
         document.getElementById('mouth-open-group').style.display = 'none';
         document.getElementById('mouth-laugh').style.display = 'none';
@@ -2017,16 +2247,13 @@
             break;
 
           case 'listening':
-            // Raise eyebrows (attentive look)
             document.getElementById('brow-left').setAttribute('d', 'M 52 68 Q 62 62 78 67');
             document.getElementById('brow-right').setAttribute('d', 'M 102 67 Q 118 62 128 68');
             document.getElementById('mouth-smile').setAttribute('d', 'M 74 127 Q 90 133 106 127');
-            // Slow pulse on face
             document.getElementById('face-container').style.animation = 'face-idle 2s ease-in-out infinite';
             break;
 
           case 'thinking':
-            // One raised brow, slight frown
             document.getElementById('brow-left').setAttribute('d', 'M 52 72 Q 62 66 78 70');
             document.getElementById('brow-right').setAttribute('d', 'M 102 66 Q 118 62 128 68');
             document.getElementById('mouth-smile').setAttribute('d', 'M 74 128 Q 90 125 108 128');
@@ -2036,12 +2263,10 @@
             break;
 
           case 'speaking':
-            // Reset brows to normal
             document.getElementById('brow-left').setAttribute('d', 'M 52 72 Q 62 66 78 70');
             document.getElementById('brow-right').setAttribute('d', 'M 102 70 Q 118 66 128 72');
             document.getElementById('mouth-smile').style.display = 'none';
             document.getElementById('mouth-open-group').style.display = 'block';
-            // Animate mouth open/close and lip waves
             this.animateLips();
             break;
 
@@ -2052,7 +2277,6 @@
             document.getElementById('cheek-right').classList.add('show');
             ['sparkle-1', 'sparkle-2', 'sparkle-3'].forEach(id => document.getElementById(id).classList.add('show'));
             this.doubleBlink();
-            // Bounce animation
             document.getElementById('face-container').style.animation = 'none';
             let t = 0;
             const bounce = () => {
@@ -2068,8 +2292,6 @@
       },
 
       animateLips() {
-        // Alternate mouth open/close + lip waves for realistic speaking
-        let open = true;
         const mouth = document.getElementById('mouth-open-group');
         const mouthEllipse = mouth.querySelector('ellipse');
         const sw1 = document.getElementById('sw1');
@@ -2084,10 +2306,8 @@
             return;
           }
           phase += 0.18;
-          // Vary mouth opening with sine wave
           const openY = 8 + Math.abs(Math.sin(phase)) * 8;
           mouthEllipse.setAttribute('ry', openY);
-          // Wave lip sync indicators
           if (Math.sin(phase) > 0.3) { sw1.classList.add('active'); sw2.classList.remove('active'); sw3.classList.add('active'); }
           else if (Math.sin(phase) < -0.3) { sw1.classList.remove('active'); sw2.classList.add('active'); sw3.classList.remove('active'); }
           else { sw1.classList.add('active'); sw2.classList.add('active'); sw3.classList.add('active'); }
@@ -2096,14 +2316,12 @@
         this.lipSyncFrame = requestAnimationFrame(loop);
       },
 
-      // Detect laugh words to trigger laugh face
       checkForLaugh(text) {
         const laughWords = ['haha', 'lol', 'funny', 'laugh', 'joke', 'hehe', '😄', '😂', 'great', 'awesome', 'amazing', 'love'];
         return laughWords.some(w => text.toLowerCase().includes(w));
       }
     };
 
-    // Init face on load
     Face.init();
 
     // ══════════════════════════════════════════════════════
@@ -2116,7 +2334,7 @@
     let currentAudio = null;
 
     // ══════════════════════════════════════════════════════
-    //  PLAY AUDIO FROM BACKEND (base64 mp3)
+    //  PLAY AUDIO FROM BACKEND
     // ══════════════════════════════════════════════════════
     function playAudioBase64(b64, onEnd) {
       try {
@@ -2132,7 +2350,6 @@
           if (onEnd) onEnd();
         };
         audio.play().catch(() => {
-          // Autoplay blocked — fallback to Web Speech API
           if (onEnd) onEnd();
         });
       } catch (e) {
@@ -2148,7 +2365,6 @@
       if (window.speechSynthesis) window.speechSynthesis.cancel();
     }
 
-    // Fallback: browser TTS
     function speakFallback(text, onEnd) {
       if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
       window.speechSynthesis.cancel();
@@ -2163,7 +2379,7 @@
     }
 
     // ══════════════════════════════════════════════════════
-    //  SPEAK — orchestrates face + audio + UI
+    //  SPEAK
     // ══════════════════════════════════════════════════════
     function startSpeaking(text, audioB64) {
       isSpeaking = true;
@@ -2174,7 +2390,6 @@
       document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice speaking';
       document.getElementById('voice-btn').textContent = '🔊 Speaking...';
 
-      // Detect laugh content for face expression
       if (Face.checkForLaugh(text)) {
         Face.setState('laughing');
         setTimeout(() => Face.setState('speaking'), 1200);
@@ -2216,7 +2431,7 @@
     }
 
     // ══════════════════════════════════════════════════════
-    //  APPEND MESSAGE TO TRANSCRIPT
+    //  APPEND MESSAGE
     // ══════════════════════════════════════════════════════
     function appendMsg(role, text) {
       const t = document.getElementById('transcript');
@@ -2232,7 +2447,7 @@
     }
 
     // ══════════════════════════════════════════════════════
-    //  MAIN PIPELINE: text → backend → TTS audio → speak
+    //  HANDLE MESSAGE
     // ══════════════════════════════════════════════════════
     async function handleMessage(userText) {
       if (!userText.trim()) return;
@@ -2271,6 +2486,134 @@
         startSpeaking(reply, audioB64);
 
       } catch (e) {
+        const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
+        appendMsg('ai', fallbackReply);
+        document.getElementById('voice-btn').disabled = false;
+        document.getElementById('mode-label').textContent = 'Offline';
+        Face.setState('idle');
+        speakFallback(fallbackReply, () => {
+          setStatus('ready', 'Backend offline — try again');
+        });
+      }
+    }
+
+    function sendText() {
+      const inp = document.getElementById('text-input');
+      const val = inp.value.trim();
+      if (!val) return;
+      inp.value = '';
+      handleMessage(val);
+    }
+
+    function askChip(q) { handleMessage(q); }
+
+    // ══════════════════════════════════════════════════════
+    //  VOICE INPUT
+    // ══════════════════════════════════════════════════════
+    function setupRecognition() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        document.getElementById('vc-hint').textContent = '⌨️ Voice not supported in this browser — please type below';
+        return null;
+      }
+      const r = new SR();
+      r.lang = 'en-US';
+      r.continuous = false;
+      r.interimResults = false;
+      r.onresult = e => {
+        const txt = e.results[0][0].transcript;
+        stopListening();
+        handleMessage(txt);
+      };
+      r.onerror = e => {
+        stopListening();
+        if (e.error !== 'aborted') setStatus('ready', 'Mic error — try typing instead');
+      };
+      r.onend = () => { if (isListening) stopListening(); };
+      return r;
+    }
+
+    function startListening() {
+      if (isSpeaking) stopAll();
+      if (!recognition) recognition = setupRecognition();
+      if (!recognition) return;
+      try {
+        recognition.start();
+        isListening = true;
+        setStatus('listening', '🎙 Listening...');
+        setVoiceBars(true);
+        document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice listening';
+        document.getElementById('voice-btn').textContent = '🔴 Listening...';
+        document.getElementById('mode-label').textContent = 'Listening';
+        Face.setState('listening');
+      } catch (e) { }
+    }
+
+    function stopListening() {
+      if (recognition) { try { recognition.stop(); } catch (e) { } }
+      isListening = false;
+      setVoiceBars(false);
+      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+      document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+      document.getElementById('mode-label').textContent = 'Idle';
+      if (!isSpeaking) Face.setState('idle');
+    }
+
+    function toggleVoice() {
+      if (isListening) { stopListening(); }
+      else { startListening(); }
+    }
+
+    function startVoice() {
+      document.getElementById('voice-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => startListening(), 600);
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  GREETING ON PAGE LOAD
+    // ══════════════════════════════════════════════════════
+    async function greetOnLoad() {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+      try {
+        const session_id = sessionStorage.getItem('chat_session_id') || '';
+        const url = new URL(`${BACKEND_URL}/greet`);
+        if (session_id) {
+          url.searchParams.append('session_id', session_id);
+        }
+        const res = await fetch(url.toString(), { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (data.session_id) {
+          sessionStorage.setItem('chat_session_id', data.session_id);
+        }
+        const greeting = data.reply;
+        const audioB64 = data.audio_base64 || '';
+        appendMsg('ai', greeting);
+        startSpeaking(greeting, audioB64);
+      } catch (e) {
+        const warmGreeting = "Hello there! Welcome to my portfolio. I am Prasad's AI assistant. My backend brain is waking up right now, which takes about 20 seconds. I'm excited to talk with you about cloud data platforms, streaming pipelines, and scaling Databricks or Snowflake systems!";
+        appendMsg('ai', warmGreeting);
+        speakFallback(warmGreeting, () => {
+          setStatus('ready', 'Backend waking up — try chatting soon!');
+        });
+        Face.setState('speaking');
+        setTimeout(() => Face.setState('idle'), 6000);
+
+        fetch(`${BACKEND_URL}/health`).catch(() => console.log("Waking up backend"));
+      }
+    }
+
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+      window.speechSynthesis.getVoices();
+    }
+
+    setTimeout(greetOnLoad, 1800);
+  </script>
+</body> (e) {
         // Backend unreachable — fallback to browser TTS with a note
         const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
         appendMsg('ai', fallbackReply);
@@ -2384,7 +2727,7 @@
         startSpeaking(greeting, audioB64);
       } catch (e) {
         // Timeout or error — meaning backend is sleeping/cold starting!
-        const warmGreeting = "Hello there! Thank you so much for visiting my portfolio. I am Karri's AI avatar. My backend brain is waking up right now, which takes about 20 seconds. I am so excited to chat with you, please bear with me for a moment!";
+        const warmGreeting = "Hello there! Welcome to my portfolio. I am Prasad's AI assistant. My backend brain is waking up right now, which takes about 20 seconds. I'm excited to talk with you about cloud data platforms, streaming pipelines, and scaling Databricks or Snowflake systems!";
         appendMsg('ai', warmGreeting);
         speakFallback(warmGreeting, () => {
           setStatus('ready', 'Backend waking up — try chatting soon!');
