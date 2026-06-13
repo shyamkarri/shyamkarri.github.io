@@ -2612,26 +2612,6 @@
       }
     }
 
-    if (window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-      window.speechSynthesis.getVoices();
-    }
-
-    setTimeout(greetOnLoad, 1800);
-  </script>
-</body> (e) {
-        // Backend unreachable — fallback to browser TTS with a note
-        const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
-        appendMsg('ai', fallbackReply);
-        document.getElementById('voice-btn').disabled = false;
-        document.getElementById('mode-label').textContent = 'Offline';
-        Face.setState('idle');
-        speakFallback(fallbackReply, () => {
-          setStatus('ready', 'Backend offline — try again');
-        });
-      }
-    }
-
     // ══════════════════════════════════════════════════════
     //  TEXT INPUT
     // ══════════════════════════════════════════════════════
@@ -2687,6 +2667,9 @@
       } catch (e) { }
     }
 
+    // ══════════════════════════════════════════════════════
+    //  VOICE CONTROL ACTIONS
+    // ══════════════════════════════════════════════════════
     function stopListening() {
       if (recognition) { try { recognition.stop(); } catch (e) { } }
       isListening = false;
@@ -2705,45 +2688,6 @@
     function startVoice() {
       document.getElementById('voice-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
       setTimeout(() => startListening(), 600);
-    }
-
-    // ══════════════════════════════════════════════════════
-    //  GREETING ON PAGE LOAD — fetched from backend
-    // ══════════════════════════════════════════════════════
-    async function greetOnLoad() {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-      try {
-        const session_id = sessionStorage.getItem('chat_session_id') || '';
-        const url = new URL(`${BACKEND_URL}/greet`);
-        if (session_id) {
-          url.searchParams.append('session_id', session_id);
-        }
-        const res = await fetch(url.toString(), { signal: controller.signal });
-        clearTimeout(timeoutId);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        if (data.session_id) {
-          sessionStorage.setItem('chat_session_id', data.session_id);
-        }
-        const greeting = data.reply;
-        const audioB64 = data.audio_base64 || '';
-        appendMsg('ai', greeting);
-        startSpeaking(greeting, audioB64);
-      } catch (e) {
-        // Timeout or error — meaning backend is sleeping/cold starting!
-        const warmGreeting = "Hello there! Welcome to my portfolio. I am Prasad's AI assistant. My backend brain is waking up right now, which takes about 20 seconds. I'm excited to talk with you about cloud data platforms, streaming pipelines, and scaling Databricks or Snowflake systems!";
-        appendMsg('ai', warmGreeting);
-        speakFallback(warmGreeting, () => {
-          setStatus('ready', 'Backend waking up — try chatting soon!');
-        });
-        Face.setState('speaking');
-        setTimeout(() => Face.setState('idle'), 6000);
-
-        // Send a non-blocking ping to ensure Render wakes up
-        fetch(`${BACKEND_URL}/health`).catch(() => console.log("Waking up backend"));
-      }
     }
 
     // Load voices cache + greet
