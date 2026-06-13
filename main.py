@@ -1560,3 +1560,142 @@ async def serve_admin_dashboard():
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return HTMLResponse(content="<h1>Dashboard not found. Deploy admin_dashboard.html</h1>", status_code=404)
+
+
+# ─── INTERACTIVE PROTOTYPES SIMULATION ENGINE ──────────────────────────────
+prototype_runs = {}
+
+PROTOTYPE_LOGS = {
+    "fraud_detection": [
+        "Initializing SparkSession over AWS EMR Cluster [nodes: 8, instances: r5.xlarge]...",
+        "Connecting to Apache Kafka topic 'finance.transactions.raw' [partitions: 12]...",
+        "Loading Scikit-Learn classification pipelines (GradientBoostingClassifier)...",
+        "Stream initialized. Subscribing to offset positions...",
+        "Ingesting transaction event stream: 12,400 records/sec...",
+        "Executing feature scaling and vector assembly transformations on Spark DataFrame...",
+        "Evaluating ML classification scoring engine...",
+        "ALERT: High-risk transaction detected: TX-98424 [Amount: $4,820.00, Location: Moscow] -> Score: 0.982",
+        "Publishing alert event to Kafka topic 'alerts.fraud'...",
+        "Syncing micro-batch stream partition logs to Silver Delta Tables on S3...",
+        "Z-Order optimization completed on column 'transaction_date' [scan path optimized]...",
+        "Pipeline successfully deployed in daemon execution mode."
+    ],
+    "regulatory_reporting": [
+        "Authenticating to Databricks Workspace via Azure AD Service Principal...",
+        "Initializing Medallion pipeline validations...",
+        "Streaming core banking records from landing files into Bronze Delta tables...",
+        "Executing dbt validation tests (checks: transaction_id unique, amount > 0)...",
+        "dbt test results: PASSED (100% compliance metrics)...",
+        "Merging Bronze updates into Silver Delta tables [Merge-Into SCD Type 1]...",
+        "Compiling regulatory report aggregations [Basel III Liquidity Coverage Ratio]...",
+        "Loading conformed report sets into Snowflake Gold Schema 'reporting.basel3'...",
+        "Triggering Airflow DAG callback: Basel III Report Generation Task...",
+        "Report completed: LCR_Report_2026_Q2.pdf successfully written to audit buckets.",
+        "Simulation successfully finished. Pipeline resources idle."
+    ],
+    "cdc_engine": [
+        "Initializing Debezium MySQL Connector configuration...",
+        "Reading source database binary transaction logs [offset: binlog.00014]...",
+        "Captured row-level modifications: 8,240 records/sec...",
+        "Publishing incremental changes to Kafka topic 'cdc.market.trades'...",
+        "Initializing Spark Structured Streaming consumer...",
+        "Converting JSON payloads to structured Apache Iceberg tables...",
+        "Writing parquet data files to Google Cloud Storage bucket...",
+        "Schema evolution detected: Column 'trading_fee' added (applied automatically)...",
+        "Updating metadata catalogs (Iceberg catalog: bigquery_catalog)...",
+        "Live P&L Grafana dashboard triggered. Query latency: 450ms.",
+        "Simulation successfully finished."
+    ],
+    "clinical_lakehouse": [
+        "Initializing PySpark processing context over Google Cloud Dataproc cluster...",
+        "Ingesting synthetic EHR events in HL7/FHIR format from GCS buckets...",
+        "Parsing FHIR JSON resources into structured relational schemas...",
+        "Writing parsed raw data layers to Bronze Delta catalog...",
+        "Deduplicating patient event records by 'patient_id' and 'timestamp'...",
+        "Writing conformed records to Silver Delta layer...",
+        "Calculating aggregate patient cohorts (demographics, clinical admissions)...",
+        "Writing analytical outputs to Gold Delta layer...",
+        "Refreshing BigQuery External Table partition pointers...",
+        "Cohort report generated: 142,500 active patients in registry.",
+        "Simulation successfully finished."
+    ],
+    "metadata_ingestion": [
+        "Initializing metadata landing pipeline...",
+        "Connecting to source API schema endpoints...",
+        "Auto-discovering source table schemas (inferred 24 distinct columns)...",
+        "Registering table definitions in database catalog schema metadata...",
+        "Executing validation rules via Great Expectations engine...",
+        "Great Expectations assertions: [null_count == 0, types match] -> PASSED.",
+        "Provisioning target schema structures via Terraform resources...",
+        "Loading source data to target BigQuery tables...",
+        "Updating centralized catalog dictionary (onboarded without code)...",
+        "Simulation successfully finished."
+    ],
+    "icu_monitoring": [
+        "Connecting to Kafka virtual event hub brokers...",
+        "Ingesting real-time ICU patient vitals stream (HR, BP, SpO2)...",
+        "Processing incoming streams using Spark Structured Streaming on Azure Databricks...",
+        "Executing anomaly detection algorithms (IQR alert boundary checks)...",
+        "ALERT: Anomaly detected on Patient Bed-04 [Heart Rate: 145 bpm, SpO2: 89%]...",
+        "Publishing emergency alert notification to event dispatcher hub...",
+        "Syncing micro-batches directly to Gold delta table metrics...",
+        "SLA monitor check: 99.99% reliability threshold met [latency: 80ms]...",
+        "React emergency dashboard alert dispatched.",
+        "Simulation successfully finished."
+    ]
+}
+
+
+async def simulate_pipeline(run_id: str, prototype_id: str):
+    prototype_runs[run_id] = {
+        "status": "running",
+        "progress": 0,
+        "logs": []
+    }
+    
+    logs = PROTOTYPE_LOGS.get(prototype_id, ["Pipeline start..."])
+    total_steps = len(logs)
+    
+    for idx, log in enumerate(logs):
+        await asyncio.sleep(1.0)  # Simulate processing delay
+        timestamp = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+        formatted_log = f"[{timestamp}] {log}"
+        prototype_runs[run_id]["logs"].append(formatted_log)
+        prototype_runs[run_id]["progress"] = int(((idx + 1) / total_steps) * 100)
+        
+    prototype_runs[run_id]["status"] = "success"
+    
+    # Log run to database to populate dashboard analytics
+    try:
+        db = SessionLocal()
+        db.add(AgentExecution(
+            agent_name=f"prototype-{prototype_id}",
+            workflow="pipeline-deploy-simulation",
+            session_id=run_id,
+            input_text=f"Deploy request for {prototype_id}",
+            output_text=f"Deployment completed: {total_steps} logs generated",
+            latency_ms=total_steps * 1000,
+            success=True,
+            model_used="static-simulation-engine",
+        ))
+        db.commit()
+        db.close()
+    except Exception as e:
+        logger.error(f"Failed to log prototype simulation run to DB: {e}")
+
+
+@app.post("/api/prototypes/run/{prototype_id}")
+async def run_prototype(prototype_id: str, background_tasks: BackgroundTasks):
+    if prototype_id not in PROTOTYPE_LOGS:
+        raise HTTPException(status_code=404, detail="Prototype not found")
+        
+    run_id = str(uuid.uuid4())
+    background_tasks.add_task(simulate_pipeline, run_id, prototype_id)
+    return {"run_id": run_id, "status": "running"}
+
+
+@app.get("/api/prototypes/status/{run_id}")
+async def get_prototype_status(run_id: str):
+    if run_id not in prototype_runs:
+        raise HTTPException(status_code=404, detail="Simulation run not found")
+    return prototype_runs[run_id]
