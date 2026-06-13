@@ -5,8 +5,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Karri Prasad — Senior Data Engineer &amp; Data Platform Architect</title>
-  <meta name="description" content="Portfolio of Karri Prasad, a Senior Data Engineer and Data Platform Architect. Expert in Databricks, Apache Spark, Snowflake, Apache Kafka, AWS, Azure, and GCP." />
-  <meta name="keywords" content="Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, Databricks Engineer, Spark Engineer, Kafka Engineer, Data Platform Engineer, Cloud Data Engineer, BigQuery Engineer, Snowflake Engineer" />
+  <meta name="description"
+    content="Portfolio of Karri Prasad, a Senior Data Engineer and Data Platform Architect. Expert in Databricks, Apache Spark, Snowflake, Apache Kafka, AWS, Azure, and GCP." />
+  <meta name="keywords"
+    content="Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, Databricks Engineer, Spark Engineer, Kafka Engineer, Data Platform Engineer, Cloud Data Engineer, BigQuery Engineer, Snowflake Engineer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
@@ -64,12 +66,15 @@
     body.light-mode .head-circle {
       fill: #ffedd5;
     }
+
     body.light-mode .face-container {
       filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
     }
+
     body.light-mode .emoji-avatar-wrap {
       background: linear-gradient(160deg, #f1f5f9 0%, #e2e8f0 100%);
     }
+
     body.light-mode .voice-console {
       background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
@@ -79,7 +84,9 @@
       body {
         cursor: auto !important;
       }
-      #cursor, #cursor-ring {
+
+      #cursor,
+      #cursor-ring {
         display: none !important;
       }
     }
@@ -130,8 +137,15 @@
     }
 
     @keyframes pulse-arrow {
-      from { transform: translateX(-3px); opacity: 0.6; }
-      to { transform: translateX(3px); opacity: 1; }
+      from {
+        transform: translateX(-3px);
+        opacity: 0.6;
+      }
+
+      to {
+        transform: translateX(3px);
+        opacity: 1;
+      }
     }
 
     html {
@@ -1499,6 +1513,132 @@
         padding: 4rem 1.5rem;
       }
     }
+
+    /* ── TERMINAL MODAL OVERLAY ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .terminal-window {
+      width: 90%;
+      max-width: 700px;
+      background: #050508;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      height: 400px;
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active .terminal-window {
+      transform: scale(1);
+    }
+
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .t-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .t-btn.close {
+      background: #ff5f56;
+      cursor: pointer;
+    }
+
+    .t-btn.minimize {
+      background: #ffbd2e;
+    }
+
+    .t-btn.expand {
+      background: #27c93f;
+    }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    .terminal-progress-bar {
+      height: 2px;
+      background: rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transition: width 0.3s ease;
+    }
+
+    .terminal-body {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #34d399;
+      line-height: 1.7;
+    }
+
+    .terminal-line {
+      margin-bottom: 0.4rem;
+      white-space: pre-wrap;
+      animation: terminal-fade 0.2s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes terminal-fade {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 
@@ -1521,7 +1661,8 @@
       <a href="#contact">Contact</a>
     </div>
     <div style="display:flex;align-items:center;gap:1.5rem;">
-      <button id="theme-toggle" aria-label="Toggle dark mode" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;transition:color 0.2s;">🌙</button>
+      <button id="theme-toggle" aria-label="Toggle dark mode"
+        style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;transition:color 0.2s;">🌙</button>
       <a class="nav-hire" href="mailto:ksprasadmvsa.1999@gmail.com">Hire Me →</a>
     </div>
   </nav>
@@ -1531,7 +1672,9 @@
       <div class="hero-left fi">
         <span class="eyebrow">Senior Data Engineer &amp; Data Platform Architect</span>
         <h1 class="hero-title">Karri <em>Prasad</em><span class="line2">Engineering Data Platforms at Scale</span></h1>
-        <p class="hero-bio">5+ years designing and implementing high-throughput, low-latency distributed systems and Lakehouses across AWS, Azure, and GCP. Specializing in Spark query tuning, real-time streaming with Kafka, and petabyte-scale cloud migrations.</p>
+        <p class="hero-bio">5+ years designing and implementing high-throughput, low-latency distributed systems and
+          Lakehouses across AWS, Azure, and GCP. Specializing in Spark query tuning, real-time streaming with Kafka, and
+          petabyte-scale cloud migrations.</p>
         <div class="hero-stats">
           <div class="hstat"><span class="hstat-n">10B+</span><span class="hstat-l">Daily Records</span></div>
           <div class="hstat"><span class="hstat-n">99.99%</span><span class="hstat-l">Pipeline SLA</span></div>
@@ -1539,7 +1682,8 @@
         </div>
         <div class="hero-btns">
           <a class="btn-glow" href="#" onclick="startVoice(); return false;">🎙 Talk to My AI Assistant</a>
-          <a class="btn-ghost" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a class="btn-ghost" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">GitHub
+            ↗</a>
           <a class="btn-ghost" href="#contact">Contact</a>
         </div>
       </div>
@@ -1674,7 +1818,8 @@
           <div class="vc-body">
             <div class="vc-transcript" id="transcript">
               <div class="vc-msg ai">
-                <div class="sender">Karri</div>Hey! I'm Prasad's AI assistant. Ask me anything about my data engineering experience, case studies, or tech stack!
+                <div class="sender">Karri</div>Hey! I'm Prasad's AI assistant. Ask me anything about my data engineering
+                experience, case studies, or tech stack!
               </div>
             </div>
             <div class="vc-controls">
@@ -1690,8 +1835,10 @@
             </div>
             <div class="chips">
               <span class="chip" onclick="askChip('What is your core tech stack?')">💻 Tech Stack</span>
-              <span class="chip" onclick="askChip('Tell me about the Enterprise Lakehouse case study')">🏢 Lakehouse Project</span>
-              <span class="chip" onclick="askChip('What was your role in the Citi Hadoop migration?')">☁️ Cloud Migration</span>
+              <span class="chip" onclick="askChip('Tell me about the Enterprise Lakehouse case study')">🏢 Lakehouse
+                Project</span>
+              <span class="chip" onclick="askChip('What was your role in the Citi Hadoop migration?')">☁️ Cloud
+                Migration</span>
               <span class="chip" onclick="askChip('How do you optimize Spark query performance?')">⚡ Spark Tuning</span>
             </div>
             <div class="vc-hint" id="vc-hint">🎙 Tap mic → speak → wait for reply · Or type above</div>
@@ -1709,25 +1856,48 @@
       <p class="sec-sub fi">Maximizing throughput, lowering compute costs, and ensuring strict pipeline SLAs.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;" class="fi">
         <div>
-          <p style="color:var(--muted);line-height:1.9;margin-bottom:1rem;">I am a Senior Data Platform Engineer dedicated to building highly performant, fault-tolerant data infrastructures. I specialize in designing and deploying unified Lakehouse architectures that bridge the gap between high-velocity event streams and production-ready data lakes.</p>
-          <p style="color:var(--muted);line-height:1.9;">Currently at HCA Healthcare, I lead data platform efficiency and optimization initiatives, managing pipelines that process over 500 million records daily. From tuning Spark shuffle partitions and implementing Z-Order clustering to decommissioning legacy clusters and designing CDC pipelines, my focus is always on delivering measurable business impact and optimizing cloud spend.</p>
+          <p style="color:var(--muted);line-height:1.9;margin-bottom:1rem;">I am a Senior Data Platform Engineer
+            dedicated to building highly performant, fault-tolerant data infrastructures. I specialize in designing and
+            deploying unified Lakehouse architectures that bridge the gap between high-velocity event streams and
+            production-ready data lakes.</p>
+          <p style="color:var(--muted);line-height:1.9;">Currently at HCA Healthcare, I lead data platform efficiency
+            and optimization initiatives, managing pipelines that process over 500 million records daily. From tuning
+            Spark shuffle partitions and implementing Z-Order clustering to decommissioning legacy clusters and
+            designing CDC pipelines, my focus is always on delivering measurable business impact and optimizing cloud
+            spend.</p>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+</span>
-            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Years XP</span>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Years
+              XP</span>
           </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">3</span>
-            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Clouds Managed</span>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">3</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Clouds
+              Managed</span>
           </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">10B+</span>
-            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Records / Day</span>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">10B+</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Records
+              / Day</span>
           </div>
-          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
-            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+ PB</span>
-            <span style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Data Lakes</span>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+
+              PB</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Data
+              Lakes</span>
           </div>
         </div>
       </div>
@@ -1739,9 +1909,12 @@
     <div class="sec-wrap">
       <span class="sec-eye fi">Capability</span>
       <h2 class="sec-h fi">Technical &amp; Architecture <em>Expertise</em></h2>
-      <p class="sec-sub fi">Deep expertise in distributed computing, storage layer optimization, and enterprise cloud infrastructure.</p>
-      
-      <h3 style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--blue); padding-left:0.75rem;" class="fi">Technical Skillset</h3>
+      <p class="sec-sub fi">Deep expertise in distributed computing, storage layer optimization, and enterprise cloud
+        infrastructure.</p>
+
+      <h3
+        style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--blue); padding-left:0.75rem;"
+        class="fi">Technical Skillset</h3>
       <div class="skills-grid" style="margin-bottom:3.5rem;">
         <div class="sk-card fi">
           <div class="sk-head"><span class="sk-ico">🖥️</span><span class="sk-name">Languages &amp; Core</span></div>
@@ -1761,7 +1934,8 @@
         <div class="sk-card fi">
           <div class="sk-head"><span class="sk-ico">⚡</span><span class="sk-name">Streaming Systems</span></div>
           <div class="sk-tags">
-            <span class="sk-t">Apache Kafka</span><span class="sk-t">Kafka Connect</span><span class="sk-t">Kafka Streams</span>
+            <span class="sk-t">Apache Kafka</span><span class="sk-t">Kafka Connect</span><span class="sk-t">Kafka
+              Streams</span>
             <span class="sk-t">Spark Structured Streaming</span><span class="sk-t">Azure Event Hubs</span>
           </div>
         </div>
@@ -1781,27 +1955,40 @@
           </div>
         </div>
         <div class="sk-card fi">
-          <div class="sk-head"><span class="sk-ico">⚙️</span><span class="sk-name">Orchestration &amp; DevOps</span></div>
+          <div class="sk-head"><span class="sk-ico">⚙️</span><span class="sk-name">Orchestration &amp; DevOps</span>
+          </div>
           <div class="sk-tags">
             <span class="sk-t">Apache Airflow</span><span class="sk-t">Autosys</span><span class="sk-t">Docker</span>
-            <span class="sk-t">Kubernetes (EKS/GKE)</span><span class="sk-t">Terraform</span><span class="sk-t">Git / CI-CD</span>
+            <span class="sk-t">Kubernetes (EKS/GKE)</span><span class="sk-t">Terraform</span><span class="sk-t">Git /
+              CI-CD</span>
           </div>
         </div>
       </div>
 
-      <h3 style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;" class="fi">Architectural Strengths</h3>
+      <h3
+        style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;"
+        class="fi">Architectural Strengths</h3>
       <div class="skills-grid">
         <div class="sk-card fi" style="border-left:2px solid var(--blue);">
-          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Medallion Lakehouse Architecture</div>
-          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Implementing Bronze (raw), Silver (cleansed/conformed), and Gold (aggregated business-level) tables utilizing ACID transactions on Delta Lake/Iceberg for single sources of truth.</p>
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Medallion Lakehouse
+            Architecture</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Implementing Bronze (raw), Silver
+            (cleansed/conformed), and Gold (aggregated business-level) tables utilizing ACID transactions on Delta
+            Lake/Iceberg for single sources of truth.</p>
         </div>
         <div class="sk-card fi" style="border-left:2px solid var(--cyan);">
-          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Real-Time Data Ingestion &amp; CDC</div>
-          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Designing decoupled streaming pipelines using Debezium CDC and Kafka to stream transactional updates into downstream Lakehouses with sub-second latencies.</p>
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Real-Time Data
+            Ingestion &amp; CDC</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Designing decoupled streaming pipelines
+            using Debezium CDC and Kafka to stream transactional updates into downstream Lakehouses with sub-second
+            latencies.</p>
         </div>
         <div class="sk-card fi" style="border-left:2px solid var(--violet);">
-          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Distributed Optimization &amp; Clustering</div>
-          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Tuning Apache Spark executors, partition sizes, Z-Order clustering keys, and cache storage to resolve data skew and drastically reduce cloud compute overhead.</p>
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Distributed
+            Optimization &amp; Clustering</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Tuning Apache Spark executors, partition
+            sizes, Z-Order clustering keys, and cache storage to resolve data skew and drastically reduce cloud compute
+            overhead.</p>
         </div>
       </div>
     </div>
@@ -1812,19 +1999,23 @@
     <div class="sec-wrap">
       <span class="sec-eye fi">Work</span>
       <h2 class="sec-h fi">Featured Case Studies &amp; <em>Projects</em></h2>
-      <p class="sec-sub fi">Review my architecture implementations, performance metrics, and quantitative business impacts.</p>
-      
+      <p class="sec-sub fi">Review my architecture implementations, performance metrics, and quantitative business
+        impacts.</p>
+
       <!-- Flagship Case Studies -->
-      <h3 style="font-family:var(--fh); font-size:1.7rem; font-weight:400; margin-bottom:2rem; border-left:3px solid var(--blue); padding-left:0.75rem;" class="fi">Flagship Programs</h3>
-      
+      <h3
+        style="font-family:var(--fh); font-size:1.7rem; font-weight:400; margin-bottom:2rem; border-left:3px solid var(--blue); padding-left:0.75rem;"
+        class="fi">Flagship Programs</h3>
+
       <div class="proj-grid" style="grid-template-columns: 1fr; gap: 2.5rem; margin-bottom: 4rem;">
-        
+
         <!-- Case Study A -->
         <div class="proj fi" style="border-left: 4px solid var(--blue);">
           <span class="proj-n">CASE STUDY A</span>
-          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Enterprise Databricks Lakehouse Platform</div>
+          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Enterprise Databricks Lakehouse Platform
+          </div>
           <div class="proj-org">AWS / Databricks / Spark SQL / Airflow</div>
-          
+
           <div class="pipeline-flow">
             <div class="flow-node">
               <div class="node-title">ERP &amp; RDBMS</div>
@@ -1852,20 +2043,32 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+          <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
             <div>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business Problem</strong>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Legacy silos led to duplicate processing, data inconsistencies, and extremely slow nightly batch jobs (8+ hours), delaying key executive operational dashboards.</p>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies Used</strong>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business
+                Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Legacy silos led to
+                duplicate processing, data inconsistencies, and extremely slow nightly batch jobs (8+ hours), delaying
+                key executive operational dashboards.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies
+                Used</strong>
               <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
-                <span class="pst">Databricks</span><span class="pst">Delta Lake</span><span class="pst">PySpark</span><span class="pst">Scala</span><span class="pst">Airflow</span><span class="pst">Terraform</span>
+                <span class="pst">Databricks</span><span class="pst">Delta Lake</span><span
+                  class="pst">PySpark</span><span class="pst">Scala</span><span class="pst">Airflow</span><span
+                  class="pst">Terraform</span>
               </div>
             </div>
             <div>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp; Metrics</strong>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data Volume:</strong> 10B+ daily transactions, 5+ PB overall data volume.</p>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;"><strong>Performance:</strong> Reduced processing time from 8 hours to under 45 minutes. Query scan time was cut by 75% via Z-Order clustering and partitioning tuning.</p>
-              <div class="proj-impact">Business Impact: Saved 45% in infrastructure costs ($380K/year) and enabled real-time reporting.</div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp;
+                Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data
+                  Volume:</strong> 10B+ daily transactions, 5+ PB overall data volume.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">
+                <strong>Performance:</strong> Reduced processing time from 8 hours to under 45 minutes. Query scan time
+                was cut by 75% via Z-Order clustering and partitioning tuning.</p>
+              <div class="proj-impact">Business Impact: Saved 45% in infrastructure costs ($380K/year) and enabled
+                real-time reporting.</div>
             </div>
           </div>
         </div>
@@ -1875,7 +2078,7 @@
           <span class="proj-n">CASE STUDY B</span>
           <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Real-Time Streaming Event Platform</div>
           <div class="proj-org">Apache Kafka / Spark Structured Streaming / Azure Databricks</div>
-          
+
           <div class="pipeline-flow">
             <div class="flow-node">
               <div class="node-title">App Events</div>
@@ -1903,20 +2106,31 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+          <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
             <div>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business Problem</strong>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">High-frequency monitoring and fraud alerts suffered from high processing latency (minutes to hours) and data loss during peak load.</p>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies Used</strong>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business
+                Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">High-frequency
+                monitoring and fraud alerts suffered from high processing latency (minutes to hours) and data loss
+                during peak load.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies
+                Used</strong>
               <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
-                <span class="pst">Apache Kafka</span><span class="pst">Kafka Connect</span><span class="pst">Spark Streaming</span><span class="pst">Azure Databricks</span><span class="pst">Kubernetes</span>
+                <span class="pst">Apache Kafka</span><span class="pst">Kafka Connect</span><span class="pst">Spark
+                  Streaming</span><span class="pst">Azure Databricks</span><span class="pst">Kubernetes</span>
               </div>
             </div>
             <div>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp; Metrics</strong>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data Volume:</strong> 500M+ event streams/day, peaking at 50K events/second.</p>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;"><strong>Performance:</strong> Sub-second processing latency; CDC ingestion windows slashed by 92% (from 6 hours batch to under 30 minutes incremental streaming).</p>
-              <div class="proj-impact">Business Impact: Eliminated message loss completely; reduced operational failures by 70%.</div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp;
+                Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data
+                  Volume:</strong> 500M+ event streams/day, peaking at 50K events/second.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">
+                <strong>Performance:</strong> Sub-second processing latency; CDC ingestion windows slashed by 92% (from
+                6 hours batch to under 30 minutes incremental streaming).</p>
+              <div class="proj-impact">Business Impact: Eliminated message loss completely; reduced operational failures
+                by 70%.</div>
             </div>
           </div>
         </div>
@@ -1926,7 +2140,7 @@
           <span class="proj-n">CASE STUDY C</span>
           <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Hadoop to GCP Migration Program</div>
           <div class="proj-org">Google Cloud Platform / BigQuery / Cloud Dataflow</div>
-          
+
           <div class="pipeline-flow">
             <div class="flow-node">
               <div class="node-title">On-Prem Hadoop</div>
@@ -1949,20 +2163,31 @@
             </div>
           </div>
 
-          <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+          <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
             <div>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business Problem</strong>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Maintaining an on-premise Hadoop cluster (200+ nodes) was capital intensive, difficult to scale, and suffered from severe disk and compute bottlenecks.</p>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies Used</strong>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business
+                Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Maintaining an
+                on-premise Hadoop cluster (200+ nodes) was capital intensive, difficult to scale, and suffered from
+                severe disk and compute bottlenecks.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies
+                Used</strong>
               <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
-                <span class="pst">GCP</span><span class="pst">BigQuery</span><span class="pst">Cloud Dataflow</span><span class="pst">Apache Beam</span><span class="pst">Composer (Airflow)</span>
+                <span class="pst">GCP</span><span class="pst">BigQuery</span><span class="pst">Cloud
+                  Dataflow</span><span class="pst">Apache Beam</span><span class="pst">Composer (Airflow)</span>
               </div>
             </div>
             <div>
-              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp; Metrics</strong>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data Volume:</strong> Migrated 2 PB of structured and unstructured data; rebuilt 200+ pipelines.</p>
-              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;"><strong>Performance:</strong> Processing runtimes decreased by 65%; compute costs reduced by 40% through automatic scaling.</p>
-              <div class="proj-impact">Business Impact: Cluster decommissioned 3 months early, saving $2.4M annually in ops costs.</div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp;
+                Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data
+                  Volume:</strong> Migrated 2 PB of structured and unstructured data; rebuilt 200+ pipelines.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">
+                <strong>Performance:</strong> Processing runtimes decreased by 65%; compute costs reduced by 40% through
+                automatic scaling.</p>
+              <div class="proj-impact">Business Impact: Cluster decommissioned 3 months early, saving $2.4M annually in
+                ops costs.</div>
             </div>
           </div>
         </div>
@@ -1970,32 +2195,233 @@
       </div>
 
       <!-- Supporting Projects -->
-      <h3 style="font-family:var(--fh); font-size:1.4rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;" class="fi">Other Key Achievements</h3>
+      <h3
+        style="font-family:var(--fh); font-size:1.4rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;"
+        class="fi">Other Key Achievements</h3>
       <div class="proj-grid">
         <div class="proj fi"><span class="proj-n">04</span>
           <div class="proj-ttl">Metadata-Driven Ingestion Engine</div>
           <div class="proj-org">@ HCA Healthcare</div>
-          <div class="proj-desc">Engineered a metadata-driven landing framework that automates source schema discovery, maps data types automatically, and registers tables dynamically.</div>
+          <div class="proj-desc">Engineered a metadata-driven landing framework that automates source schema discovery,
+            maps data types automatically, and registers tables dynamically.</div>
           <div class="proj-impact">Enabled analyst self-service ingestion</div>
-          <div class="proj-stack"><span class="pst">BigQuery</span><span class="pst">Python</span><span class="pst">Cloud Functions</span></div>
+          <div class="proj-stack"><span class="pst">BigQuery</span><span class="pst">Python</span><span
+              class="pst">Cloud Functions</span></div>
         </div>
         <div class="proj fi"><span class="proj-n">05</span>
           <div class="proj-ttl">High-Throughput CDC Ingestion</div>
           <div class="proj-org">@ Citi</div>
-          <div class="proj-desc">Designed an incremental Change Data Capture (CDC) system capture engine, decoupling heavy read operations from transaction-heavy core banking databases.</div>
+          <div class="proj-desc">Designed an incremental Change Data Capture (CDC) system capture engine, decoupling
+            heavy read operations from transaction-heavy core banking databases.</div>
           <div class="proj-impact">92% reduction in database load</div>
-          <div class="proj-stack"><span class="pst">Debezium</span><span class="pst">Kafka Connect</span><span class="pst">GCP Pub/Sub</span></div>
+          <div class="proj-stack"><span class="pst">Debezium</span><span class="pst">Kafka Connect</span><span
+              class="pst">GCP Pub/Sub</span></div>
         </div>
         <div class="proj fi"><span class="proj-n">06</span>
           <div class="proj-ttl">Data Lakehouse Storage Layer</div>
           <div class="proj-org">@ HCA Healthcare</div>
-          <div class="proj-desc">Implemented and standardized GCS-based Delta Lake storage formats, replacing siloed folders with structured transactional tables using schema enforcement.</div>
+          <div class="proj-desc">Implemented and standardized GCS-based Delta Lake storage formats, replacing siloed
+            folders with structured transactional tables using schema enforcement.</div>
           <div class="proj-impact">99.7% pipeline operational reliability</div>
-          <div class="proj-stack"><span class="pst">Delta Lake</span><span class="pst">Terraform</span><span class="pst">Google Cloud Storage</span></div>
+          <div class="proj-stack"><span class="pst">Delta Lake</span><span class="pst">Terraform</span><span
+              class="pst">Google Cloud Storage</span></div>
         </div>
       </div>
     </div>
   </section>
+
+  <!-- INTERACTIVE PIPELINE PROTOTYPES -->
+  <section class="sec alt" id="prototypes">
+    <div class="sec-wrap">
+      <span class="sec-eyebrow">Simulations</span>
+      <h2 class="sec-title">Interactive Pipeline Prototypes</h2>
+      <p class="sec-sub">Click to build and monitor production-ready pipelines. Watch real-time logs stream from the
+        backend platform.</p>
+
+      <h3
+        style="font-family:var(--font-sans); font-size:1.4rem; font-weight:700; margin-bottom:1.5rem; border-left:3px solid var(--blue); padding-left:0.75rem;"
+        class="reveal">Finance Domain</h3>
+      <div class="expertise-grid reveal" style="margin-bottom: 4rem;">
+
+        <!-- Prototype 1 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(37, 99, 235, 0.1); color: var(--blue); border-color: rgba(37, 99, 235, 0.2);">Finance</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Real-time fraud detection pipeline
+            </h4>
+            <p class="exp-desc">Live transaction stream ➔ Kafka ➔ Spark Structured Streaming ➔ ML scoring ➔ alert
+              dashboard. Simulates 50K events/sec with configurable fraud rate.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Kafka</span><span class="exp-t-tag">PySpark</span><span class="exp-t-tag">Delta
+                Lake</span><span class="exp-t-tag">Streamlit</span><span class="exp-t-tag">Scikit-learn</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#"
+              onclick="launchPrototype('fraud_detection', 'Real-time fraud detection pipeline'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+        <!-- Prototype 2 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(37, 99, 235, 0.1); color: var(--blue); border-color: rgba(37, 99, 235, 0.2);">Finance</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Regulatory reporting lakehouse (Basel
+              III / AML)</h4>
+            <p class="exp-desc">Medallion architecture ingesting core banking data ➔ automated AML report generation ➔
+              audit trail. Mirrors Citi's production data lake environment.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Databricks</span><span class="exp-t-tag">Delta Lake</span><span
+                class="exp-t-tag">dbt</span><span class="exp-t-tag">Airflow</span><span
+                class="exp-t-tag">Snowflake</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#"
+              onclick="launchPrototype('regulatory_reporting', 'Regulatory reporting lakehouse'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+        <!-- Prototype 3 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(37, 99, 235, 0.1); color: var(--blue); border-color: rgba(37, 99, 235, 0.2);">Finance</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Market data CDC engine</h4>
+            <p class="exp-desc">Debezium captures trade book changes ➔ Kafka ➔ Iceberg tables ➔ live P&L dashboard.
+              Sub-second latency with schema evolution handled automatically.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Debezium</span><span class="exp-t-tag">Kafka</span><span class="exp-t-tag">Apache
+                Iceberg</span><span class="exp-t-tag">BigQuery</span><span class="exp-t-tag">Grafana</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#" onclick="launchPrototype('cdc_engine', 'Market data CDC engine'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <h3
+        style="font-family:var(--font-sans); font-size:1.4rem; font-weight:700; margin-bottom:1.5rem; border-left:3px solid var(--green); padding-left:0.75rem;"
+        class="reveal">Healthcare Domain</h3>
+      <div class="expertise-grid reveal">
+
+        <!-- Prototype 4 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(16, 185, 129, 0.1); color: var(--green); border-color: rgba(16, 185, 129, 0.2);">Healthcare</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Clinical data lakehouse (HL7 / FHIR
+              pipeline)</h4>
+            <p class="exp-desc">Ingests EHR events (HL7/FHIR format) ➔ Bronze/Silver/Gold on GCS Delta Lake ➔ patient
+              cohort analytics. Directly mirrors HCA Healthcare work.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">GCP</span><span class="exp-t-tag">Delta Lake</span><span
+                class="exp-t-tag">PySpark</span><span class="exp-t-tag">FHIR</span><span
+                class="exp-t-tag">BigQuery</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#" onclick="launchPrototype('clinical_lakehouse', 'Clinical data lakehouse'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+        <!-- Prototype 5 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(16, 185, 129, 0.1); color: var(--green); border-color: rgba(16, 185, 129, 0.2);">Healthcare</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">HIPAA-compliant metadata-driven
+              ingestion</h4>
+            <p class="exp-desc">Self-service UI where analysts configure a new data source ➔ engine auto-discovers
+              schema ➔ registers table in catalog ➔ runs quality checks.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Cloud Functions</span><span class="exp-t-tag">BigQuery</span><span
+                class="exp-t-tag">Python</span><span class="exp-t-tag">Great Expectations</span><span
+                class="exp-t-tag">Terraform</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#"
+              onclick="launchPrototype('metadata_ingestion', 'Metadata-driven ingestion engine'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+        <!-- Prototype 6 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(16, 185, 129, 0.1); color: var(--green); border-color: rgba(16, 185, 129, 0.2);">Healthcare</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Real-time ICU monitoring pipeline
+            </h4>
+            <p class="exp-desc">Simulated IoT vitals (HR, BP, SpO2) stream via Kafka ➔ Spark Streaming anomaly detection
+              ➔ alert escalation dashboard. 99.99% SLA engineering.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Kafka</span><span class="exp-t-tag">Spark Streaming</span><span
+                class="exp-t-tag">Azure Databricks</span><span class="exp-t-tag">Event Hubs</span><span
+                class="exp-t-tag">React</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#" onclick="launchPrototype('icu_monitoring', 'Real-time ICU monitoring pipeline'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TERMINAL OVERLAY MODAL -->
+  <div id="terminal-modal" class="modal-overlay">
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <span class="t-btn close" onclick="closeTerminal()"></span>
+          <span class="t-btn minimize"></span>
+          <span class="t-btn expand"></span>
+        </div>
+        <div class="terminal-title" id="terminal-title">Deploying Pipeline...</div>
+        <div style="width: 50px;"></div>
+      </div>
+      <div class="terminal-progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="terminal-body" id="terminal-logs"></div>
+    </div>
+  </div>
 
   <!-- ═══ EXPERIENCE ═══ -->
   <section class="sec" id="experience">
@@ -2010,12 +2436,18 @@
           <div class="exp-ttl">Senior Data Platform Engineer</div>
           <div class="exp-loc">📍 Remote, US</div>
           <ul class="exp-ul">
-            <li>Architect and support high-throughput cloud data platform pipelines processing 500M+ events daily across GCP and hybrid environments.</li>
-            <li>Optimized BigQuery resources and partitioning strategies, saving 45% in operational compute and query overhead costs.</li>
-            <li>Standardized GCS Delta Lakehouse architectures, consolidating corporate reporting layers and establishing data quality schemas.</li>
-            <li>Deployed metadata-driven ingestion pipelines, allowing clinical and analytics units to self-serve landing data schemas automatically.</li>
+            <li>Architect and support high-throughput cloud data platform pipelines processing 500M+ events daily across
+              GCP and hybrid environments.</li>
+            <li>Optimized BigQuery resources and partitioning strategies, saving 45% in operational compute and query
+              overhead costs.</li>
+            <li>Standardized GCS Delta Lakehouse architectures, consolidating corporate reporting layers and
+              establishing data quality schemas.</li>
+            <li>Deployed metadata-driven ingestion pipelines, allowing clinical and analytics units to self-serve
+              landing data schemas automatically.</li>
           </ul>
-          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">BigQuery</span><span class="exp-tag">Delta Lake</span><span class="exp-tag">Spark SQL</span><span class="exp-tag">Terraform</span><span class="exp-tag">Kubernetes</span></div>
+          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">BigQuery</span><span
+              class="exp-tag">Delta Lake</span><span class="exp-tag">Spark SQL</span><span
+              class="exp-tag">Terraform</span><span class="exp-tag">Kubernetes</span></div>
         </div>
         <div class="exp-item fi">
           <div class="exp-top">
@@ -2024,11 +2456,16 @@
           <div class="exp-ttl">Cloud Data Engineer — Cloud Data Lake</div>
           <div class="exp-loc">📍 Irving, TX</div>
           <ul class="exp-ul">
-            <li>Re-engineered legacy batch pipelines into stream-ingested Change Data Capture (Debezium CDC + Pub/Sub), decreasing raw database ingestion windows by 92% (from 6 hours to 30 minutes).</li>
-            <li>Executed cloud migration of 2 PB historical Hadoop database files to Google Cloud BigQuery and Dataflow, achieving 65% processing speed improvements and full Hadoop cluster decommissioning.</li>
-            <li>Built automated CI/CD container deployment architectures using Google Kubernetes Engine (GKE), reducing test deployment failure occurrences by 70%.</li>
+            <li>Re-engineered legacy batch pipelines into stream-ingested Change Data Capture (Debezium CDC + Pub/Sub),
+              decreasing raw database ingestion windows by 92% (from 6 hours to 30 minutes).</li>
+            <li>Executed cloud migration of 2 PB historical Hadoop database files to Google Cloud BigQuery and Dataflow,
+              achieving 65% processing speed improvements and full Hadoop cluster decommissioning.</li>
+            <li>Built automated CI/CD container deployment architectures using Google Kubernetes Engine (GKE), reducing
+              test deployment failure occurrences by 70%.</li>
           </ul>
-          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">Debezium CDC</span><span class="exp-tag">Kafka / PubSub</span><span class="exp-tag">BigQuery</span><span class="exp-tag">Dataflow</span><span class="exp-tag">GKE</span></div>
+          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">Debezium CDC</span><span
+              class="exp-tag">Kafka / PubSub</span><span class="exp-tag">BigQuery</span><span
+              class="exp-tag">Dataflow</span><span class="exp-tag">GKE</span></div>
         </div>
         <div class="exp-item fi">
           <div class="exp-top">
@@ -2037,10 +2474,14 @@
           <div class="exp-ttl">Data Engineer — Cloud &amp; Big Data Platform</div>
           <div class="exp-loc">📍 Bengaluru, India</div>
           <ul class="exp-ul">
-            <li>Administered on-premise MapReduce, Hive, and Spark jobs running across 200+ node enterprise clusters, reducing total processing load by 55% via query and partition tuning.</li>
-            <li>Automated operational infrastructure tasks using Python and Shell scripting, eliminating manual database administration workflows by 60%.</li>
+            <li>Administered on-premise MapReduce, Hive, and Spark jobs running across 200+ node enterprise clusters,
+              reducing total processing load by 55% via query and partition tuning.</li>
+            <li>Automated operational infrastructure tasks using Python and Shell scripting, eliminating manual database
+              administration workflows by 60%.</li>
           </ul>
-          <div class="exp-tags"><span class="exp-tag">PySpark</span><span class="exp-tag">Hadoop</span><span class="exp-tag">Hive</span><span class="exp-tag">AWS EMR</span><span class="exp-tag">Python</span><span class="exp-tag">Shell Scripting</span></div>
+          <div class="exp-tags"><span class="exp-tag">PySpark</span><span class="exp-tag">Hadoop</span><span
+              class="exp-tag">Hive</span><span class="exp-tag">AWS EMR</span><span class="exp-tag">Python</span><span
+              class="exp-tag">Shell Scripting</span></div>
         </div>
       </div>
     </div>
@@ -2092,7 +2533,8 @@
           <div>
             <div class="cert-name">Google Professional Data Engineer</div>
             <div class="cert-dt">In Progress</div><span class="cert-badge"
-              style="color:var(--blue);border-color:rgba(91,140,255,0.3);background:rgba(91,140,255,0.08);">In Progress</span>
+              style="color:var(--blue);border-color:rgba(91,140,255,0.3);background:rgba(91,140,255,0.08);">In
+              Progress</span>
           </div>
         </div>
       </div>
@@ -2104,10 +2546,13 @@
     <div class="sec-wrap">
       <div class="contact-card fi">
         <h2>Let's Build Data Platforms <em style="font-style:italic;color:var(--blue);">at Scale</em></h2>
-        <p>I am looking for Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, and Data Platform Architect opportunities. If you need clean, high-performance data architectures that cut compute costs and scale seamlessly, let's connect.</p>
-        
+        <p>I am looking for Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, and Data Platform Architect
+          opportunities. If you need clean, high-performance data architectures that cut compute costs and scale
+          seamlessly, let's connect.</p>
+
         <div style="margin-bottom: 2.5rem;">
-          <a class="btn-glow" href="https://github.com/shyamkarri/shyamkarri.github.io/raw/main/resume.pdf" download style="display: inline-flex; align-items: center; gap: 8px;">
+          <a class="btn-glow" href="https://github.com/shyamkarri/shyamkarri.github.io/raw/main/resume.pdf" download
+            style="display: inline-flex; align-items: center; gap: 8px;">
             📄 Download Professional Resume (PDF)
           </a>
         </div>
@@ -2115,8 +2560,10 @@
         <div class="c-links">
           <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 ksprasadmvsa.1999@gmail.com</a>
           <a class="c-link" href="tel:+18176015406">📱 +1 817-601-5406</a>
-          <a class="c-link" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻 github.com/shyamkarri</a>
-          <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank" rel="noopener noreferrer">🔗 linkedin.com/in/shyam-karri</a>
+          <a class="c-link" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻
+            github.com/shyamkarri</a>
+          <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank" rel="noopener noreferrer">🔗
+            linkedin.com/in/shyam-karri</a>
         </div>
       </div>
     </div>
@@ -2620,141 +3067,130 @@
     setTimeout(greetOnLoad, 1800);
   </script>
 </body> (e) {
-        // Backend unreachable — fallback to browser TTS with a note
-        const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
-        appendMsg('ai', fallbackReply);
-        document.getElementById('voice-btn').disabled = false;
-        document.getElementById('mode-label').textContent = 'Offline';
-        Face.setState('idle');
-        speakFallback(fallbackReply, () => {
-          setStatus('ready', 'Backend offline — try again');
-        });
-      }
-    }
+// Backend unreachable — fallback to browser TTS with a note
+const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again
+in a moment!";
+appendMsg('ai', fallbackReply);
+document.getElementById('voice-btn').disabled = false;
+document.getElementById('mode-label').textContent = 'Offline';
+Face.setState('idle');
+speakFallback(fallbackReply, () => {
+setStatus('ready', 'Backend offline — try again');
+});
+}
+}
 
-    // ══════════════════════════════════════════════════════
-    //  TEXT INPUT
-    // ══════════════════════════════════════════════════════
-    function sendText() {
-      const inp = document.getElementById('text-input');
-      const val = inp.value.trim();
-      if (!val) return;
-      inp.value = '';
-      handleMessage(val);
-    }
+// ══════════════════════════════════════════════════════
+// TEXT INPUT
+// ══════════════════════════════════════════════════════
+function sendText() {
+const inp = document.getElementById('text-input');
+const val = inp.value.trim();
+if (!val) return;
+inp.value = '';
+handleMessage(val);
+}
 
-    function askChip(q) { handleMessage(q); }
+function askChip(q) { handleMessage(q); }
 
-    // ══════════════════════════════════════════════════════
-    //  VOICE INPUT (Web Speech API)
-    // ══════════════════════════════════════════════════════
-    function setupRecognition() {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SR) {
-        document.getElementById('vc-hint').textContent = '⌨️ Voice not supported in this browser — please type below';
-        return null;
-      }
-      const r = new SR();
-      r.lang = 'en-US';
-      r.continuous = false;
-      r.interimResults = false;
-      r.onresult = e => {
-        const txt = e.results[0][0].transcript;
-        stopListening();
-        handleMessage(txt);
-      };
-      r.onerror = e => {
-        stopListening();
-        if (e.error !== 'aborted') setStatus('ready', 'Mic error — try typing instead');
-      };
-      r.onend = () => { if (isListening) stopListening(); };
-      return r;
-    }
+// ══════════════════════════════════════════════════════
+// VOICE INPUT (Web Speech API)
+// ══════════════════════════════════════════════════════
+function setupRecognition() {
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SR) {
+document.getElementById('vc-hint').textContent = '⌨️ Voice not supported in this browser — please type below';
+return null;
+}
+const r = new SR();
+r.lang = 'en-US';
+r.continuous = false;
+r.interimResults = false;
+r.onresult = e => {
+const txt = e.results[0][0].transcript;
+stopListening();
+handleMessage(txt);
+};
+r.onerror = e => {
+stopListening();
+if (e.error !== 'aborted') setStatus('ready', 'Mic error — try typing instead');
+};
+r.onend = () => { if (isListening) stopListening(); };
+return r;
+}
 
-    function startListening() {
-      if (isSpeaking) stopAll();
-      if (!recognition) recognition = setupRecognition();
-      if (!recognition) return;
-      try {
-        recognition.start();
-        isListening = true;
-        setStatus('listening', '🎙 Listening...');
-        setVoiceBars(true);
-        document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice listening';
-        document.getElementById('voice-btn').textContent = '🔴 Listening...';
-        document.getElementById('mode-label').textContent = 'Listening';
-        Face.setState('listening');
-      } catch (e) { }
-    }
+function startListening() {
+if (isSpeaking) stopAll();
+if (!recognition) recognition = setupRecognition();
+if (!recognition) return;
+try {
+recognition.start();
+isListening = true;
+setStatus('listening', '🎙 Listening...');
+setVoiceBars(true);
+document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice listening';
+document.getElementById('voice-btn').textContent = '🔴 Listening...';
+document.getElementById('mode-label').textContent = 'Listening';
+Face.setState('listening');
+} catch (e) { }
+}
 
-    function stopListening() {
-      if (recognition) { try { recognition.stop(); } catch (e) { } }
-      isListening = false;
-      setVoiceBars(false);
-      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
-      document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
-      document.getElementById('mode-label').textContent = 'Idle';
-      if (!isSpeaking) Face.setState('idle');
-    }
+function stopListening() {
+if (recognition) { try { recognition.stop(); } catch (e) { } }
+isListening = false;
+setVoiceBars(false);
+document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+document.getElementById('mode-label').textContent = 'Idle';
+if (!isSpeaking) Face.setState('idle');
+}
 
-    function toggleVoice() {
-      if (isListening) { stopListening(); }
-      else { startListening(); }
-    }
+function toggleVoice() {
+if (isListening) { stopListening(); }
+else { startListening(); }
+}
 
-    function startVoice() {
-      document.getElementById('voice-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
-      setTimeout(() => startListening(), 600);
-    }
+function startVoice() {
+document.getElementById('voice-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+setTimeout(() => startListening(), 600);
+}
 
-    // ══════════════════════════════════════════════════════
-    //  GREETING ON PAGE LOAD — fetched from backend
-    // ══════════════════════════════════════════════════════
-    async function greetOnLoad() {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
+// ══════════════════════════════════════════════════════
+// GREETING ON PAGE LOAD — fetched from backend
+// ══════════════════════════════════════════════════════
+async function greetOnLoad() {
+const controller = new AbortController();
+const timeoutId = setTimeout(() => controller.abort(), 2000);
 
-      try {
-        const session_id = sessionStorage.getItem('chat_session_id') || '';
-        const url = new URL(`${BACKEND_URL}/greet`);
-        if (session_id) {
-          url.searchParams.append('session_id', session_id);
-        }
-        const res = await fetch(url.toString(), { signal: controller.signal });
-        clearTimeout(timeoutId);
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        if (data.session_id) {
-          sessionStorage.setItem('chat_session_id', data.session_id);
-        }
-        const greeting = data.reply;
-        const audioB64 = data.audio_base64 || '';
-        appendMsg('ai', greeting);
-        startSpeaking(greeting, audioB64);
-      } catch (e) {
-        // Timeout or error — meaning backend is sleeping/cold starting!
-        const warmGreeting = "Hello there! Welcome to my portfolio. I am Prasad's AI assistant. My backend brain is waking up right now, which takes about 20 seconds. I'm excited to talk with you about cloud data platforms, streaming pipelines, and scaling Databricks or Snowflake systems!";
-        appendMsg('ai', warmGreeting);
-        speakFallback(warmGreeting, () => {
-          setStatus('ready', 'Backend waking up — try chatting soon!');
-        });
-        Face.setState('speaking');
-        setTimeout(() => Face.setState('idle'), 6000);
-
-        // Send a non-blocking ping to ensure Render wakes up
-        fetch(`${BACKEND_URL}/health`).catch(() => console.log("Waking up backend"));
-      }
-    }
-
-    // Load voices cache + greet
-    if (window.speechSynthesis) {
-      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-      window.speechSynthesis.getVoices();
-    }
-
-    // Wait 1.8s then greet
-    setTimeout(greetOnLoad, 1800);
-  </script>
+try {
+const session_id = sessionStorage.getItem('chat_session_id') || '';
+const url = new URL(`${BACKEND_URL}/greet`);
+if (session_id) {
+url.searchParams.append('session_id', session_id);
+}
+const res = await fetch(url.toString(), { signal: controller.signal });
+clearTimeout(timeoutId);
+if (!res.ok) throw new Error();
+const data = await res.json();
+if (data.session_id) {
+sessionStorage.setItem('chat_session_id', data.session_id);
+}
+const greeting = data.reply;
+const audioB64 = data.audio_base64 || '';
+appendMsg('ai', greeting);
+startSpeaking(greeting, audioB64);
+} catch (e) {
+// Timeout or error — meaning backend is sleeping/cold starting!
+const warmGreeting = "Hello there! Welcome to my portfolio. I am Prasad's AI assistant. My backend brain is waking up
+right now, which takes about 20 seconds. I'm excited to talk with you about cloud data platforms, streaming pipelines,
+and scaling Databricks or Snowflake systems!";
+appendMsg('ai', warmGreeting);
+speakFallback(warmGreeting, () => {
+setStatus('ready', 'Backend waking up — try chatting soon!');
+});
+});
+});
+</script>
 </body>
 
 </html>
