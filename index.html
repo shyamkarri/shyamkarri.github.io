@@ -1513,10 +1513,8 @@
         padding: 4rem 1.5rem;
       }
     }
-  </style>
-</head>
 
-/* ── TERMINAL MODAL OVERLAY ── */
+    /* ── TERMINAL MODAL OVERLAY ── */
 .modal-overlay {
 position: fixed;
 inset: 0;
@@ -2474,7 +2472,7 @@ transform: translateY(0);
         </div>
         <div class="exp-item fi">
           <div class="exp-top">
-            <div class="exp-co">Accenture</div><span class="exp-dt">Aug 2020 — Jan 2022</span>
+            <div class="exp-co">Accenture</div><span class="exp-dt">Aug 2019 — Jan 2022</span>
           </div>
           <div class="exp-ttl">Data Engineer — Cloud &amp; Big Data Platform</div>
           <div class="exp-loc">📍 Bengaluru, India</div>
@@ -3071,131 +3069,5 @@ transform: translateY(0);
 
     setTimeout(greetOnLoad, 1800);
   </script>
-</body> (e) {
-// Backend unreachable — fallback to browser TTS with a note
-const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again
-in a moment!";
-appendMsg('ai', fallbackReply);
-document.getElementById('voice-btn').disabled = false;
-document.getElementById('mode-label').textContent = 'Offline';
-Face.setState('idle');
-speakFallback(fallbackReply, () => {
-setStatus('ready', 'Backend offline — try again');
-});
-}
-}
-
-// ══════════════════════════════════════════════════════
-// TEXT INPUT
-// ══════════════════════════════════════════════════════
-function sendText() {
-const inp = document.getElementById('text-input');
-const val = inp.value.trim();
-if (!val) return;
-inp.value = '';
-handleMessage(val);
-}
-
-function askChip(q) { handleMessage(q); }
-
-// ══════════════════════════════════════════════════════
-// VOICE INPUT (Web Speech API)
-// ══════════════════════════════════════════════════════
-function setupRecognition() {
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (!SR) {
-document.getElementById('vc-hint').textContent = '⌨️ Voice not supported in this browser — please type below';
-return null;
-}
-const r = new SR();
-r.lang = 'en-US';
-r.continuous = false;
-r.interimResults = false;
-r.onresult = e => {
-const txt = e.results[0][0].transcript;
-stopListening();
-handleMessage(txt);
-};
-r.onerror = e => {
-stopListening();
-if (e.error !== 'aborted') setStatus('ready', 'Mic error — try typing instead');
-};
-r.onend = () => { if (isListening) stopListening(); };
-return r;
-}
-
-function startListening() {
-if (isSpeaking) stopAll();
-if (!recognition) recognition = setupRecognition();
-if (!recognition) return;
-try {
-recognition.start();
-isListening = true;
-setStatus('listening', '🎙 Listening...');
-setVoiceBars(true);
-document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice listening';
-document.getElementById('voice-btn').textContent = '🔴 Listening...';
-document.getElementById('mode-label').textContent = 'Listening';
-Face.setState('listening');
-} catch (e) { }
-}
-
-function stopListening() {
-if (recognition) { try { recognition.stop(); } catch (e) { } }
-isListening = false;
-setVoiceBars(false);
-document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
-document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
-document.getElementById('mode-label').textContent = 'Idle';
-if (!isSpeaking) Face.setState('idle');
-}
-
-function toggleVoice() {
-if (isListening) { stopListening(); }
-else { startListening(); }
-}
-
-function startVoice() {
-document.getElementById('voice-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
-setTimeout(() => startListening(), 600);
-}
-
-// ══════════════════════════════════════════════════════
-// GREETING ON PAGE LOAD — fetched from backend
-// ══════════════════════════════════════════════════════
-async function greetOnLoad() {
-const controller = new AbortController();
-const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-try {
-const session_id = sessionStorage.getItem('chat_session_id') || '';
-const url = new URL(`${BACKEND_URL}/greet`);
-if (session_id) {
-url.searchParams.append('session_id', session_id);
-}
-const res = await fetch(url.toString(), { signal: controller.signal });
-clearTimeout(timeoutId);
-if (!res.ok) throw new Error();
-const data = await res.json();
-if (data.session_id) {
-sessionStorage.setItem('chat_session_id', data.session_id);
-}
-const greeting = data.reply;
-const audioB64 = data.audio_base64 || '';
-appendMsg('ai', greeting);
-startSpeaking(greeting, audioB64);
-} catch (e) {
-// Timeout or error — meaning backend is sleeping/cold starting!
-const warmGreeting = "Hello there! Welcome to my portfolio. I am Prasad's AI assistant. My backend brain is waking up
-right now, which takes about 20 seconds. I'm excited to talk with you about cloud data platforms, streaming pipelines,
-and scaling Databricks or Snowflake systems!";
-appendMsg('ai', warmGreeting);
-speakFallback(warmGreeting, () => {
-setStatus('ready', 'Backend waking up — try chatting soon!');
-});
-});
-});
-</script>
 </body>
-
 </html>
