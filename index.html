@@ -1515,131 +1515,131 @@
     }
 
     /* ── TERMINAL MODAL OVERLAY ── */
-.modal-overlay {
-position: fixed;
-inset: 0;
-background: rgba(0, 0, 0, 0.85);
-backdrop-filter: blur(12px);
--webkit-backdrop-filter: blur(12px);
-z-index: 1000;
-display: flex;
-align-items: center;
-justify-content: center;
-opacity: 0;
-pointer-events: none;
-transition: opacity 0.3s ease;
-}
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
 
-.modal-overlay.active {
-opacity: 1;
-pointer-events: auto;
-}
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
-.terminal-window {
-width: 90%;
-max-width: 700px;
-background: #050508;
-border: 1px solid rgba(255, 255, 255, 0.1);
-border-radius: 12px;
-overflow: hidden;
-box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
-display: flex;
-flex-direction: column;
-height: 400px;
-transform: scale(0.95);
-transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
+    .terminal-window {
+      width: 90%;
+      max-width: 700px;
+      background: #050508;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      height: 400px;
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
 
-.modal-overlay.active .terminal-window {
-transform: scale(1);
-}
+    .modal-overlay.active .terminal-window {
+      transform: scale(1);
+    }
 
-.terminal-header {
-background: rgba(255, 255, 255, 0.02);
-border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-padding: 0.75rem 1.25rem;
-display: flex;
-justify-content: space-between;
-align-items: center;
-}
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-.terminal-buttons {
-display: flex;
-gap: 6px;
-}
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+    }
 
-.t-btn {
-width: 12px;
-height: 12px;
-border-radius: 50%;
-display: inline-block;
-}
+    .t-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
 
-.t-btn.close {
-background: #ff5f56;
-cursor: pointer;
-}
+    .t-btn.close {
+      background: #ff5f56;
+      cursor: pointer;
+    }
 
-.t-btn.minimize {
-background: #ffbd2e;
-}
+    .t-btn.minimize {
+      background: #ffbd2e;
+    }
 
-.t-btn.expand {
-background: #27c93f;
-}
+    .t-btn.expand {
+      background: #27c93f;
+    }
 
-.terminal-title {
-font-family: var(--font-mono);
-font-size: 0.72rem;
-color: var(--muted);
-letter-spacing: 0.5px;
-}
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
 
-.terminal-progress-bar {
-height: 2px;
-background: rgba(255, 255, 255, 0.05);
-position: relative;
-}
+    .terminal-progress-bar {
+      height: 2px;
+      background: rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
 
-.progress-fill {
-position: absolute;
-left: 0;
-top: 0;
-height: 100%;
-width: 0%;
-background: linear-gradient(90deg, var(--blue), var(--cyan));
-transition: width 0.3s ease;
-}
+    .progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transition: width 0.3s ease;
+    }
 
-.terminal-body {
-flex: 1;
-padding: 1.5rem;
-overflow-y: auto;
-font-family: var(--font-mono);
-font-size: 0.8rem;
-color: #34d399;
-line-height: 1.7;
-}
+    .terminal-body {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #34d399;
+      line-height: 1.7;
+    }
 
-.terminal-line {
-margin-bottom: 0.4rem;
-white-space: pre-wrap;
-animation: terminal-fade 0.2s ease forwards;
-opacity: 0;
-}
+    .terminal-line {
+      margin-bottom: 0.4rem;
+      white-space: pre-wrap;
+      animation: terminal-fade 0.2s ease forwards;
+      opacity: 0;
+    }
 
-@keyframes terminal-fade {
-from {
-opacity: 0;
-transform: translateY(4px);
-}
+    @keyframes terminal-fade {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
 
-to {
-opacity: 1;
-transform: translateY(0);
-}
-}
-</style>
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -2554,15 +2554,15 @@ transform: translateY(0);
           seamlessly, let's connect.</p>
 
         <div style="margin-bottom: 2.5rem;">
-          <a class="btn-glow" href="https://github.com/shyamkarri/shyamkarri.github.io/raw/main/resume.pdf" download
-            style="display: inline-flex; align-items: center; gap: 8px;">
+          <a class="btn-glow" href="https://github.com/shyamkarri/shyamkarri.github.io/blob/main/raw/main/resume.pdf"
+            download style="display: inline-flex; align-items: center; gap: 8px;">
             📄 Download Professional Resume (PDF)
           </a>
         </div>
 
         <div class="c-links">
-          <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 ksprasadmvsa.1999@gmail.com</a>
-          <a class="c-link" href="tel:+18176015406">📱 +1 817-601-5406</a>
+          <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 </a>
+          <a class="c-link" href="tel:+18176015406">📱 </a>
           <a class="c-link" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻
             github.com/shyamkarri</a>
           <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank" rel="noopener noreferrer">🔗
@@ -3070,4 +3070,5 @@ transform: translateY(0);
     setTimeout(greetOnLoad, 1800);
   </script>
 </body>
+
 </html>
