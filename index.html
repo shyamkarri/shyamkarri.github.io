@@ -10,9 +10,12 @@
   <meta name="keywords"
     content="Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, Databricks Engineer, Spark Engineer, Kafka Engineer, Data Platform Engineer, Cloud Data Engineer, BigQuery Engineer, Snowflake Engineer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
     rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.12.0/tsparticles.slim.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.0/dist/countUp.umd.js"></script>
   <style>
     * {
       margin: 0;
@@ -21,25 +24,26 @@
     }
 
     :root {
-      --bg: #060812;
-      --bg2: #090d1f;
-      --surface: #0f1326;
-      --card: #131729;
-      --border: rgba(120, 160, 255, 0.12);
-      --border2: rgba(120, 160, 255, 0.28);
-      --text: #eef0ff;
-      --muted: #6b7a9f;
-      --dim: #363d55;
-      --blue: #5b8cff;
-      --cyan: #38d9f5;
-      --violet: #a78bfa;
-      --green: #2dd4ac;
-      --amber: #f5a623;
-      --pink: #f472b6;
-      --glow: rgba(91, 140, 255, 0.2);
-      --glow2: rgba(56, 217, 245, 0.15);
-      --fh: 'Playfair Display', serif;
-      --fb: 'Outfit', sans-serif;
+      --bg: #0A0E17; /* Deep, dark space navy */
+      --bg2: #0E1321;
+      --surface: rgba(20, 30, 40, 0.55); /* Glassmorphism base */
+      --card: rgba(20, 30, 40, 0.55); /* Glassmorphism card */
+      --border: rgba(255, 255, 255, 0.08); /* Glassmorphism border */
+      --border2: rgba(0, 240, 255, 0.15); /* Cyan glow border */
+      --text: #FFFFFF; /* Pure White */
+      --muted: #B0C4DE; /* Light Grey */
+      --dim: #7B8F9A;
+      --blue: #00F0FF; /* Primary Glow: Cyan */
+      --cyan: #00F0FF; /* Primary Glow: Cyan */
+      --magenta: #FF00E5; /* Secondary Glow: Magenta */
+      --violet: #D946EF;
+      --green: #10B981;
+      --amber: #F59E0B;
+      --pink: #EC4899;
+      --glow: rgba(0, 240, 255, 0.25);
+      --glow2: rgba(255, 0, 229, 0.2);
+      --fh: 'Space Grotesk', sans-serif;
+      --fb: 'Inter', sans-serif;
       --fm: 'JetBrains Mono', monospace;
     }
 
@@ -424,11 +428,56 @@
     .avatar-card {
       position: relative;
       width: 300px;
-      background: linear-gradient(160deg, rgba(19, 23, 41, 0.95) 0%, rgba(9, 13, 31, 0.9) 100%);
-      border: 1px solid var(--border2);
-      border-radius: 28px;
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(91, 140, 255, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .avatar-card:hover {
+      transform: scale(1.02);
+      border-color: var(--cyan);
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.25);
+    }
+
+    .avatar-card.idle {
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+      border-color: var(--cyan);
+    }
+
+    .avatar-card.listening {
+      transform: scale(1.02);
+      box-shadow: 0 0 40px rgba(0, 136, 255, 0.4);
+      border-color: #0088FF;
+    }
+
+    .avatar-card.thinking {
+      box-shadow: 0 0 50px rgba(255, 0, 229, 0.45);
+      border-color: var(--magenta);
+      animation: vibration 0.15s infinite;
+    }
+
+    .avatar-card.speaking {
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
+      border-color: var(--cyan);
+    }
+
+    @keyframes vibration {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      10% { transform: translate(-1px, -2px) rotate(-1deg); }
+      20% { transform: translate(-3px, 0px) rotate(1deg); }
+      30% { transform: translate(0px, 2px) rotate(0deg); }
+      40% { transform: translate(1px, -1px) rotate(1deg); }
+      50% { transform: translate(-1px, 2px) rotate(-1deg); }
+      60% { transform: translate(-3px, 1px) rotate(0deg); }
+      70% { transform: translate(2px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      90% { transform: translate(2px, 2px) rotate(0deg); }
+      100% { transform: translate(1px, -2px) rotate(-1deg); }
     }
 
     .avatar-card::before {
@@ -438,7 +487,7 @@
       left: 0;
       right: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(91, 140, 255, 0.5), rgba(56, 217, 245, 0.3), transparent);
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), transparent);
       z-index: 3;
     }
 
@@ -821,11 +870,35 @@
     /* ── VOICE CONSOLE ── */
     .voice-console {
       width: 300px;
-      background: rgba(9, 13, 31, 0.95);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .voice-console.idle {
+      border-color: var(--cyan);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+    }
+    
+    .voice-console.listening {
+      border-color: #0088FF;
+      box-shadow: 0 0 40px rgba(0, 136, 255, 0.4);
+    }
+    
+    .voice-console.thinking {
+      border-color: var(--magenta);
+      box-shadow: 0 0 50px rgba(255, 0, 229, 0.45);
+      animation: vibration 0.15s infinite;
+    }
+    
+    .voice-console.speaking {
+      border-color: var(--cyan);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
     }
 
     .vc-header {
@@ -1077,17 +1150,20 @@
     }
 
     .sk-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
       padding: 1.5rem;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     .sk-card:hover {
-      border-color: rgba(91, 140, 255, 0.4);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px var(--glow);
+      border-color: var(--cyan);
+      transform: scale(1.02) translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.25);
     }
 
     .sk-head {
@@ -1248,13 +1324,16 @@
     }
 
     .proj {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
       padding: 1.75rem;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
     .proj::before {
@@ -1264,7 +1343,7 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
       transform: scaleX(0);
       transform-origin: left;
       transition: transform 0.3s;
@@ -1275,9 +1354,9 @@
     }
 
     .proj:hover {
-      border-color: rgba(91, 140, 255, 0.35);
-      transform: translateY(-5px);
-      box-shadow: 0 16px 60px rgba(0, 0, 0, 0.4);
+      border-color: var(--cyan);
+      transform: scale(1.02) translateY(-5px);
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.25);
     }
 
     .proj-n {
@@ -1639,13 +1718,233 @@
         transform: translateY(0);
       }
     }
+
+    /* ── REDESIGN OVERRIDES ── */
+    body {
+      background: var(--bg) !important;
+      font-family: var(--fb) !important;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .sec-h, .hero-title, .avatar-name, .exp-co, .proj-ttl {
+      font-family: var(--fh) !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.02em;
+    }
+    
+    .hero-title {
+      font-size: clamp(3.5rem, 6.5vw, 6rem) !important;
+    }
+    
+    .sec-h {
+      font-size: clamp(2.4rem, 4.2vw, 3.6rem) !important;
+    }
+    
+    .proj-ttl {
+      font-size: 1.5rem !important;
+    }
+    
+    .exp-co {
+      font-size: 1.65rem !important;
+    }
+    
+    .avatar-name {
+      font-size: 1.65rem !important;
+    }
+    
+    /* Interactive Links Underline Glow */
+    .nav-links a, .hero-bio a, .exp-ul a, footer a {
+      position: relative;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .nav-links a::after, .hero-bio a::after, .exp-ul a::after, footer a::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      transform: scaleX(0);
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      transform-origin: bottom left;
+      transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+    
+    .nav-links a:hover::after, .hero-bio a:hover::after, .exp-ul a:hover::after, footer a:hover::after {
+      transform: scaleX(1);
+    }
+    
+    /* Input and Controls Glow */
+    #text-input {
+      background: rgba(20, 30, 40, 0.6) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(6px);
+      transition: all 0.3s ease;
+    }
+    
+    #text-input:focus {
+      border-color: var(--cyan) !important;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important;
+      background: rgba(20, 30, 40, 0.8) !important;
+    }
+    
+    /* Button glow hover */
+    .btn-glow, .vc-btn-voice, .nav-hire {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+    
+    .btn-glow:hover, .vc-btn-voice:hover, .nav-hire:hover {
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5) !important;
+      transform: translateY(-2px) scale(1.02);
+      border-color: var(--cyan) !important;
+    }
+    
+    /* Interactive Flow Nodes with Tooltips */
+    .flow-node {
+      position: relative;
+      cursor: pointer;
+      background: rgba(20, 30, 40, 0.7) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .flow-node:hover {
+      transform: translateY(-4px) scale(1.05);
+      border-color: var(--cyan) !important;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+    
+    /* Tooltip styling */
+    .flow-node::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.85);
+      background: rgba(10, 14, 23, 0.95);
+      border: 1px solid var(--cyan);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
+      color: #fff;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      white-space: normal;
+      width: 200px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 100;
+      line-height: 1.4;
+      text-align: center;
+    }
+    
+    .flow-node:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* ── DATA-SPIRIT ORB STYLES ── */
+    .data-spirit-orb-container {
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .data-spirit-orb {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.85) 0%, rgba(0, 240, 255, 0.2) 50%, transparent 70%);
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px solid rgba(0, 240, 255, 0.4);
+    }
+
+    .orb-inner-swirl {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(0, 240, 255, 0.4), transparent, rgba(255, 0, 229, 0.3), transparent);
+      animation: swirl 4s linear infinite;
+      border-radius: 40%;
+      opacity: 0.65;
+    }
+
+    @keyframes swirl {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Orb States */
+    .data-spirit-orb.idle {
+      box-shadow: 0 0 40px #00F0FF, inset 0 0 20px rgba(0, 240, 255, 0.5);
+      animation: orb-idle-pulse 3s ease-in-out infinite alternate;
+    }
+
+    .data-spirit-orb.listening {
+      transform: scale(1.15);
+      background: radial-gradient(circle, rgba(0, 136, 255, 0.9) 0%, rgba(0, 136, 255, 0.3) 50%, transparent 70%);
+      border-color: rgba(0, 136, 255, 0.6);
+      box-shadow: 0 0 60px #0088FF, 0 0 100px rgba(0, 136, 255, 0.3), inset 0 0 30px rgba(0, 136, 255, 0.6);
+      animation: orb-ripple 1.5s ease-in-out infinite;
+    }
+
+    .data-spirit-orb.thinking {
+      background: radial-gradient(circle, rgba(255, 0, 229, 0.9) 0%, rgba(255, 0, 229, 0.3) 50%, transparent 70%);
+      border-color: rgba(255, 0, 229, 0.6);
+      box-shadow: 0 0 80px #FF00E5, 0 0 120px rgba(255, 0, 229, 0.4), inset 0 0 30px rgba(255, 0, 229, 0.6);
+      animation: orb-vibrate-pulse 0.15s linear infinite, orb-think-glow 0.8s ease-in-out infinite alternate;
+    }
+
+    .data-spirit-orb.speaking {
+      box-shadow: 0 0 50px #00F0FF, 0 0 80px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(0, 240, 255, 0.5);
+      animation: orb-waveform-pulse 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes orb-idle-pulse {
+      from { transform: scale(1); box-shadow: 0 0 35px #00F0FF, inset 0 0 15px rgba(0, 240, 255, 0.4); }
+      to { transform: scale(1.05); box-shadow: 0 0 55px #00F0FF, inset 0 0 30px rgba(0, 240, 255, 0.6); }
+    }
+
+    @keyframes orb-ripple {
+      0% { transform: scale(1.1); box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0.3), inset 0 0 25px rgba(0, 136, 255, 0.5); }
+      50% { transform: scale(1.18); box-shadow: 0 0 65px #0088FF, 0 0 30px rgba(0, 136, 255, 0.4), inset 0 0 35px rgba(0, 136, 255, 0.6); }
+      100% { transform: scale(1.1); box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0), inset 0 0 25px rgba(0, 136, 255, 0.5); }
+    }
+
+    @keyframes orb-think-glow {
+      from { box-shadow: 0 0 60px #FF00E5, inset 0 0 20px rgba(255, 0, 229, 0.4); }
+      to { box-shadow: 0 0 95px #FF00E5, inset 0 0 40px rgba(255, 0, 229, 0.7); }
+    }
+
+    @keyframes orb-vibrate-pulse {
+      0% { transform: translate(1px, 1px); }
+      50% { transform: translate(-1px, -1px); }
+      100% { transform: translate(1px, -1px); }
+    }
+
+    @keyframes orb-waveform-pulse {
+      from { transform: scale(1.02); }
+      to { transform: scale(1.12); }
+    }
   </style>
 </head>
 
 <body>
+  <div id="tsparticles" style="position:fixed;width:100%;height:100%;z-index:-1;top:0;left:0;pointer-events:none;"></div>
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
-  <div class="bg-grid"></div>
+  <div class="bg-grid" style="opacity: 0.15;"></div>
   <div class="orb orb-a"></div>
   <div class="orb orb-b"></div>
   <div class="orb orb-c"></div>
@@ -1695,95 +1994,10 @@
 
           <!-- ✨ INTERACTIVE EMOJI FACE ✨ -->
           <div class="emoji-avatar-wrap">
-            <div class="face-container" id="face-container">
-              <svg class="face-svg" id="face-svg" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
-                <!-- Headphone arc left -->
-                <path class="headphone" d="M 30 90 Q 30 35 90 35" stroke-width="6" />
-                <!-- Headphone arc right -->
-                <path class="headphone" d="M 150 90 Q 150 35 90 35" stroke-width="6" />
-                <!-- Left ear pad -->
-                <rect class="headphone" x="18" y="80" width="18" height="26" rx="8" fill="rgba(91,140,255,0.2)"
-                  stroke="#5b8cff" stroke-width="3" />
-                <!-- Right ear pad -->
-                <rect class="headphone" x="144" y="80" width="18" height="26" rx="8" fill="rgba(91,140,255,0.2)"
-                  stroke="#5b8cff" stroke-width="3" />
-
-                <!-- FACE HEAD -->
-                <circle class="head-circle" cx="90" cy="95" r="68" />
-                <!-- Ear lobes -->
-                <ellipse fill="#F5C680" cx="22" cy="95" rx="7" ry="10" />
-                <ellipse fill="#F5C680" cx="158" cy="95" rx="7" ry="10" />
-
-                <!-- HAIR -->
-                <ellipse fill="#3D1F00" cx="90" cy="36" rx="52" ry="22" />
-                <rect fill="#3D1F00" x="40" y="36" width="100" height="18" rx="4" />
-
-                <!-- LEFT EYE GROUP -->
-                <g id="eye-left">
-                  <ellipse class="eye-white" cx="68" cy="88" rx="16" ry="14" />
-                  <ellipse class="eye-pupil" id="pupil-left" cx="68" cy="89" rx="8" ry="9" />
-                  <circle class="eye-shine" cx="72" cy="85" r="3" />
-                  <!-- Eyelid (for blinking) -->
-                  <ellipse class="eye-lid" id="lid-left" cx="68" cy="88" rx="16" ry="14" fill="#FFDBA4"
-                    transform-origin="68 78" transform="scaleY(0)" />
-                </g>
-
-                <!-- RIGHT EYE GROUP -->
-                <g id="eye-right">
-                  <ellipse class="eye-white" cx="112" cy="88" rx="16" ry="14" />
-                  <ellipse class="eye-pupil" id="pupil-right" cx="112" cy="89" rx="8" ry="9" />
-                  <circle class="eye-shine" cx="116" cy="85" r="3" />
-                  <ellipse class="eye-lid" id="lid-right" cx="112" cy="88" rx="16" ry="14" fill="#FFDBA4"
-                    transform-origin="112 78" transform="scaleY(0)" />
-                </g>
-
-                <!-- EYEBROWS -->
-                <path class="eyebrow-path" id="brow-left" d="M 52 72 Q 62 66 78 70" stroke-width="3.5" />
-                <path class="eyebrow-path" id="brow-right" d="M 102 70 Q 118 66 128 72" stroke-width="3.5" />
-
-                <!-- NOSE -->
-                <path d="M 90 98 Q 84 108 88 112 Q 90 114 92 112 Q 96 108 90 98" fill="#E8A870" stroke="none" />
-
-                <!-- MOUTH -->
-                <path class="mouth-path" id="mouth-smile" d="M 72 125 Q 90 137 108 125" />
-                <g id="mouth-open-group" style="display:none">
-                  <ellipse class="mouth-open" cx="90" cy="128" rx="18" ry="10" />
-                  <ellipse class="teeth" cx="90" cy="122" rx="14" ry="4" />
-                  <ellipse class="tongue" cx="90" cy="133" rx="10" ry="5" />
-                </g>
-                <g id="mouth-laugh" style="display:none">
-                  <path d="M 70 122 Q 90 142 110 122" fill="#CC6B4A" stroke="#8B4513" stroke-width="2"
-                    stroke-linecap="round" />
-                  <ellipse fill="#FFFFF0" cx="90" cy="126" rx="16" ry="6" />
-                </g>
-                <path class="mouth-path" id="mouth-think" d="M 75 128 Q 90 126 108 128" style="display:none" />
-
-                <!-- CHEEKS -->
-                <ellipse class="cheek" id="cheek-left" cx="50" cy="108" rx="16" ry="10" />
-                <ellipse class="cheek" id="cheek-right" cx="130" cy="108" rx="16" ry="10" />
-
-                <!-- SWEAT DROP -->
-                <g class="sweat" id="sweat-drop">
-                  <circle fill="#7EC8E3" cx="138" cy="68" r="6" />
-                  <path fill="#7EC8E3" d="M 138 55 Q 133 62 138 68 Q 143 62 138 55" />
-                </g>
-
-                <!-- SPARKLES -->
-                <g class="sparkle" id="sparkle-1" transform="translate(145,65)">
-                  <path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z" fill="#f5a623" />
-                </g>
-                <g class="sparkle" id="sparkle-2" transform="translate(35,70)">
-                  <path d="M0,-6 L1.5,-1.5 L6,0 L1.5,1.5 L0,6 L-1.5,1.5 L-6,0 L-1.5,-1.5 Z" fill="#38d9f5" />
-                </g>
-                <g class="sparkle" id="sparkle-3" transform="translate(155,105)">
-                  <path d="M0,-5 L1.2,-1.2 L5,0 L1.2,1.2 L0,5 L-1.2,1.2 L-5,0 L-1.2,-1.2 Z" fill="#a78bfa" />
-                </g>
-
-                <!-- Speaking waves -->
-                <path class="speaking-wave" id="sw1" d="M 65 148 Q 72 144 80 148" />
-                <path class="speaking-wave" id="sw2" d="M 82 150 Q 90 146 98 150" />
-                <path class="speaking-wave" id="sw3" d="M 100 148 Q 108 144 115 148" />
-              </svg>
+            <div class="data-spirit-orb-container" id="face-container">
+              <div id="data-spirit-orb" class="data-spirit-orb idle">
+                <div class="orb-inner-swirl"></div>
+              </div>
             </div>
           </div>
 
@@ -2625,13 +2839,6 @@
     // ══════════════════════════════════════════════════════
     const Face = {
       state: 'idle',
-      eyeTarget: { x: 0, y: 0 },
-      eyeCurrent: { x: 0, y: 0 },
-      blinkTimer: null,
-      isBlinking: false,
-      lipSyncFrame: null,
-      lipPhase: 0,
-
       init() {
         document.addEventListener('mousemove', e => {
           const face = document.getElementById('face-container');
@@ -2639,137 +2846,48 @@
           const rect = face.getBoundingClientRect();
           const cx = rect.left + rect.width / 2;
           const cy = rect.top + rect.height / 2;
-          this.eyeTarget.x = Math.max(-5, Math.min(5, (e.clientX - cx) * 0.04));
-          this.eyeTarget.y = Math.max(-3, Math.min(3, (e.clientY - cy) * 0.03));
+          const dx = e.clientX - cx;
+          const dy = e.clientY - cy;
+          // Apply a subtle 3D rotate tilt effect to the orb based on mouse distance
+          const tiltX = Math.max(-15, Math.min(15, (dy / window.innerHeight) * 40));
+          const tiltY = Math.max(-15, Math.min(15, (-dx / window.innerWidth) * 40));
+          const orb = document.getElementById('data-spirit-orb');
+          if (orb) {
+            orb.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+          }
         });
-
-        setInterval(() => {
-          this.eyeCurrent.x += (this.eyeTarget.x - this.eyeCurrent.x) * 0.1;
-          this.eyeCurrent.y += (this.eyeTarget.y - this.eyeCurrent.y) * 0.1;
-          const pl = document.getElementById('pupil-left');
-          const pr = document.getElementById('pupil-right');
-          if (pl) pl.setAttribute('transform', `translate(${this.eyeCurrent.x},${this.eyeCurrent.y})`);
-          if (pr) pr.setAttribute('transform', `translate(${this.eyeCurrent.x},${this.eyeCurrent.y})`);
-        }, 30);
-
-        this.scheduleBlink();
-      },
-
-      scheduleBlink() {
-        const delay = 2000 + Math.random() * 4000;
-        this.blinkTimer = setTimeout(() => {
-          this.blink();
-          this.scheduleBlink();
-        }, delay);
-      },
-
-      blink() {
-        if (this.isBlinking) return;
-        this.isBlinking = true;
-        const ll = document.getElementById('lid-left');
-        const lr = document.getElementById('lid-right');
-        if (ll) ll.setAttribute('transform', 'scaleY(1)');
-        if (lr) lr.setAttribute('transform', 'scaleY(1)');
-        setTimeout(() => {
-          if (ll) ll.setAttribute('transform', 'scaleY(0)');
-          if (lr) lr.setAttribute('transform', 'scaleY(0)');
-          this.isBlinking = false;
-        }, 120);
-      },
-
-      doubleBlink() {
-        this.blink();
-        setTimeout(() => this.blink(), 350);
+        
+        // Add perspective styling to the container for 3D tilt
+        const faceContainer = document.getElementById('face-container');
+        if (faceContainer) {
+          faceContainer.style.perspective = "1000px";
+        }
       },
 
       setState(newState) {
         this.state = newState;
-        document.getElementById('mouth-smile').style.display = 'block';
-        document.getElementById('mouth-open-group').style.display = 'none';
-        document.getElementById('mouth-laugh').style.display = 'none';
-        document.getElementById('mouth-think').style.display = 'none';
-        document.getElementById('cheek-left').classList.remove('show');
-        document.getElementById('cheek-right').classList.remove('show');
-        document.getElementById('sweat-drop').classList.remove('show');
-        ['sparkle-1', 'sparkle-2', 'sparkle-3'].forEach(id => document.getElementById(id).classList.remove('show'));
-        ['sw1', 'sw2', 'sw3'].forEach(id => document.getElementById(id).classList.remove('active'));
-        if (this.lipSyncFrame) { cancelAnimationFrame(this.lipSyncFrame); this.lipSyncFrame = null; }
-        document.getElementById('face-container').style.animation = '';
+        const orb = document.getElementById('data-spirit-orb');
+        const consoleEl = document.querySelector('.voice-console');
+        const cardEl = document.getElementById('avatar-card');
+        
+        // Map laugh to speaking visual state
+        const stateClass = newState === 'laughing' ? 'speaking' : newState;
 
-        switch (newState) {
-          case 'idle':
-            document.getElementById('mouth-smile').style.display = 'block';
-            document.getElementById('face-container').style.animation = 'face-idle 4s ease-in-out infinite';
-            break;
-
-          case 'listening':
-            document.getElementById('brow-left').setAttribute('d', 'M 52 68 Q 62 62 78 67');
-            document.getElementById('brow-right').setAttribute('d', 'M 102 67 Q 118 62 128 68');
-            document.getElementById('mouth-smile').setAttribute('d', 'M 74 127 Q 90 133 106 127');
-            document.getElementById('face-container').style.animation = 'face-idle 2s ease-in-out infinite';
-            break;
-
-          case 'thinking':
-            document.getElementById('brow-left').setAttribute('d', 'M 52 72 Q 62 66 78 70');
-            document.getElementById('brow-right').setAttribute('d', 'M 102 66 Q 118 62 128 68');
-            document.getElementById('mouth-smile').setAttribute('d', 'M 74 128 Q 90 125 108 128');
-            document.getElementById('sweat-drop').classList.add('show');
-            document.getElementById('mouth-think').style.display = 'block';
-            document.getElementById('mouth-smile').style.display = 'none';
-            break;
-
-          case 'speaking':
-            document.getElementById('brow-left').setAttribute('d', 'M 52 72 Q 62 66 78 70');
-            document.getElementById('brow-right').setAttribute('d', 'M 102 70 Q 118 66 128 72');
-            document.getElementById('mouth-smile').style.display = 'none';
-            document.getElementById('mouth-open-group').style.display = 'block';
-            this.animateLips();
-            break;
-
-          case 'laughing':
-            document.getElementById('mouth-smile').style.display = 'none';
-            document.getElementById('mouth-laugh').style.display = 'block';
-            document.getElementById('cheek-left').classList.add('show');
-            document.getElementById('cheek-right').classList.add('show');
-            ['sparkle-1', 'sparkle-2', 'sparkle-3'].forEach(id => document.getElementById(id).classList.add('show'));
-            this.doubleBlink();
-            document.getElementById('face-container').style.animation = 'none';
-            let t = 0;
-            const bounce = () => {
-              t += 0.15;
-              const y = Math.sin(t) * 5;
-              document.getElementById('face-container').style.transform = `translateY(${y}px)`;
-              if (this.state === 'laughing') requestAnimationFrame(bounce);
-              else document.getElementById('face-container').style.transform = '';
-            };
-            requestAnimationFrame(bounce);
-            break;
+        // Reset state classes
+        const classes = ['idle', 'listening', 'thinking', 'speaking'];
+        
+        if (orb) {
+          classes.forEach(c => orb.classList.remove(c));
+          orb.classList.add(stateClass);
         }
-      },
-
-      animateLips() {
-        const mouth = document.getElementById('mouth-open-group');
-        const mouthEllipse = mouth.querySelector('ellipse');
-        const sw1 = document.getElementById('sw1');
-        const sw2 = document.getElementById('sw2');
-        const sw3 = document.getElementById('sw3');
-        let phase = 0;
-
-        const loop = () => {
-          if (this.state !== 'speaking') {
-            mouth.style.display = 'none';
-            [sw1, sw2, sw3].forEach(e => e.classList.remove('active'));
-            return;
-          }
-          phase += 0.18;
-          const openY = 8 + Math.abs(Math.sin(phase)) * 8;
-          mouthEllipse.setAttribute('ry', openY);
-          if (Math.sin(phase) > 0.3) { sw1.classList.add('active'); sw2.classList.remove('active'); sw3.classList.add('active'); }
-          else if (Math.sin(phase) < -0.3) { sw1.classList.remove('active'); sw2.classList.add('active'); sw3.classList.remove('active'); }
-          else { sw1.classList.add('active'); sw2.classList.add('active'); sw3.classList.add('active'); }
-          this.lipSyncFrame = requestAnimationFrame(loop);
-        };
-        this.lipSyncFrame = requestAnimationFrame(loop);
+        if (consoleEl) {
+          classes.forEach(c => consoleEl.classList.remove(c));
+          consoleEl.classList.add(stateClass);
+        }
+        if (cardEl) {
+          classes.forEach(c => cardEl.classList.remove(c));
+          cardEl.classList.add(stateClass);
+        }
       },
 
       checkForLaugh(text) {
@@ -3066,6 +3184,181 @@
       window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
       window.speechSynthesis.getVoices();
     }
+
+    // 🌌 tsParticles Initializer
+    if (typeof tsParticles !== 'undefined') {
+      tsParticles.load("tsparticles", {
+        fpsLimit: 60,
+        particles: {
+          number: {
+            value: 65,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#00F0FF"
+          },
+          shape: {
+            type: "circle"
+          },
+          opacity: {
+            value: 0.15,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 0.5,
+              opacity_min: 0.05,
+              sync: false
+            }
+          },
+          size: {
+            value: 2.5,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 1,
+              size_min: 0.5,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 140,
+            color: "#00F0FF",
+            opacity: 0.08,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 0.6,
+            direction: "none",
+            random: true,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: {
+              enable: true,
+              rotateX: 600,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "grab"
+            },
+            onclick: {
+              enable: false
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 180,
+              line_linked: {
+                opacity: 0.2
+              }
+            }
+          }
+        },
+        retina_detect: true
+      });
+      
+      // Resource-saving pause on blur
+      window.addEventListener('blur', () => {
+        const container = tsParticles.domItem(0);
+        if (container) container.pause();
+      });
+      window.addEventListener('focus', () => {
+        const container = tsParticles.domItem(0);
+        if (container) container.play();
+      });
+    }
+
+    // 📈 CountUp Metrics Initializer
+    function initMetricsCountUp() {
+      if (typeof countUp === 'undefined' || !countUp.CountUp) return;
+      
+      const metricElements = [];
+      document.querySelectorAll('.hstat-n').forEach(el => metricElements.push(el));
+      document.querySelectorAll('#about span').forEach(el => {
+        if (/[0-9]/.test(el.textContent) && el.textContent.length < 15) {
+          metricElements.push(el);
+        }
+      });
+      
+      metricElements.forEach((el, index) => {
+        el.style.textShadow = '0 0 15px rgba(0, 240, 255, 0.4)';
+        el.style.position = 'relative';
+        
+        const rawText = el.textContent.trim();
+        const match = rawText.match(/^([0-9.,]+)(.*)$/);
+        if (match) {
+          const numValue = parseFloat(match[1].replace(/,/g, ''));
+          const suffix = match[2];
+          
+          const targetId = 'metric-anim-' + index;
+          el.id = targetId;
+          
+          const decimals = match[1].includes('.') ? match[1].split('.')[1].length : 0;
+          
+          const cu = new countUp.CountUp(targetId, numValue, {
+            startVal: 0,
+            duration: 2.5,
+            decimalPlaces: decimals,
+            suffix: suffix,
+            useEasing: true,
+            useGrouping: true
+          });
+          
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                cu.start();
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+          
+          observer.observe(el);
+        }
+      });
+    }
+    initMetricsCountUp();
+
+    // 🔀 Pipeline Flow Tooltips
+    function initPipelineTooltips() {
+      const tooltips = {
+        "Bronze Delta": { action: "Ingests raw ERP & RDBMS data directly into Delta Lake.", savings: "20% storage cost reduction via compression." },
+        "Silver Delta": { action: "Cleanses, deduplicates, and conforms data.", savings: "30% reduction in cluster runtime." },
+        "Gold Delta": { action: "Aggregates and builds business-level metrics.", savings: "45% infrastructure cost savings ($380K/year)." },
+        "Apache Kafka": { action: "High-throughput event broker ingestion.", savings: "Zero data loss during peak load." },
+        "Spark Stream": { action: "Exactly-once event processing and transformation.", savings: "Reduced ingestion latency from hours to seconds." },
+        "Delta Tables": { action: "Micro-batch storage for real-time query engines.", savings: "92% faster CDC ingestion windows." },
+        "GCS Storage": { action: "Sleek landing bucket for petabyte-scale raw files.", savings: "Decommissioned legacy physical servers." },
+        "Cloud Dataflow": { action: "Apache Beam streaming processing pipeline.", savings: "Saved 40% in compute resources." },
+        "BigQuery": { action: "Enterprise data warehouse for analytics.", savings: "Cut query times from hours to seconds." }
+      };
+
+      document.querySelectorAll('.flow-node').forEach(node => {
+        const titleEl = node.querySelector('.node-title');
+        if (!titleEl) return;
+        const titleText = titleEl.textContent.trim();
+        if (tooltips[titleText]) {
+          const info = tooltips[titleText];
+          node.setAttribute('data-tooltip', `${info.action} Cost Savings: ${info.savings}`);
+          node.style.borderColor = 'var(--cyan)';
+        } else {
+          node.setAttribute('data-tooltip', `Data ingestion flow stage.`);
+        }
+      });
+    }
+    initPipelineTooltips();
 
     setTimeout(greetOnLoad, 1800);
   </script>
