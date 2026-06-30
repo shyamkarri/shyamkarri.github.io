@@ -24,18 +24,28 @@
     }
 
     :root {
-      --bg: #0A0E17; /* Deep, dark space navy */
+      --bg: #0A0E17;
+      /* Deep, dark space navy */
       --bg2: #0E1321;
-      --surface: rgba(20, 30, 40, 0.55); /* Glassmorphism base */
-      --card: rgba(20, 30, 40, 0.55); /* Glassmorphism card */
-      --border: rgba(255, 255, 255, 0.08); /* Glassmorphism border */
-      --border2: rgba(0, 240, 255, 0.15); /* Cyan glow border */
-      --text: #FFFFFF; /* Pure White */
-      --muted: #B0C4DE; /* Light Grey */
+      --surface: rgba(20, 30, 40, 0.55);
+      /* Glassmorphism base */
+      --card: rgba(20, 30, 40, 0.55);
+      /* Glassmorphism card */
+      --border: rgba(255, 255, 255, 0.08);
+      /* Glassmorphism border */
+      --border2: rgba(0, 240, 255, 0.15);
+      /* Cyan glow border */
+      --text: #FFFFFF;
+      /* Pure White */
+      --muted: #B0C4DE;
+      /* Light Grey */
       --dim: #7B8F9A;
-      --blue: #00F0FF; /* Primary Glow: Cyan */
-      --cyan: #00F0FF; /* Primary Glow: Cyan */
-      --magenta: #FF00E5; /* Secondary Glow: Magenta */
+      --blue: #00F0FF;
+      /* Primary Glow: Cyan */
+      --cyan: #00F0FF;
+      /* Primary Glow: Cyan */
+      --magenta: #FF00E5;
+      /* Secondary Glow: Magenta */
       --violet: #D946EF;
       --green: #10B981;
       --amber: #F59E0B;
@@ -467,17 +477,49 @@
     }
 
     @keyframes vibration {
-      0% { transform: translate(1px, 1px) rotate(0deg); }
-      10% { transform: translate(-1px, -2px) rotate(-1deg); }
-      20% { transform: translate(-3px, 0px) rotate(1deg); }
-      30% { transform: translate(0px, 2px) rotate(0deg); }
-      40% { transform: translate(1px, -1px) rotate(1deg); }
-      50% { transform: translate(-1px, 2px) rotate(-1deg); }
-      60% { transform: translate(-3px, 1px) rotate(0deg); }
-      70% { transform: translate(2px, 1px) rotate(-1deg); }
-      80% { transform: translate(-1px, -1px) rotate(1deg); }
-      90% { transform: translate(2px, 2px) rotate(0deg); }
-      100% { transform: translate(1px, -2px) rotate(-1deg); }
+      0% {
+        transform: translate(1px, 1px) rotate(0deg);
+      }
+
+      10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+      }
+
+      20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+      }
+
+      30% {
+        transform: translate(0px, 2px) rotate(0deg);
+      }
+
+      40% {
+        transform: translate(1px, -1px) rotate(1deg);
+      }
+
+      50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+      }
+
+      60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+      }
+
+      70% {
+        transform: translate(2px, 1px) rotate(-1deg);
+      }
+
+      80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+      }
+
+      90% {
+        transform: translate(2px, 2px) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+      }
     }
 
     .avatar-card::before {
@@ -884,18 +926,18 @@
       border-color: var(--cyan);
       box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
     }
-    
+
     .voice-console.listening {
       border-color: #0088FF;
       box-shadow: 0 0 40px rgba(0, 136, 255, 0.4);
     }
-    
+
     .voice-console.thinking {
       border-color: var(--magenta);
       box-shadow: 0 0 50px rgba(255, 0, 229, 0.45);
       animation: vibration 0.15s infinite;
     }
-    
+
     .voice-console.speaking {
       border-color: var(--cyan);
       box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
@@ -1724,41 +1766,57 @@
       background: var(--bg) !important;
       font-family: var(--fb) !important;
     }
-    
-    h1, h2, h3, h4, h5, h6, .sec-h, .hero-title, .avatar-name, .exp-co, .proj-ttl {
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .sec-h,
+    .hero-title,
+    .avatar-name,
+    .exp-co,
+    .proj-ttl {
       font-family: var(--fh) !important;
       font-weight: 700 !important;
       letter-spacing: -0.02em;
     }
-    
+
     .hero-title {
       font-size: clamp(3.5rem, 6.5vw, 6rem) !important;
     }
-    
+
     .sec-h {
       font-size: clamp(2.4rem, 4.2vw, 3.6rem) !important;
     }
-    
+
     .proj-ttl {
       font-size: 1.5rem !important;
     }
-    
+
     .exp-co {
       font-size: 1.65rem !important;
     }
-    
+
     .avatar-name {
       font-size: 1.65rem !important;
     }
-    
+
     /* Interactive Links Underline Glow */
-    .nav-links a, .hero-bio a, .exp-ul a, footer a {
+    .nav-links a,
+    .hero-bio a,
+    .exp-ul a,
+    footer a {
       position: relative;
       text-decoration: none;
       transition: color 0.3s;
     }
-    
-    .nav-links a::after, .hero-bio a::after, .exp-ul a::after, footer a::after {
+
+    .nav-links a::after,
+    .hero-bio a::after,
+    .exp-ul a::after,
+    footer a::after {
       content: '';
       position: absolute;
       width: 100%;
@@ -1771,11 +1829,14 @@
       transform-origin: bottom left;
       transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
     }
-    
-    .nav-links a:hover::after, .hero-bio a:hover::after, .exp-ul a:hover::after, footer a:hover::after {
+
+    .nav-links a:hover::after,
+    .hero-bio a:hover::after,
+    .exp-ul a:hover::after,
+    footer a:hover::after {
       transform: scaleX(1);
     }
-    
+
     /* Input and Controls Glow */
     #text-input {
       background: rgba(20, 30, 40, 0.6) !important;
@@ -1783,24 +1844,28 @@
       backdrop-filter: blur(6px);
       transition: all 0.3s ease;
     }
-    
+
     #text-input:focus {
       border-color: var(--cyan) !important;
       box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important;
       background: rgba(20, 30, 40, 0.8) !important;
     }
-    
+
     /* Button glow hover */
-    .btn-glow, .vc-btn-voice, .nav-hire {
+    .btn-glow,
+    .vc-btn-voice,
+    .nav-hire {
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
     }
-    
-    .btn-glow:hover, .vc-btn-voice:hover, .nav-hire:hover {
+
+    .btn-glow:hover,
+    .vc-btn-voice:hover,
+    .nav-hire:hover {
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.5) !important;
       transform: translateY(-2px) scale(1.02);
       border-color: var(--cyan) !important;
     }
-    
+
     /* Interactive Flow Nodes with Tooltips */
     .flow-node {
       position: relative;
@@ -1810,13 +1875,13 @@
       border-radius: 12px !important;
       transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
-    
+
     .flow-node:hover {
       transform: translateY(-4px) scale(1.05);
       border-color: var(--cyan) !important;
       box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
     }
-    
+
     /* Tooltip styling */
     .flow-node::after {
       content: attr(data-tooltip);
@@ -1840,7 +1905,7 @@
       line-height: 1.4;
       text-align: center;
     }
-    
+
     .flow-node:hover::after {
       opacity: 1;
       transform: translateX(-50%) scale(1);
@@ -1881,8 +1946,13 @@
     }
 
     @keyframes swirl {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     /* Orb States */
@@ -1912,36 +1982,73 @@
     }
 
     @keyframes orb-idle-pulse {
-      from { transform: scale(1); box-shadow: 0 0 35px #00F0FF, inset 0 0 15px rgba(0, 240, 255, 0.4); }
-      to { transform: scale(1.05); box-shadow: 0 0 55px #00F0FF, inset 0 0 30px rgba(0, 240, 255, 0.6); }
+      from {
+        transform: scale(1);
+        box-shadow: 0 0 35px #00F0FF, inset 0 0 15px rgba(0, 240, 255, 0.4);
+      }
+
+      to {
+        transform: scale(1.05);
+        box-shadow: 0 0 55px #00F0FF, inset 0 0 30px rgba(0, 240, 255, 0.6);
+      }
     }
 
     @keyframes orb-ripple {
-      0% { transform: scale(1.1); box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0.3), inset 0 0 25px rgba(0, 136, 255, 0.5); }
-      50% { transform: scale(1.18); box-shadow: 0 0 65px #0088FF, 0 0 30px rgba(0, 136, 255, 0.4), inset 0 0 35px rgba(0, 136, 255, 0.6); }
-      100% { transform: scale(1.1); box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0), inset 0 0 25px rgba(0, 136, 255, 0.5); }
+      0% {
+        transform: scale(1.1);
+        box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0.3), inset 0 0 25px rgba(0, 136, 255, 0.5);
+      }
+
+      50% {
+        transform: scale(1.18);
+        box-shadow: 0 0 65px #0088FF, 0 0 30px rgba(0, 136, 255, 0.4), inset 0 0 35px rgba(0, 136, 255, 0.6);
+      }
+
+      100% {
+        transform: scale(1.1);
+        box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0), inset 0 0 25px rgba(0, 136, 255, 0.5);
+      }
     }
 
     @keyframes orb-think-glow {
-      from { box-shadow: 0 0 60px #FF00E5, inset 0 0 20px rgba(255, 0, 229, 0.4); }
-      to { box-shadow: 0 0 95px #FF00E5, inset 0 0 40px rgba(255, 0, 229, 0.7); }
+      from {
+        box-shadow: 0 0 60px #FF00E5, inset 0 0 20px rgba(255, 0, 229, 0.4);
+      }
+
+      to {
+        box-shadow: 0 0 95px #FF00E5, inset 0 0 40px rgba(255, 0, 229, 0.7);
+      }
     }
 
     @keyframes orb-vibrate-pulse {
-      0% { transform: translate(1px, 1px); }
-      50% { transform: translate(-1px, -1px); }
-      100% { transform: translate(1px, -1px); }
+      0% {
+        transform: translate(1px, 1px);
+      }
+
+      50% {
+        transform: translate(-1px, -1px);
+      }
+
+      100% {
+        transform: translate(1px, -1px);
+      }
     }
 
     @keyframes orb-waveform-pulse {
-      from { transform: scale(1.02); }
-      to { transform: scale(1.12); }
+      from {
+        transform: scale(1.02);
+      }
+
+      to {
+        transform: scale(1.12);
+      }
     }
   </style>
 </head>
 
 <body>
-  <div id="tsparticles" style="position:fixed;width:100%;height:100%;z-index:-1;top:0;left:0;pointer-events:none;"></div>
+  <div id="tsparticles" style="position:fixed;width:100%;height:100%;z-index:-1;top:0;left:0;pointer-events:none;">
+  </div>
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
   <div class="bg-grid" style="opacity: 0.15;"></div>
@@ -2779,8 +2886,9 @@
           <a class="c-link" href="tel:+18176015406">📱 </a>
           <a class="c-link" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻
             github.com/shyamkarri</a>
-          <a class="c-link" href="https://linkedin.com/in/shyam-karri" target="_blank" rel="noopener noreferrer">🔗
-            linkedin.com/in/shyam-karri</a>
+          <a class="c-link" href="https://www.linkedin.com/in/karri-prasad-293374293/" target="_blank"
+            rel="noopener noreferrer">🔗
+            linkedin.com/in/karri-prasad-293374293/</a>
         </div>
       </div>
     </div>
@@ -2856,7 +2964,7 @@
             orb.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
           }
         });
-        
+
         // Add perspective styling to the container for 3D tilt
         const faceContainer = document.getElementById('face-container');
         if (faceContainer) {
@@ -2869,13 +2977,13 @@
         const orb = document.getElementById('data-spirit-orb');
         const consoleEl = document.querySelector('.voice-console');
         const cardEl = document.getElementById('avatar-card');
-        
+
         // Map laugh to speaking visual state
         const stateClass = newState === 'laughing' ? 'speaking' : newState;
 
         // Reset state classes
         const classes = ['idle', 'listening', 'thinking', 'speaking'];
-        
+
         if (orb) {
           classes.forEach(c => orb.classList.remove(c));
           orb.classList.add(stateClass);
@@ -3268,7 +3376,7 @@
         },
         retina_detect: true
       });
-      
+
       // Resource-saving pause on blur
       window.addEventListener('blur', () => {
         const container = tsParticles.domItem(0);
@@ -3283,7 +3391,7 @@
     // 📈 CountUp Metrics Initializer
     function initMetricsCountUp() {
       if (typeof countUp === 'undefined' || !countUp.CountUp) return;
-      
+
       const metricElements = [];
       document.querySelectorAll('.hstat-n').forEach(el => metricElements.push(el));
       document.querySelectorAll('#about span').forEach(el => {
@@ -3291,22 +3399,22 @@
           metricElements.push(el);
         }
       });
-      
+
       metricElements.forEach((el, index) => {
         el.style.textShadow = '0 0 15px rgba(0, 240, 255, 0.4)';
         el.style.position = 'relative';
-        
+
         const rawText = el.textContent.trim();
         const match = rawText.match(/^([0-9.,]+)(.*)$/);
         if (match) {
           const numValue = parseFloat(match[1].replace(/,/g, ''));
           const suffix = match[2];
-          
+
           const targetId = 'metric-anim-' + index;
           el.id = targetId;
-          
+
           const decimals = match[1].includes('.') ? match[1].split('.')[1].length : 0;
-          
+
           const cu = new countUp.CountUp(targetId, numValue, {
             startVal: 0,
             duration: 2.5,
@@ -3315,7 +3423,7 @@
             useEasing: true,
             useGrouping: true
           });
-          
+
           const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
               if (entry.isIntersecting) {
@@ -3324,7 +3432,7 @@
               }
             });
           }, { threshold: 0.1 });
-          
+
           observer.observe(el);
         }
       });
