@@ -4,12 +4,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Karri Prasad — Senior Data Platform Engineer</title>
-  <meta name="description" content="Senior Data Platform Engineer specializing in high-throughput streaming systems, Medallion Lakehouses, and distributed optimization across AWS, Azure, and GCP." />
-  <meta name="keywords" content="Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, Databricks Engineer, Spark Engineer, Kafka Engineer, Data Platform Engineer, Cloud Data Engineer, BigQuery Engineer, Snowflake Engineer" />
+  <title>Karri Prasad — Senior Data Engineer &amp; Data Platform Architect</title>
+  <meta name="description"
+    content="Portfolio of Karri Prasad, a Senior Data Engineer and Data Platform Architect. Expert in Databricks, Apache Spark, Snowflake, Apache Kafka, AWS, Azure, and GCP." />
+  <meta name="keywords"
+    content="Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, Databricks Engineer, Spark Engineer, Kafka Engineer, Data Platform Engineer, Cloud Data Engineer, BigQuery Engineer, Snowflake Engineer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.12.0/tsparticles.slim.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/countup.js@2.8.0/dist/countUp.umd.js"></script>
   <style>
     * {
       margin: 0;
@@ -18,43 +24,142 @@
     }
 
     :root {
-      --bg: #000000;
-      --bg2: #050508;
-      --surface: #0a0a0f;
-      --card: #0d0d14;
-      --border: rgba(255, 255, 255, 0.04);
-      --border-hover: rgba(255, 255, 255, 0.12);
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --dim: #475569;
-      --blue: #2563eb;
-      --cyan: #06b6d4;
-      --violet: #7c3aed;
-      --green: #10b981;
-      --amber: #f59e0b;
-      --pink: #ec4899;
-      --glow: rgba(37, 99, 235, 0.08);
-      --font-sans: 'Plus Jakarta Sans', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --bg: #0A0E17;
+      /* Deep, dark space navy */
+      --bg2: #0E1321;
+      --surface: rgba(20, 30, 40, 0.55);
+      /* Glassmorphism base */
+      --card: rgba(20, 30, 40, 0.55);
+      /* Glassmorphism card */
+      --border: rgba(255, 255, 255, 0.08);
+      /* Glassmorphism border */
+      --border2: rgba(0, 240, 255, 0.15);
+      /* Cyan glow border */
+      --text: #FFFFFF;
+      /* Pure White */
+      --muted: #B0C4DE;
+      /* Light Grey */
+      --dim: #7B8F9A;
+      --blue: #00F0FF;
+      /* Primary Glow: Cyan */
+      --cyan: #00F0FF;
+      /* Primary Glow: Cyan */
+      --magenta: #FF00E5;
+      /* Secondary Glow: Magenta */
+      --violet: #D946EF;
+      --green: #10B981;
+      --amber: #F59E0B;
+      --pink: #EC4899;
+      --glow: rgba(0, 240, 255, 0.25);
+      --glow2: rgba(255, 0, 229, 0.2);
+      --fh: 'Space Grotesk', sans-serif;
+      --fb: 'Inter', sans-serif;
+      --fm: 'JetBrains Mono', monospace;
     }
 
     body.light-mode {
-      --bg: #fafafa;
-      --bg2: #f4f4f5;
-      --surface: #ececed;
+      --bg: #f8fafc;
+      --bg2: #f1f5f9;
+      --surface: #e2e8f0;
       --card: #ffffff;
-      --border: rgba(0, 0, 0, 0.05);
-      --border-hover: rgba(0, 0, 0, 0.15);
-      --text: #09090b;
-      --muted: #71717a;
-      --dim: #a1a1aa;
-      --blue: #2563eb;
+      --border: rgba(15, 23, 42, 0.08);
+      --border2: rgba(15, 23, 42, 0.16);
+      --text: #0f172a;
+      --muted: #475569;
+      --dim: #64748b;
+      --blue: #1d4ed8;
       --cyan: #0891b2;
-      --violet: #7c3aed;
-      --green: #059669;
-      --amber: #d97706;
-      --pink: #db2777;
-      --glow: rgba(37, 99, 235, 0.03);
+      --violet: #6d28d9;
+      --green: #047857;
+      --amber: #b45309;
+      --pink: #be185d;
+      --glow: rgba(37, 99, 235, 0.05);
+      --glow2: rgba(6, 182, 212, 0.03);
+    }
+
+    body.light-mode .head-circle {
+      fill: #ffedd5;
+    }
+
+    body.light-mode .face-container {
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.1));
+    }
+
+    body.light-mode .emoji-avatar-wrap {
+      background: linear-gradient(160deg, #f1f5f9 0%, #e2e8f0 100%);
+    }
+
+    body.light-mode .voice-console {
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (hover: none) {
+      body {
+        cursor: auto !important;
+      }
+
+      #cursor,
+      #cursor-ring {
+        display: none !important;
+      }
+    }
+
+    /* ── PIPELINE FLOW DIAGRAMS ── */
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 1.5rem 0;
+      background: rgba(91, 140, 255, 0.03);
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      gap: 0.5rem;
+      overflow-x: auto;
+    }
+
+    .flow-node {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      text-align: center;
+      min-width: 95px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .flow-node .node-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .flow-node .node-sub {
+      font-size: 0.6rem;
+      color: var(--cyan);
+      font-family: var(--fm);
+      margin-top: 0.15rem;
+    }
+
+    .flow-arrow {
+      color: var(--blue);
+      font-size: 1.1rem;
+      animation: pulse-arrow 1.5s infinite alternate;
+      flex-shrink: 0;
+    }
+
+    @keyframes pulse-arrow {
+      from {
+        transform: translateX(-3px);
+        opacity: 0.6;
+      }
+
+      to {
+        transform: translateX(3px);
+        opacity: 1;
+      }
     }
 
     html {
@@ -64,85 +169,112 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: var(--font-sans);
+      font-family: var(--fb);
       overflow-x: hidden;
-      line-height: 1.6;
+      cursor: none;
     }
 
-    /* ── BACKGROUND ACCENTS ── */
+    #cursor {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--cyan);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+      mix-blend-mode: screen;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(91, 140, 255, 0.4);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.08s, width 0.25s, height 0.25s;
+    }
+
     .bg-grid {
       position: fixed;
       inset: 0;
-      background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 60px 60px;
+      background-image: linear-gradient(rgba(91, 140, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(91, 140, 255, 0.03) 1px, transparent 1px);
+      background-size: 80px 80px;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.45;
     }
 
-    .glow-orb {
+    .orb {
       position: fixed;
       border-radius: 50%;
       pointer-events: none;
       z-index: 0;
-      filter: blur(140px);
-      opacity: 0.15;
+      filter: blur(100px);
     }
 
-    .glow-orb-1 {
+    .orb-a {
       width: 600px;
       height: 600px;
-      background: radial-gradient(circle, var(--blue) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(91, 140, 255, 0.1) 0%, transparent 70%);
       top: -200px;
-      left: -100px;
+      left: -150px;
     }
 
-    .glow-orb-2 {
+    .orb-b {
       width: 500px;
       height: 500px;
-      background: radial-gradient(circle, var(--violet) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(167, 139, 250, 0.08) 0%, transparent 70%);
       bottom: -100px;
       right: -100px;
     }
 
-    /* ── NAVIGATION ── */
+    .orb-c {
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 217, 245, 0.06) 0%, transparent 70%);
+      top: 40%;
+      right: 20%;
+    }
+
     nav {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 100;
-      padding: 1.25rem 4rem;
+      z-index: 200;
+      padding: 1.1rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(var(--bg), 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      background: rgba(6, 8, 18, 0.7);
+      backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
     }
 
     .nav-logo {
-      font-weight: 800;
-      font-size: 0.95rem;
-      letter-spacing: -0.5px;
-      color: var(--text);
+      font-family: var(--fm);
+      font-size: 0.8rem;
+      color: var(--blue);
+      letter-spacing: 3px;
       text-transform: uppercase;
-      font-family: var(--font-mono);
     }
 
     .nav-links {
       display: flex;
-      gap: 3rem;
+      gap: 2.5rem;
     }
 
     .nav-links a {
       color: var(--muted);
       text-decoration: none;
       font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.5px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
+      font-weight: 500;
       transition: color 0.2s;
     }
 
@@ -150,682 +282,1339 @@
       color: var(--text);
     }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-    }
-
-    .theme-btn {
-      background: none;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      font-size: 1.05rem;
-      transition: color 0.2s;
-    }
-
-    .theme-btn:hover {
-      color: var(--text);
-    }
-
-    .nav-btn {
-      background: var(--text);
-      color: var(--bg);
-      padding: 0.5rem 1.2rem;
-      border-radius: 6px;
-      text-decoration: none;
+    .nav-hire {
+      font-family: var(--fm);
       font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      transition: opacity 0.2s;
+      color: var(--cyan);
+      border: 1px solid rgba(56, 217, 245, 0.3);
+      border-radius: 4px;
+      padding: 0.4rem 1rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      letter-spacing: 1px;
     }
 
-    .nav-btn:hover {
-      opacity: 0.9;
+    .nav-hire:hover {
+      background: rgba(56, 217, 245, 0.08);
+      border-color: var(--cyan);
     }
 
-    /* ── HERO SECTION ── */
     #hero {
       min-height: 100vh;
       display: flex;
       align-items: center;
-      padding: 8rem 4rem 4rem;
+      padding: 8rem 3rem 4rem;
       position: relative;
       z-index: 1;
     }
 
     .hero-layout {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 6rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
       align-items: center;
-      max-width: 1300px;
+      max-width: 1200px;
       margin: 0 auto;
       width: 100%;
     }
 
     .hero-left .eyebrow {
-      font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--blue);
-      letter-spacing: 3px;
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 4px;
       text-transform: uppercase;
       display: block;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
 
     .hero-title {
-      font-size: clamp(3rem, 5.5vw, 4.75rem);
+      font-family: var(--fh);
+      font-size: clamp(3rem, 5.5vw, 5rem);
       line-height: 1.05;
-      font-weight: 800;
-      letter-spacing: -2.5px;
       margin-bottom: 1.5rem;
-    }
-
-    .hero-title em {
-      font-style: normal;
-      background: linear-gradient(135deg, var(--blue), var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-sub {
-      color: var(--muted);
-      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
-      line-height: 1.6;
-      margin-bottom: 2.5rem;
-      max-width: 580px;
       font-weight: 400;
     }
 
-    .hero-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 3rem;
+    .hero-title em {
+      font-style: italic;
+      color: var(--blue);
     }
 
-    .hero-chip {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.3rem 0.8rem;
-      font-size: 0.72rem;
-      font-family: var(--font-mono);
+    .hero-title .line2 {
+      display: block;
       color: var(--muted);
+      font-size: 0.65em;
+      font-weight: 300;
+      margin-top: 0.3rem;
+      font-family: var(--fb);
+      letter-spacing: 2px;
+      font-style: normal;
+    }
+
+    .hero-bio {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.85;
+      margin-bottom: 2.5rem;
+      max-width: 480px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .hstat {
+      text-align: left;
+    }
+
+    .hstat-n {
+      font-family: var(--fh);
+      font-size: 2rem;
+      color: var(--text);
+      display: block;
+      font-weight: 700;
+    }
+
+    .hstat-l {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
 
     .hero-btns {
       display: flex;
-      gap: 1.25rem;
+      gap: 1rem;
       flex-wrap: wrap;
     }
 
-    .btn-primary {
-      background: var(--text);
-      color: var(--bg);
-      padding: 0.85rem 2.2rem;
+    .btn-glow {
+      background: var(--blue);
+      color: #fff;
+      padding: 0.75rem 2rem;
       border-radius: 8px;
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       letter-spacing: 0.5px;
-      transition: opacity 0.2s;
+      transition: all 0.25s;
+      box-shadow: 0 0 30px rgba(91, 140, 255, 0.3);
     }
 
-    .btn-primary:hover {
-      opacity: 0.95;
+    .btn-glow:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 50px rgba(91, 140, 255, 0.5);
     }
 
-    .btn-secondary {
+    .btn-ghost {
       color: var(--text);
-      background: transparent;
-      padding: 0.85rem 2.2rem;
+      padding: 0.75rem 2rem;
       border-radius: 8px;
       text-decoration: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      border: 1px solid var(--border-hover);
-      transition: all 0.2s;
+      font-weight: 500;
+      font-size: 0.88rem;
+      border: 1px solid var(--border2);
+      transition: all 0.25s;
     }
 
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.02);
-      border-color: var(--text);
+    .btn-ghost:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-2px);
     }
 
-    /* ── platform visual Timelines ── */
-    .platform-visual {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.5rem;
-      backdrop-filter: blur(10px);
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .visual-nodes {
+    /* ── AVATAR ZONE ── */
+    .avatar-zone {
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
-      position: relative;
-    }
-
-    .platform-node {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      display: flex;
       align-items: center;
-      gap: 1rem;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      cursor: pointer;
+      gap: 1.5rem;
+    }
+
+    .avatar-card {
       position: relative;
-      z-index: 2;
-    }
-
-    .platform-node:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--blue);
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px var(--glow);
-    }
-
-    .platform-node .node-icon {
-      font-size: 1.35rem;
-      background: rgba(255, 255, 255, 0.03);
-      width: 42px;
-      height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      transition: color 0.3s;
-    }
-
-    .platform-node:hover .node-icon {
-      color: var(--blue);
-      border-color: rgba(37, 99, 235, 0.3);
-    }
-
-    .platform-node h4 {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .platform-node p {
-      font-size: 0.7rem;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      margin-top: 0.1rem;
-    }
-
-    .platform-node .hover-details {
-      position: absolute;
-      right: 1.25rem;
-      font-size: 0.68rem;
-      color: var(--cyan);
-      font-family: var(--font-mono);
-      opacity: 0;
-      transform: translateX(10px);
+      width: 300px;
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
       transition: all 0.3s ease;
     }
 
-    .platform-node:hover .hover-details {
-      opacity: 1;
-      transform: translateX(0);
+    .avatar-card:hover {
+      transform: scale(1.02);
+      border-color: var(--cyan);
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.25);
     }
 
-    .connector {
-      width: 2px;
-      height: 20px;
-      background: var(--border);
-      margin: -0.65rem auto;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
+    .avatar-card.idle {
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+      border-color: var(--cyan);
     }
 
-    .pulse-dot {
+    .avatar-card.listening {
+      transform: scale(1.02);
+      box-shadow: 0 0 40px rgba(0, 136, 255, 0.4);
+      border-color: #0088FF;
+    }
+
+    .avatar-card.thinking {
+      box-shadow: 0 0 50px rgba(255, 0, 229, 0.45);
+      border-color: var(--magenta);
+      animation: vibration 0.15s infinite;
+    }
+
+    .avatar-card.speaking {
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
+      border-color: var(--cyan);
+    }
+
+    @keyframes vibration {
+      0% {
+        transform: translate(1px, 1px) rotate(0deg);
+      }
+
+      10% {
+        transform: translate(-1px, -2px) rotate(-1deg);
+      }
+
+      20% {
+        transform: translate(-3px, 0px) rotate(1deg);
+      }
+
+      30% {
+        transform: translate(0px, 2px) rotate(0deg);
+      }
+
+      40% {
+        transform: translate(1px, -1px) rotate(1deg);
+      }
+
+      50% {
+        transform: translate(-1px, 2px) rotate(-1deg);
+      }
+
+      60% {
+        transform: translate(-3px, 1px) rotate(0deg);
+      }
+
+      70% {
+        transform: translate(2px, 1px) rotate(-1deg);
+      }
+
+      80% {
+        transform: translate(-1px, -1px) rotate(1deg);
+      }
+
+      90% {
+        transform: translate(2px, 2px) rotate(0deg);
+      }
+
+      100% {
+        transform: translate(1px, -2px) rotate(-1deg);
+      }
+    }
+
+    .avatar-card::before {
+      content: '';
       position: absolute;
-      top: -10px;
+      top: 0;
       left: 0;
-      width: 2px;
-      height: 12px;
-      background: linear-gradient(to bottom, var(--blue), var(--cyan));
-      animation: pulse-down 1.8s infinite linear;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--magenta), transparent);
+      z-index: 3;
     }
 
-    @keyframes pulse-down {
-      0% { top: -12px; }
-      100% { top: 20px; }
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(56, 217, 245, 0.6), transparent);
+      z-index: 4;
+      animation: scan 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scan {
+      0% {
+        top: 0%;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 0.3;
+      }
+
+      100% {
+        top: 100%;
+        opacity: 0;
+      }
+    }
+
+    /* ─── EMOJI FACE AVATAR ─── */
+    .emoji-avatar-wrap {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #0f1326 0%, #1a1f40 50%, #0a0d1e 100%);
+      overflow: hidden;
+    }
+
+    /* Subtle glow behind face */
+    .emoji-avatar-wrap::before {
+      content: '';
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(91, 140, 255, 0.25) 0%, transparent 70%);
+      border-radius: 50%;
+      animation: face-glow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes face-glow {
+      from {
+        opacity: 0.5;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+
+    /* The SVG face container */
+    .face-container {
+      position: relative;
+      z-index: 2;
+      width: 180px;
+      height: 180px;
+      animation: face-idle 4s ease-in-out infinite;
+    }
+
+    @keyframes face-idle {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      25% {
+        transform: translateY(-4px) rotate(0.5deg);
+      }
+
+      75% {
+        transform: translateY(2px) rotate(-0.5deg);
+      }
+    }
+
+    /* ── Face SVG elements ── */
+    .face-svg {
+      width: 180px;
+      height: 180px;
+      overflow: visible;
+    }
+
+    /* HEAD */
+    .head-circle {
+      fill: #FFDBA4;
+      filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+    }
+
+    /* EYES */
+    .eye-white {
+      fill: #fff;
+    }
+
+    .eye-pupil {
+      fill: #2d1a00;
+      transition: transform 0.15s;
+    }
+
+    .eye-shine {
+      fill: #fff;
+      opacity: 0.9;
+    }
+
+    .eye-lid {
+      fill: #FFDBA4;
+      transform-origin: center;
+      transition: transform 0.2s ease;
+    }
+
+    /* Blinking */
+    .blinking .eye-lid-left,
+    .blinking .eye-lid-right {
+      transform: scaleY(1) !important;
+    }
+
+    /* EYEBROWS */
+    .eyebrow-path {
+      stroke: #6B3A1F;
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      transition: d 0.3s ease;
+    }
+
+    /* MOUTH */
+    .mouth-path {
+      stroke: #8B4513;
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      transition: d 0.4s ease;
+    }
+
+    .mouth-open {
+      fill: #CC6B4A;
+      stroke: #8B4513;
+      stroke-width: 2;
+      transition: all 0.3s ease;
+    }
+
+    .teeth {
+      fill: #FFFFF0;
+    }
+
+    .tongue {
+      fill: #E86060;
+    }
+
+    /* CHEEKS */
+    .cheek {
+      fill: #FFB3B3;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .cheek.show {
+      opacity: 0.5;
+    }
+
+    /* SWEAT DROP (thinking) */
+    .sweat {
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .sweat.show {
+      opacity: 1;
+      animation: sweat-drop 1.5s ease-in-out infinite;
+    }
+
+    @keyframes sweat-drop {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(3px);
+      }
+    }
+
+    /* STARS / SPARKLES (happy) */
+    .sparkle {
+      opacity: 0;
+      transition: opacity 0.4s;
+      animation: sparkle-spin 2s linear infinite;
+    }
+
+    .sparkle.show {
+      opacity: 1;
+    }
+
+    @keyframes sparkle-spin {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+
+      50% {
+        transform: rotate(180deg) scale(1.2);
+      }
+
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
+    }
+
+    /* LIP SYNC – mouth shapes animated by JS */
+    .speaking-wave {
+      stroke: #8B4513;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      fill: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .speaking-wave.active {
+      opacity: 1;
+    }
+
+    /* Headphones (decoration) */
+    .headphone {
+      fill: none;
+      stroke: #5b8cff;
+      stroke-width: 4;
+      stroke-linecap: round;
+      opacity: 0.7;
+    }
+
+    .avatar-info {
+      padding: 1.25rem 1.5rem 1.5rem;
+      position: relative;
+      z-index: 3;
+    }
+
+    .avatar-name {
+      font-family: var(--fh);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .avatar-role {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .voice-bar {
+      display: flex;
+      align-items: flex-end;
+      gap: 3px;
+      height: 28px;
+      margin-bottom: 1rem;
+    }
+
+    .vb {
+      width: 4px;
+      border-radius: 2px;
+      background: var(--blue);
+      transition: height 0.1s ease;
+    }
+
+    .vb.active {
+      animation: wave-bar var(--d, 0.8s) ease-in-out infinite alternate;
+    }
+
+    @keyframes wave-bar {
+      from {
+        height: 4px;
+      }
+
+      to {
+        height: 22px;
+      }
+    }
+
+    .vb:nth-child(1) {
+      --d: 0.7s;
+    }
+
+    .vb:nth-child(2) {
+      --d: 0.5s;
+      animation-delay: 0.1s;
+    }
+
+    .vb:nth-child(3) {
+      --d: 0.6s;
+      animation-delay: 0.05s;
+    }
+
+    .vb:nth-child(4) {
+      --d: 0.4s;
+      animation-delay: 0.15s;
+    }
+
+    .vb:nth-child(5) {
+      --d: 0.8s;
+      animation-delay: 0.08s;
+    }
+
+    .vb:nth-child(6) {
+      --d: 0.5s;
+      animation-delay: 0.12s;
+    }
+
+    .vb:nth-child(7) {
+      --d: 0.65s;
+      animation-delay: 0.03s;
+    }
+
+    .vb:nth-child(8) {
+      --d: 0.45s;
+      animation-delay: 0.18s;
+    }
+
+    .vb:nth-child(9) {
+      --d: 0.7s;
+      animation-delay: 0.06s;
+    }
+
+    .vb:nth-child(10) {
+      --d: 0.55s;
+      animation-delay: 0.1s;
+    }
+
+    .avatar-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: pulse-green 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-green {
+
+      0%,
+      100% {
+        box-shadow: 0 0 8px var(--green);
+      }
+
+      50% {
+        box-shadow: 0 0 18px var(--green), 0 0 30px rgba(45, 212, 172, 0.3);
+      }
+    }
+
+    /* ── VOICE CONSOLE ── */
+    .voice-console {
+      width: 300px;
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .voice-console.idle {
+      border-color: var(--cyan);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.25);
+    }
+
+    .voice-console.listening {
+      border-color: #0088FF;
+      box-shadow: 0 0 40px rgba(0, 136, 255, 0.4);
+    }
+
+    .voice-console.thinking {
+      border-color: var(--magenta);
+      box-shadow: 0 0 50px rgba(255, 0, 229, 0.45);
+      animation: vibration 0.15s infinite;
+    }
+
+    .voice-console.speaking {
+      border-color: var(--cyan);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.35);
+    }
+
+    .vc-header {
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(91, 140, 255, 0.04);
+    }
+
+    .vc-title {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--blue);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    .vc-mode {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    .vc-body {
+      padding: 1rem 1.2rem;
+    }
+
+    .vc-transcript {
+      min-height: 80px;
+      max-height: 130px;
+      overflow-y: auto;
+      margin-bottom: 0.9rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .vc-transcript::-webkit-scrollbar {
+      width: 3px;
+    }
+
+    .vc-transcript::-webkit-scrollbar-thumb {
+      background: var(--border2);
+    }
+
+    .vc-msg {
+      margin-bottom: 0.5rem;
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.79rem;
+      animation: fade-in-msg 0.3s ease;
+    }
+
+    @keyframes fade-in-msg {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .vc-msg.user {
+      background: rgba(91, 140, 255, 0.1);
+      border-left: 2px solid var(--blue);
+    }
+
+    .vc-msg.ai {
+      background: rgba(56, 217, 245, 0.06);
+      border-left: 2px solid var(--cyan);
+      color: var(--text);
+    }
+
+    .vc-msg .sender {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .vc-controls {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .vc-btn {
+      flex: 1;
+      padding: 0.65rem;
+      border-radius: 8px;
+      border: none;
+      font-family: var(--fb);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .vc-btn-voice {
+      background: linear-gradient(135deg, var(--blue), var(--violet));
+      color: #fff;
+    }
+
+    .vc-btn-voice:hover {
+      transform: scale(1.02);
+      box-shadow: 0 4px 20px rgba(91, 140, 255, 0.4);
+    }
+
+    .vc-btn-voice.listening {
+      background: linear-gradient(135deg, var(--green), var(--cyan));
+      animation: pulse-listen 1.5s ease-in-out infinite;
+    }
+
+    .vc-btn-voice.speaking {
+      background: linear-gradient(135deg, var(--amber), var(--pink));
+      animation: pulse-speak 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse-listen {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(45, 212, 172, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(45, 212, 172, 0);
+      }
+    }
+
+    @keyframes pulse-speak {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.4);
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(245, 166, 35, 0);
+      }
+    }
+
+    .vc-btn-stop {
+      background: rgba(244, 114, 182, 0.1);
+      border: 1px solid rgba(244, 114, 182, 0.25);
+      color: var(--pink);
+      font-size: 0.78rem;
+      flex: 0 0 auto;
+      padding: 0.65rem 0.8rem;
+    }
+
+    .vc-btn-stop:hover {
+      background: rgba(244, 114, 182, 0.2);
+    }
+
+    .vc-hint {
+      font-family: var(--fm);
+      font-size: 0.65rem;
+      color: var(--dim);
+      text-align: center;
+      margin-top: 0.6rem;
+      letter-spacing: 0.5px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+    }
+
+    .chip {
+      background: rgba(91, 140, 255, 0.07);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.25rem 0.65rem;
+      font-size: 0.7rem;
+      font-family: var(--fm);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
+    }
+
+    .chip:hover {
+      border-color: var(--blue);
+      color: var(--blue);
     }
 
     /* ── SECTIONS ── */
     section.sec {
-      padding: 8rem 4rem;
+      padding: 6rem 3rem;
       position: relative;
       z-index: 1;
-      border-bottom: 1px solid var(--border);
+    }
+
+    section.sec.alt {
+      background: var(--bg2);
     }
 
     .sec-wrap {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
-    .sec-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
+    .sec-eye {
+      font-family: var(--fm);
+      font-size: 0.7rem;
       color: var(--blue);
-      letter-spacing: 3px;
+      letter-spacing: 4px;
       text-transform: uppercase;
       display: block;
-      margin-bottom: 1rem;
+      margin-bottom: 0.8rem;
     }
 
-    .sec-title {
-      font-size: clamp(2rem, 3.8vw, 3.25rem);
-      font-weight: 800;
-      letter-spacing: -1.5px;
-      margin-bottom: 1.5rem;
-      line-height: 1.15;
+    .sec-h {
+      font-family: var(--fh);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+    }
+
+    .sec-h em {
+      font-style: italic;
+      color: var(--blue);
     }
 
     .sec-sub {
       color: var(--muted);
-      font-size: 1.1rem;
-      max-width: 640px;
-      margin-bottom: 4rem;
+      font-size: 0.9rem;
+      margin-bottom: 3rem;
     }
 
-    /* ── METRICS SECTION ── */
-    .metrics-grid {
+    .skills-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
     }
 
-    .metric-card {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 2.5rem;
-      transition: all 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .metric-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-2px);
-    }
-
-    .metric-num {
-      font-size: 3.5rem;
-      font-weight: 800;
-      letter-spacing: -2px;
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-
-    .metric-label {
-      font-size: 0.85rem;
-      font-family: var(--font-mono);
-      color: var(--blue);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 0.5rem;
-    }
-
-    .metric-desc {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    /* ── TECHNICAL EXPERTISE ── */
-    .expertise-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .exp-card {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
+    .sk-card {
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 20px;
-      padding: 2.25rem;
-      transition: all 0.3s;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
 
-    .exp-card:hover {
-      border-color: rgba(37, 99, 235, 0.3);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 30px var(--glow);
+    .sk-card:hover {
+      border-color: var(--cyan);
+      transform: scale(1.02) translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.25);
     }
 
-    .exp-header {
+    .sk-head {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 1.25rem;
+      gap: 10px;
+      margin-bottom: 1.1rem;
     }
 
-    .exp-icon {
-      font-size: 1.5rem;
-      width: 46px;
-      height: 46px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+    .sk-ico {
+      font-size: 1.4rem;
     }
 
-    .exp-title {
-      font-size: 1.05rem;
-      font-weight: 700;
+    .sk-name {
+      font-weight: 600;
+      font-size: 0.9rem;
     }
 
-    .exp-desc {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin-bottom: 1.5rem;
-    }
-
-    .exp-techs {
+    .sk-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
-      margin-bottom: 1.5rem;
     }
 
-    .exp-t-tag {
-      background: rgba(255, 255, 255, 0.02);
+    .sk-t {
+      background: rgba(91, 140, 255, 0.07);
       border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 0.2rem 0.6rem;
+      border-radius: 5px;
+      padding: 0.18rem 0.55rem;
       font-size: 0.72rem;
-      font-family: var(--font-mono);
-      color: var(--text);
+      font-family: var(--fm);
+      color: var(--muted);
+      transition: all 0.2s;
     }
 
-    .exp-value {
-      border-top: 1px solid var(--border);
-      padding-top: 1rem;
-      font-size: 0.8rem;
-      color: var(--cyan);
-      font-weight: 500;
-    }
-
-    /* ── ARCHITECTURE SHOWCASE ── */
-    .showcase-block {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 3rem;
-      margin-bottom: 4rem;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-
-    .showcase-header {
-      margin-bottom: 2rem;
-    }
-
-    .showcase-details {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3.5rem;
-      margin-top: 2.5rem;
-    }
-
-    .showcase-flow-container {
-      background: rgba(0,0,0,0.2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.5rem;
-    }
-
-    /* ── CASE STUDIES ── */
-    .case-card {
-      background: rgba(255, 255, 255, 0.01);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 3.5rem;
-      margin-bottom: 3rem;
-      transition: border-color 0.3s;
-    }
-
-    .case-card:hover {
-      border-color: rgba(37, 99, 235, 0.2);
-    }
-
-    .case-num {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
+    .sk-t:hover {
+      background: rgba(91, 140, 255, 0.18);
       color: var(--blue);
-      letter-spacing: 2px;
-      display: block;
-      margin-bottom: 1rem;
     }
 
-    .case-title {
-      font-size: 2rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin-bottom: 1.5rem;
-    }
-
-    .case-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 4rem;
-      margin-top: 2rem;
-    }
-
-    .case-section-title {
-      font-size: 0.85rem;
-      font-family: var(--font-mono);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text);
-      margin-bottom: 0.65rem;
-    }
-
-    .case-results-card {
-      background: rgba(37, 99, 235, 0.02);
-      border: 1px dashed rgba(37, 99, 235, 0.25);
-      border-radius: 12px;
-      padding: 1.5rem;
-    }
-
-    .case-stat-highlight {
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: var(--green);
-      line-height: 1.2;
-      margin-bottom: 0.5rem;
-    }
-
-    /* ── EXPERIENCE TIMELINE ── */
-    .exp-timeline {
-      display: flex;
-      flex-direction: column;
-      gap: 3.5rem;
+    .timeline {
       position: relative;
       padding-left: 2rem;
     }
 
-    .exp-timeline::before {
+    .timeline::before {
       content: '';
       position: absolute;
       left: 0;
       top: 0;
       bottom: 0;
       width: 1px;
-      background: var(--border);
+      background: linear-gradient(to bottom, var(--blue), transparent);
     }
 
-    .timeline-item {
+    .exp-item {
       position: relative;
+      margin-bottom: 3.5rem;
+      padding-left: 1.5rem;
     }
 
-    .timeline-item::before {
+    .exp-item::before {
       content: '';
       position: absolute;
-      left: -2.4rem;
+      left: -2.45rem;
       top: 0.4rem;
-      width: 11px;
-      height: 11px;
-      background: var(--bg);
-      border: 2px solid var(--blue);
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
+      background: var(--blue);
+      box-shadow: 0 0 0 4px rgba(91, 140, 255, 0.15), 0 0 16px rgba(91, 140, 255, 0.3);
     }
 
-    .timeline-header {
+    .exp-top {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1.5rem;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
     }
 
-    .timeline-co {
-      font-size: 1.5rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+    .exp-co {
+      font-family: var(--fh);
+      font-size: 1.4rem;
+      font-weight: 400;
     }
 
-    .timeline-dt {
-      font-family: var(--font-mono);
+    .exp-dt {
+      font-family: var(--fm);
       font-size: 0.72rem;
       color: var(--blue);
-      background: rgba(37, 99, 235, 0.05);
-      border: 1px solid rgba(37, 99, 235, 0.15);
-      padding: 0.25rem 0.75rem;
+      background: rgba(91, 140, 255, 0.08);
+      border: 1px solid var(--border);
       border-radius: 4px;
+      padding: 0.2rem 0.6rem;
     }
 
-    .timeline-content-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 3rem;
-    }
-
-    .exp-sub-title {
-      font-size: 0.9rem;
-      font-family: var(--font-mono);
+    .exp-ttl {
+      font-family: var(--fm);
+      font-size: 0.78rem;
       color: var(--cyan);
+      margin-bottom: 0.3rem;
+    }
+
+    .exp-loc {
+      font-family: var(--fm);
+      font-size: 0.7rem;
+      color: var(--dim);
       margin-bottom: 1rem;
     }
 
-    /* ── RECRUITER CTA ── */
-    .cta-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.01) 0%, rgba(255,255,255,0) 100%);
+    .exp-ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .exp-ul li {
+      color: var(--muted);
+      font-size: 0.86rem;
+      padding-left: 1.1rem;
+      position: relative;
+      line-height: 1.7;
+    }
+
+    .exp-ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--blue);
+      font-size: 0.65rem;
+      top: 0.35rem;
+    }
+
+    .exp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .exp-tag {
+      background: rgba(45, 212, 172, 0.07);
+      border: 1px solid rgba(45, 212, 172, 0.18);
+      border-radius: 4px;
+      padding: 0.14rem 0.5rem;
+      font-size: 0.68rem;
+      font-family: var(--fm);
+      color: var(--green);
+    }
+
+    .proj-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .proj {
+      background: rgba(20, 30, 40, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 1.75rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    }
+
+    .proj::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .proj:hover::before {
+      transform: scaleX(1);
+    }
+
+    .proj:hover {
+      border-color: var(--cyan);
+      transform: scale(1.02) translateY(-5px);
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.25);
+    }
+
+    .proj-n {
+      font-family: var(--fm);
+      font-size: 0.68rem;
+      color: var(--blue);
+      opacity: 0.5;
+      display: block;
+      margin-bottom: 0.6rem;
+    }
+
+    .proj-ttl {
+      font-family: var(--fh);
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .proj-org {
+      font-family: var(--fm);
+      font-size: 0.72rem;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+
+    .proj-desc {
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .proj-impact {
+      background: rgba(45, 212, 172, 0.06);
+      border: 1px solid rgba(45, 212, 172, 0.15);
+      border-radius: 8px;
+      padding: 0.5rem 0.8rem;
+      font-size: 0.76rem;
+      font-family: var(--fm);
+      color: var(--green);
+    }
+
+    .proj-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.9rem;
+    }
+
+    .pst {
+      background: rgba(167, 139, 250, 0.08);
+      border: 1px solid rgba(167, 139, 250, 0.18);
+      border-radius: 4px;
+      padding: 0.13rem 0.5rem;
+      font-size: 0.68rem;
+      font-family: var(--fm);
+      color: var(--violet);
+    }
+
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .cert {
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 32px;
-      padding: 5rem 3.5rem;
+      border-radius: 12px;
+      padding: 1.2rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      transition: all 0.3s;
+    }
+
+    .cert:hover {
+      border-color: rgba(245, 166, 35, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .cert-ico {
+      font-size: 1.9rem;
+      flex-shrink: 0;
+    }
+
+    .cert-name {
+      font-weight: 600;
+      font-size: 0.85rem;
+      line-height: 1.3;
+      margin-bottom: 0.25rem;
+    }
+
+    .cert-dt {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-family: var(--fm);
+    }
+
+    .cert-badge {
+      display: inline-block;
+      margin-top: 0.4rem;
+      background: rgba(245, 166, 35, 0.08);
+      border: 1px solid rgba(245, 166, 35, 0.2);
+      border-radius: 4px;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.65rem;
+      font-family: var(--fm);
+      color: var(--amber);
+    }
+
+    #contact {
       text-align: center;
+    }
+
+    .contact-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 4rem 2.5rem;
+      max-width: 620px;
+      margin: 0 auto;
       position: relative;
       overflow: hidden;
     }
 
-    .cta-card::before {
+    .contact-card::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at top center, rgba(37, 99, 235, 0.08), transparent 50%);
+      background: radial-gradient(ellipse at 50% 0%, rgba(91, 140, 255, 0.06), transparent 60%);
       pointer-events: none;
     }
 
-    .cta-card h2 {
-      font-size: clamp(2rem, 4.5vw, 3.5rem);
-      font-weight: 800;
-      letter-spacing: -2px;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
+    .contact-card h2 {
+      font-family: var(--fh);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 400;
     }
 
-    .cta-card p {
+    .contact-card p {
       color: var(--muted);
-      max-width: 600px;
-      margin: 0 auto 3rem;
-      font-size: 1.1rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.8;
     }
 
-    .cta-links {
+    .c-links {
       display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      margin-top: 3rem;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
     }
 
-    .cta-link-btn {
-      display: inline-flex;
+    .c-link {
+      display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
       color: var(--text);
       text-decoration: none;
-      font-size: 0.85rem;
-      font-family: var(--font-mono);
-      padding: 0.75rem 1.75rem;
+      font-size: 0.88rem;
+      padding: 0.7rem 1.5rem;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       transition: all 0.2s;
+      width: 100%;
+      max-width: 340px;
+      justify-content: center;
     }
 
-    .cta-link-btn:hover {
-      border-color: var(--text);
-      background: rgba(255, 255, 255, 0.02);
+    .c-link:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-1px);
     }
 
     footer {
-      padding: 3rem 4rem;
+      padding: 2rem 3rem;
+      text-align: center;
       border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
+      font-family: var(--fm);
+      font-size: 0.72rem;
       color: var(--dim);
     }
 
-    /* ── SCROLL ANIMATIONS ── */
-    .reveal {
+    .fi {
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
-    .reveal.visible {
+    .fi.vis {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ── RESPONSIVENESS ── */
-    @media(max-width: 1024px) {
+    .avatar-card.speaking {
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(56, 217, 245, 0.4), 0 0 60px rgba(56, 217, 245, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    }
+
+    @media(max-width:900px) {
       .hero-layout {
         grid-template-columns: 1fr;
-        gap: 4rem;
         text-align: center;
       }
 
-      .hero-sub {
-        margin-left: auto;
-        margin-right: auto;
+      .avatar-zone {
+        margin-top: 2rem;
       }
 
-      .hero-chips {
+      .hero-bio {
+        margin: 0 auto 2rem;
+      }
+
+      .hero-stats {
         justify-content: center;
       }
 
@@ -833,686 +1622,1853 @@
         justify-content: center;
       }
 
-      .showcase-details {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
-      .case-grid {
-        grid-template-columns: 1fr;
-        gap: 3rem;
-      }
-
-      .timeline-content-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-      }
-
       nav {
-        padding: 1.25rem 2rem;
+        padding: 1rem 1.5rem;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      section.sec {
+        padding: 4rem 1.5rem;
       }
     }
 
-    @media(max-width: 768px) {
-      section.sec {
-        padding: 6rem 2rem;
+    /* ── TERMINAL MODAL OVERLAY ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .terminal-window {
+      width: 90%;
+      max-width: 700px;
+      background: #050508;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      height: 400px;
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-overlay.active .terminal-window {
+      transform: scale(1);
+    }
+
+    .terminal-header {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 0.75rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .t-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .t-btn.close {
+      background: #ff5f56;
+      cursor: pointer;
+    }
+
+    .t-btn.minimize {
+      background: #ffbd2e;
+    }
+
+    .t-btn.expand {
+      background: #27c93f;
+    }
+
+    .terminal-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+    }
+
+    .terminal-progress-bar {
+      height: 2px;
+      background: rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .progress-fill {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--blue), var(--cyan));
+      transition: width 0.3s ease;
+    }
+
+    .terminal-body {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #34d399;
+      line-height: 1.7;
+    }
+
+    .terminal-line {
+      margin-bottom: 0.4rem;
+      white-space: pre-wrap;
+      animation: terminal-fade 0.2s ease forwards;
+      opacity: 0;
+    }
+
+    @keyframes terminal-fade {
+      from {
+        opacity: 0;
+        transform: translateY(4px);
       }
-      
-      footer {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: center;
-        text-align: center;
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
-      
-      .nav-links {
-        display: none;
+    }
+
+    /* ── REDESIGN OVERRIDES ── */
+    body {
+      background: var(--bg) !important;
+      font-family: var(--fb) !important;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    .sec-h,
+    .hero-title,
+    .avatar-name,
+    .exp-co,
+    .proj-ttl {
+      font-family: var(--fh) !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-title {
+      font-size: clamp(3.5rem, 6.5vw, 6rem) !important;
+    }
+
+    .sec-h {
+      font-size: clamp(2.4rem, 4.2vw, 3.6rem) !important;
+    }
+
+    .proj-ttl {
+      font-size: 1.5rem !important;
+    }
+
+    .exp-co {
+      font-size: 1.65rem !important;
+    }
+
+    .avatar-name {
+      font-size: 1.65rem !important;
+    }
+
+    /* Interactive Links Underline Glow */
+    .nav-links a,
+    .hero-bio a,
+    .exp-ul a,
+    footer a {
+      position: relative;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .nav-links a::after,
+    .hero-bio a::after,
+    .exp-ul a::after,
+    footer a::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      transform: scaleX(0);
+      height: 2px;
+      bottom: -4px;
+      left: 0;
+      background-color: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+      transform-origin: bottom left;
+      transition: transform 0.3s cubic-bezier(0.86, 0, 0.07, 1);
+    }
+
+    .nav-links a:hover::after,
+    .hero-bio a:hover::after,
+    .exp-ul a:hover::after,
+    footer a:hover::after {
+      transform: scaleX(1);
+    }
+
+    /* Input and Controls Glow */
+    #text-input {
+      background: rgba(20, 30, 40, 0.6) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      backdrop-filter: blur(6px);
+      transition: all 0.3s ease;
+    }
+
+    #text-input:focus {
+      border-color: var(--cyan) !important;
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4) !important;
+      background: rgba(20, 30, 40, 0.8) !important;
+    }
+
+    /* Button glow hover */
+    .btn-glow,
+    .vc-btn-voice,
+    .nav-hire {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+
+    .btn-glow:hover,
+    .vc-btn-voice:hover,
+    .nav-hire:hover {
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5) !important;
+      transform: translateY(-2px) scale(1.02);
+      border-color: var(--cyan) !important;
+    }
+
+    /* Interactive Flow Nodes with Tooltips */
+    .flow-node {
+      position: relative;
+      cursor: pointer;
+      background: rgba(20, 30, 40, 0.7) !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      border-radius: 12px !important;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    .flow-node:hover {
+      transform: translateY(-4px) scale(1.05);
+      border-color: var(--cyan) !important;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+
+    /* Tooltip styling */
+    .flow-node::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%) scale(0.85);
+      background: rgba(10, 14, 23, 0.95);
+      border: 1px solid var(--cyan);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
+      color: #fff;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      white-space: normal;
+      width: 200px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 100;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .flow-node:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    /* ── DATA-SPIRIT ORB STYLES ── */
+    .data-spirit-orb-container {
+      width: 100%;
+      height: 280px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .data-spirit-orb {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.85) 0%, rgba(0, 240, 255, 0.2) 50%, transparent 70%);
+      position: relative;
+      transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 2px solid rgba(0, 240, 255, 0.4);
+    }
+
+    .orb-inner-swirl {
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(0, 240, 255, 0.4), transparent, rgba(255, 0, 229, 0.3), transparent);
+      animation: swirl 4s linear infinite;
+      border-radius: 40%;
+      opacity: 0.65;
+    }
+
+    @keyframes swirl {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Orb States */
+    .data-spirit-orb.idle {
+      box-shadow: 0 0 40px #00F0FF, inset 0 0 20px rgba(0, 240, 255, 0.5);
+      animation: orb-idle-pulse 3s ease-in-out infinite alternate;
+    }
+
+    .data-spirit-orb.listening {
+      transform: scale(1.15);
+      background: radial-gradient(circle, rgba(0, 136, 255, 0.9) 0%, rgba(0, 136, 255, 0.3) 50%, transparent 70%);
+      border-color: rgba(0, 136, 255, 0.6);
+      box-shadow: 0 0 60px #0088FF, 0 0 100px rgba(0, 136, 255, 0.3), inset 0 0 30px rgba(0, 136, 255, 0.6);
+      animation: orb-ripple 1.5s ease-in-out infinite;
+    }
+
+    .data-spirit-orb.thinking {
+      background: radial-gradient(circle, rgba(255, 0, 229, 0.9) 0%, rgba(255, 0, 229, 0.3) 50%, transparent 70%);
+      border-color: rgba(255, 0, 229, 0.6);
+      box-shadow: 0 0 80px #FF00E5, 0 0 120px rgba(255, 0, 229, 0.4), inset 0 0 30px rgba(255, 0, 229, 0.6);
+      animation: orb-vibrate-pulse 0.15s linear infinite, orb-think-glow 0.8s ease-in-out infinite alternate;
+    }
+
+    .data-spirit-orb.speaking {
+      box-shadow: 0 0 50px #00F0FF, 0 0 80px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(0, 240, 255, 0.5);
+      animation: orb-waveform-pulse 0.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes orb-idle-pulse {
+      from {
+        transform: scale(1);
+        box-shadow: 0 0 35px #00F0FF, inset 0 0 15px rgba(0, 240, 255, 0.4);
+      }
+
+      to {
+        transform: scale(1.05);
+        box-shadow: 0 0 55px #00F0FF, inset 0 0 30px rgba(0, 240, 255, 0.6);
+      }
+    }
+
+    @keyframes orb-ripple {
+      0% {
+        transform: scale(1.1);
+        box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0.3), inset 0 0 25px rgba(0, 136, 255, 0.5);
+      }
+
+      50% {
+        transform: scale(1.18);
+        box-shadow: 0 0 65px #0088FF, 0 0 30px rgba(0, 136, 255, 0.4), inset 0 0 35px rgba(0, 136, 255, 0.6);
+      }
+
+      100% {
+        transform: scale(1.1);
+        box-shadow: 0 0 45px #0088FF, 0 0 0px rgba(0, 136, 255, 0), inset 0 0 25px rgba(0, 136, 255, 0.5);
+      }
+    }
+
+    @keyframes orb-think-glow {
+      from {
+        box-shadow: 0 0 60px #FF00E5, inset 0 0 20px rgba(255, 0, 229, 0.4);
+      }
+
+      to {
+        box-shadow: 0 0 95px #FF00E5, inset 0 0 40px rgba(255, 0, 229, 0.7);
+      }
+    }
+
+    @keyframes orb-vibrate-pulse {
+      0% {
+        transform: translate(1px, 1px);
+      }
+
+      50% {
+        transform: translate(-1px, -1px);
+      }
+
+      100% {
+        transform: translate(1px, -1px);
+      }
+    }
+
+    @keyframes orb-waveform-pulse {
+      from {
+        transform: scale(1.02);
+      }
+
+      to {
+        transform: scale(1.12);
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="bg-grid"></div>
-  <div class="glow-orb glow-orb-1"></div>
-  <div class="glow-orb glow-orb-2"></div>
+  <div id="tsparticles" style="position:fixed;width:100%;height:100%;z-index:-1;top:0;left:0;pointer-events:none;">
+  </div>
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+  <div class="bg-grid" style="opacity: 0.15;"></div>
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
 
   <nav>
     <div class="nav-logo">Karri Prasad</div>
     <div class="nav-links">
       <a href="#about">About</a>
       <a href="#expertise">Expertise</a>
-      <a href="#showcase">Architectures</a>
-      <a href="#cases">Case Studies</a>
-      <a href="#experience">Initiatives</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#certs">Certifications</a>
       <a href="#contact">Contact</a>
     </div>
-    <div class="nav-right">
-      <button class="theme-btn" id="theme-toggle" aria-label="Toggle Theme">🌙</button>
-      <a class="nav-btn" href="mailto:ksprasadmvsa.1999@gmail.com">Contact →</a>
+    <div style="display:flex;align-items:center;gap:1.5rem;">
+      <button id="theme-toggle" aria-label="Toggle dark mode"
+        style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;transition:color 0.2s;">🌙</button>
+      <a class="nav-hire" href="mailto:ksprasadmvsa.1999@gmail.com">Hire Me →</a>
     </div>
   </nav>
 
-  <!-- HERO SECTION -->
   <section id="hero">
     <div class="hero-layout">
-      <div class="hero-left">
-        <span class="eyebrow">Data Infrastructure Platform</span>
-        <h1 class="hero-title">Architecting Resilient <em>Data Foundations</em></h1>
-        <p class="hero-sub">Designing enterprise-scale Lakehouse platforms, real-time streaming systems, and cloud-native analytics ecosystems.</p>
-        
-        <div class="hero-chips">
-          <span class="hero-chip">Apache Spark</span>
-          <span class="hero-chip">Apache Kafka</span>
-          <span class="hero-chip">Databricks</span>
-          <span class="hero-chip">Snowflake</span>
-          <span class="hero-chip">BigQuery</span>
-          <span class="hero-chip">AWS</span>
-          <span class="hero-chip">Azure</span>
-          <span class="hero-chip">GCP</span>
+      <div class="hero-left fi">
+        <span class="eyebrow">Senior Data Engineer &amp; Data Platform Architect</span>
+        <h1 class="hero-title">Karri <em>Prasad</em><span class="line2">Engineering Data Platforms at Scale</span></h1>
+        <p class="hero-bio">5+ years designing and implementing high-throughput, low-latency distributed systems and
+          Lakehouses across AWS, Azure, and GCP. Specializing in Spark query tuning, real-time streaming with Kafka, and
+          petabyte-scale cloud migrations.</p>
+        <div class="hero-stats">
+          <div class="hstat"><span class="hstat-n">10B+</span><span class="hstat-l">Daily Records</span></div>
+          <div class="hstat"><span class="hstat-n">99.99%</span><span class="hstat-l">Pipeline SLA</span></div>
+          <div class="hstat"><span class="hstat-n">65%</span><span class="hstat-l">Compute Cost ↓</span></div>
         </div>
-
         <div class="hero-btns">
-          <a class="btn-primary" href="#showcase">Explore Architecture</a>
-          <a class="btn-secondary" href="https://github.com/shyamkarri/shyamkarri.github.io/raw/main/resume.pdf" download>Download Resume</a>
+          <a class="btn-glow" href="#" onclick="startVoice(); return false;">🎙 Talk to My AI Assistant</a>
+          <a class="btn-ghost" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">GitHub
+            ↗</a>
+          <a class="btn-ghost" href="#contact">Contact</a>
         </div>
       </div>
 
-      <!-- HERO VISUAL -->
-      <div class="hero-right">
-        <div class="platform-visual">
-          <div class="visual-nodes">
-            
-            <div class="platform-node" data-node="sources">
-              <div class="node-icon">💾</div>
-              <div>
-                <h4>Data Sources</h4>
-                <p>ERP, Databases, App APIs</p>
+      <!-- AVATAR RIGHT SIDE -->
+      <div class="avatar-zone fi">
+        <div class="avatar-card" id="avatar-card">
+          <div class="scan-line"></div>
+
+          <!-- ✨ INTERACTIVE EMOJI FACE ✨ -->
+          <div class="emoji-avatar-wrap">
+            <div class="data-spirit-orb-container" id="face-container">
+              <div id="data-spirit-orb" class="data-spirit-orb idle">
+                <div class="orb-inner-swirl"></div>
               </div>
-              <span class="hover-details">10B+ events/day</span>
             </div>
+          </div>
 
-            <div class="connector"><div class="pulse-dot"></div></div>
+          <div class="avatar-info">
+            <div class="voice-bar" id="voice-bar">
+              <div class="vb" style="height:6px"></div>
+              <div class="vb" style="height:10px"></div>
+              <div class="vb" style="height:4px"></div>
+              <div class="vb" style="height:14px"></div>
+              <div class="vb" style="height:8px"></div>
+              <div class="vb" style="height:5px"></div>
+              <div class="vb" style="height:12px"></div>
+              <div class="vb" style="height:7px"></div>
+              <div class="vb" style="height:10px"></div>
+              <div class="vb" style="height:4px"></div>
+            </div>
+            <div class="avatar-name">Karri Prasad</div>
+            <div class="avatar-role">Senior Data Engineer · Open to Work</div>
+            <div class="avatar-status">
+              <span class="status-dot"></span>
+              <span id="avatar-status-txt">Ready to chat — click mic below</span>
+            </div>
+          </div>
+        </div>
 
-            <div class="platform-node" data-node="kafka">
-              <div class="node-icon">⚡</div>
-              <div>
-                <h4>Apache Kafka</h4>
-                <p>Real-Time Ingestion Buffer</p>
+        <!-- VOICE CONSOLE -->
+        <div class="voice-console">
+          <div class="vc-header">
+            <span class="vc-title">AI Portfolio Assistant</span>
+            <span class="vc-mode" id="mode-label">Idle</span>
+          </div>
+          <div class="vc-body">
+            <div class="vc-transcript" id="transcript">
+              <div class="vc-msg ai">
+                <div class="sender">Karri</div>Hey! I'm Prasad's AI assistant. Ask me anything about my data engineering
+                experience, case studies, or tech stack!
               </div>
-              <span class="hover-details">50K events/sec peak</span>
             </div>
-
-            <div class="connector"><div class="pulse-dot"></div></div>
-
-            <div class="platform-node" data-node="spark">
-              <div class="node-icon">🔥</div>
-              <div>
-                <h4>Spark &amp; Databricks</h4>
-                <p>Distributed Computing Engine</p>
-              </div>
-              <span class="hover-details">Exactly-Once Semantics</span>
+            <div class="vc-controls">
+              <button class="vc-btn vc-btn-voice" id="voice-btn" onclick="toggleVoice()">🎙 Tap to Talk</button>
+              <button class="vc-btn vc-btn-stop" onclick="stopAll()">■ Stop</button>
             </div>
-
-            <div class="connector"><div class="pulse-dot"></div></div>
-
-            <div class="platform-node" data-node="delta">
-              <div class="node-icon">📦</div>
-              <div>
-                <h4>Delta Lake</h4>
-                <p>Unified Storage Layer</p>
-              </div>
-              <span class="hover-details">Bronze ➔ Silver ➔ Gold</span>
+            <div style="display:flex;gap:0.5rem;margin-top:0.6rem;">
+              <input id="text-input" type="text" placeholder="Or type here..."
+                style="flex:1;background:rgba(91,140,255,0.05);border:1px solid var(--border);border-radius:7px;padding:0.5rem 0.75rem;font-size:0.78rem;color:var(--text);font-family:var(--fb);outline:none;"
+                onkeydown="if(event.key==='Enter')sendText()" />
+              <button onclick="sendText()"
+                style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:0.5rem 0.85rem;font-size:0.8rem;font-weight:600;cursor:pointer;font-family:var(--fb);">→</button>
             </div>
-
-            <div class="connector"><div class="pulse-dot"></div></div>
-
-            <div class="platform-node" data-node="dwh">
-              <div class="node-icon">❄️</div>
-              <div>
-                <h4>Snowflake &amp; BigQuery</h4>
-                <p>Cloud Analytics Warehouse</p>
-              </div>
-              <span class="hover-details">75% scan reduction</span>
+            <div class="chips">
+              <span class="chip" onclick="askChip('What is your core tech stack?')">💻 Tech Stack</span>
+              <span class="chip" onclick="askChip('Tell me about the Enterprise Lakehouse case study')">🏢 Lakehouse
+                Project</span>
+              <span class="chip" onclick="askChip('What was your role in the Citi Hadoop migration?')">☁️ Cloud
+                Migration</span>
+              <span class="chip" onclick="askChip('How do you optimize Spark query performance?')">⚡ Spark Tuning</span>
             </div>
-
-            <div class="connector"><div class="pulse-dot"></div></div>
-
-            <div class="platform-node" data-node="serving">
-              <div class="node-icon">📊</div>
-              <div>
-                <h4>Analytics &amp; AI</h4>
-                <p>BI Dashboards &amp; ML Serving</p>
-              </div>
-              <span class="hover-details">Sub-second query SLA</span>
-            </div>
-
+            <div class="vc-hint" id="vc-hint">🎙 Tap mic → speak → wait for reply · Or type above</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- METRICS SECTION -->
+  <!-- ═══ ABOUT ═══ -->
   <section class="sec alt" id="about">
     <div class="sec-wrap">
-      <span class="sec-eyebrow">Performance Metrics</span>
-      <h2 class="sec-title">Enterprise Scale by the Numbers</h2>
-      <p class="sec-sub">Data foundations optimized for throughput, availability, and cost-efficiency.</p>
-      
-      <div class="metrics-grid reveal">
-        <div class="metric-card">
-          <div class="metric-num">5+</div>
-          <div class="metric-label">Years Experience</div>
-          <div class="metric-desc">Designing, launching, and maintaining large-scale distributed cloud data platforms.</div>
+      <span class="sec-eye fi">About Me</span>
+      <h2 class="sec-h fi">Architecting Resilient <em>Data Foundations</em></h2>
+      <p class="sec-sub fi">Maximizing throughput, lowering compute costs, and ensuring strict pipeline SLAs.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;" class="fi">
+        <div>
+          <p style="color:var(--muted);line-height:1.9;margin-bottom:1rem;">I am a Senior Data Platform Engineer
+            dedicated to building highly performant, fault-tolerant data infrastructures. I specialize in designing and
+            deploying unified Lakehouse architectures that bridge the gap between high-velocity event streams and
+            production-ready data lakes.</p>
+          <p style="color:var(--muted);line-height:1.9;">Currently at HCA Healthcare, I lead data platform efficiency
+            and optimization initiatives, managing pipelines that process over 500 million records daily. From tuning
+            Spark shuffle partitions and implementing Z-Order clustering to decommissioning legacy clusters and
+            designing CDC pipelines, my focus is always on delivering measurable business impact and optimizing cloud
+            spend.</p>
         </div>
-        <div class="metric-card">
-          <div class="metric-num">3</div>
-          <div class="metric-label">Clouds Managed</div>
-          <div class="metric-desc">Multi-cloud deployments and serverless integrations across AWS, Azure, and GCP.</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-num">10B+</div>
-          <div class="metric-label">Records Processed Daily</div>
-          <div class="metric-desc">Throughput managed daily across real-time ingestion pipelines and batch jobs.</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-num">5+ PB</div>
-          <div class="metric-label">Data Lakes</div>
-          <div class="metric-desc">Consolidated storage layer directories managed under ACID Delta formats.</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-num">500M+</div>
-          <div class="metric-label">Daily Events</div>
-          <div class="metric-desc">Sub-second event ingestion streams driven by Kafka cluster topologies.</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-num">99.7%</div>
-          <div class="metric-label">Pipeline Reliability</div>
-          <div class="metric-desc">SLA guarantee maintained across data loading, quality auditing, and scheduling.</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Years
+              XP</span>
+          </div>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">3</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Clouds
+              Managed</span>
+          </div>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span
+              style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">10B+</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Records
+              / Day</span>
+          </div>
+          <div
+            style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;">
+            <span style="font-family:var(--fh);font-size:2.4rem;color:var(--text);display:block;font-weight:700;">5+
+              PB</span>
+            <span
+              style="font-family:var(--fm);font-size:0.65rem;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;">Data
+              Lakes</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- TECHNICAL EXPERTISE -->
+  <!-- ═══ EXPERTISE ═══ -->
   <section class="sec" id="expertise">
     <div class="sec-wrap">
-      <span class="sec-eyebrow">Capability</span>
-      <h2 class="sec-title">Data Platform Engineering Stack</h2>
-      <p class="sec-sub">Deep domain expertise in storage layer optimization, distributed computing, and enterprise cloud operations.</p>
-      
+      <span class="sec-eye fi">Capability</span>
+      <h2 class="sec-h fi">Technical &amp; Architecture <em>Expertise</em></h2>
+      <p class="sec-sub fi">Deep expertise in distributed computing, storage layer optimization, and enterprise cloud
+        infrastructure.</p>
+
+      <h3
+        style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--blue); padding-left:0.75rem;"
+        class="fi">Technical Skillset</h3>
+      <div class="skills-grid" style="margin-bottom:3.5rem;">
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">🖥️</span><span class="sk-name">Languages &amp; Core</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">SQL</span><span class="sk-t">Advanced SQL</span><span class="sk-t">Python</span>
+            <span class="sk-t">Scala</span><span class="sk-t">PySpark</span><span class="sk-t">Spark SQL</span>
+            <span class="sk-t">Shell Scripting</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">🐘</span><span class="sk-name">Big Data &amp; Storage</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">Apache Spark</span><span class="sk-t">Hadoop</span><span class="sk-t">Hive</span>
+            <span class="sk-t">Impala</span><span class="sk-t">HDFS</span><span class="sk-t">YARN</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">⚡</span><span class="sk-name">Streaming Systems</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">Apache Kafka</span><span class="sk-t">Kafka Connect</span><span class="sk-t">Kafka
+              Streams</span>
+            <span class="sk-t">Spark Structured Streaming</span><span class="sk-t">Azure Event Hubs</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">☁️</span><span class="sk-name">Cloud Infrastructure</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">AWS (S3, EMR, Redshift, Glue, Lambda)</span>
+            <span class="sk-t">GCP (BigQuery, Dataflow, Cloud Storage, Composer)</span>
+            <span class="sk-t">Azure (Databricks, ADF, Synapse Analytics)</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">❄️</span><span class="sk-name">Modern Data Stack</span></div>
+          <div class="sk-tags">
+            <span class="sk-t">Databricks</span><span class="sk-t">Delta Lake</span><span class="sk-t">Snowflake</span>
+            <span class="sk-t">dbt</span><span class="sk-t">Apache Iceberg</span><span class="sk-t">Apache Hudi</span>
+          </div>
+        </div>
+        <div class="sk-card fi">
+          <div class="sk-head"><span class="sk-ico">⚙️</span><span class="sk-name">Orchestration &amp; DevOps</span>
+          </div>
+          <div class="sk-tags">
+            <span class="sk-t">Apache Airflow</span><span class="sk-t">Autosys</span><span class="sk-t">Docker</span>
+            <span class="sk-t">Kubernetes (EKS/GKE)</span><span class="sk-t">Terraform</span><span class="sk-t">Git /
+              CI-CD</span>
+          </div>
+        </div>
+      </div>
+
+      <h3
+        style="font-family:var(--fh); font-size:1.6rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;"
+        class="fi">Architectural Strengths</h3>
+      <div class="skills-grid">
+        <div class="sk-card fi" style="border-left:2px solid var(--blue);">
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Medallion Lakehouse
+            Architecture</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Implementing Bronze (raw), Silver
+            (cleansed/conformed), and Gold (aggregated business-level) tables utilizing ACID transactions on Delta
+            Lake/Iceberg for single sources of truth.</p>
+        </div>
+        <div class="sk-card fi" style="border-left:2px solid var(--cyan);">
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Real-Time Data
+            Ingestion &amp; CDC</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Designing decoupled streaming pipelines
+            using Debezium CDC and Kafka to stream transactional updates into downstream Lakehouses with sub-second
+            latencies.</p>
+        </div>
+        <div class="sk-card fi" style="border-left:2px solid var(--violet);">
+          <div class="sk-name" style="margin-bottom:0.5rem; font-size:0.95rem; font-weight:700;">Distributed
+            Optimization &amp; Clustering</div>
+          <p style="font-size:0.8rem; color:var(--muted); line-height:1.6;">Tuning Apache Spark executors, partition
+            sizes, Z-Order clustering keys, and cache storage to resolve data skew and drastically reduce cloud compute
+            overhead.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROJECTS & CASE STUDIES ═══ -->
+  <section class="sec alt" id="projects">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">Work</span>
+      <h2 class="sec-h fi">Featured Case Studies &amp; <em>Projects</em></h2>
+      <p class="sec-sub fi">Review my architecture implementations, performance metrics, and quantitative business
+        impacts.</p>
+
+      <!-- Flagship Case Studies -->
+      <h3
+        style="font-family:var(--fh); font-size:1.7rem; font-weight:400; margin-bottom:2rem; border-left:3px solid var(--blue); padding-left:0.75rem;"
+        class="fi">Flagship Programs</h3>
+
+      <div class="proj-grid" style="grid-template-columns: 1fr; gap: 2.5rem; margin-bottom: 4rem;">
+
+        <!-- Case Study A -->
+        <div class="proj fi" style="border-left: 4px solid var(--blue);">
+          <span class="proj-n">CASE STUDY A</span>
+          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Enterprise Databricks Lakehouse Platform
+          </div>
+          <div class="proj-org">AWS / Databricks / Spark SQL / Airflow</div>
+
+          <div class="pipeline-flow">
+            <div class="flow-node">
+              <div class="node-title">ERP &amp; RDBMS</div>
+              <div class="node-sub">Sources</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--amber);">
+              <div class="node-title">Bronze Delta</div>
+              <div class="node-sub">Raw Landing</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--blue);">
+              <div class="node-title">Silver Delta</div>
+              <div class="node-sub">Conformed</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--green);">
+              <div class="node-title">Gold Delta</div>
+              <div class="node-sub">Aggregations</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node">
+              <div class="node-title">Redshift / BI</div>
+              <div class="node-sub">Serving</div>
+            </div>
+          </div>
+
+          <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business
+                Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Legacy silos led to
+                duplicate processing, data inconsistencies, and extremely slow nightly batch jobs (8+ hours), delaying
+                key executive operational dashboards.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies
+                Used</strong>
+              <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
+                <span class="pst">Databricks</span><span class="pst">Delta Lake</span><span
+                  class="pst">PySpark</span><span class="pst">Scala</span><span class="pst">Airflow</span><span
+                  class="pst">Terraform</span>
+              </div>
+            </div>
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp;
+                Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data
+                  Volume:</strong> 10B+ daily transactions, 5+ PB overall data volume.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">
+                <strong>Performance:</strong> Reduced processing time from 8 hours to under 45 minutes. Query scan time
+                was cut by 75% via Z-Order clustering and partitioning tuning.
+              </p>
+              <div class="proj-impact">Business Impact: Saved 45% in infrastructure costs ($380K/year) and enabled
+                real-time reporting.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study B -->
+        <div class="proj fi" style="border-left: 4px solid var(--cyan);">
+          <span class="proj-n">CASE STUDY B</span>
+          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Real-Time Streaming Event Platform</div>
+          <div class="proj-org">Apache Kafka / Spark Structured Streaming / Azure Databricks</div>
+
+          <div class="pipeline-flow">
+            <div class="flow-node">
+              <div class="node-title">App Events</div>
+              <div class="node-sub">IoT Streams</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--violet);">
+              <div class="node-title">Apache Kafka</div>
+              <div class="node-sub">Broker</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--cyan);">
+              <div class="node-title">Spark Stream</div>
+              <div class="node-sub">Exactly-Once</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--green);">
+              <div class="node-title">Delta Tables</div>
+              <div class="node-sub">Micro-Batches</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node">
+              <div class="node-title">Synapse / API</div>
+              <div class="node-sub">Real-Time</div>
+            </div>
+          </div>
+
+          <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business
+                Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">High-frequency
+                monitoring and fraud alerts suffered from high processing latency (minutes to hours) and data loss
+                during peak load.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies
+                Used</strong>
+              <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
+                <span class="pst">Apache Kafka</span><span class="pst">Kafka Connect</span><span class="pst">Spark
+                  Streaming</span><span class="pst">Azure Databricks</span><span class="pst">Kubernetes</span>
+              </div>
+            </div>
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp;
+                Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data
+                  Volume:</strong> 500M+ event streams/day, peaking at 50K events/second.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">
+                <strong>Performance:</strong> Sub-second processing latency; CDC ingestion windows slashed by 92% (from
+                6 hours batch to under 30 minutes incremental streaming).
+              </p>
+              <div class="proj-impact">Business Impact: Eliminated message loss completely; reduced operational failures
+                by 70%.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study C -->
+        <div class="proj fi" style="border-left: 4px solid var(--violet);">
+          <span class="proj-n">CASE STUDY C</span>
+          <div class="proj-ttl" style="font-size:1.6rem; font-weight:600;">Hadoop to GCP Migration Program</div>
+          <div class="proj-org">Google Cloud Platform / BigQuery / Cloud Dataflow</div>
+
+          <div class="pipeline-flow">
+            <div class="flow-node">
+              <div class="node-title">On-Prem Hadoop</div>
+              <div class="node-sub">HDFS &amp; Hive</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--blue);">
+              <div class="node-title">GCS Storage</div>
+              <div class="node-sub">Landing Bucket</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--violet);">
+              <div class="node-title">Cloud Dataflow</div>
+              <div class="node-sub">Apache Beam</div>
+            </div>
+            <div class="flow-arrow">➔</div>
+            <div class="flow-node" style="border-color: var(--green);">
+              <div class="node-title">BigQuery DWH</div>
+              <div class="node-sub">Serverless SQL</div>
+            </div>
+          </div>
+
+          <div
+            style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem; margin-top:1.5rem;">
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Business
+                Problem</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">Maintaining an
+                on-premise Hadoop cluster (200+ nodes) was capital intensive, difficult to scale, and suffered from
+                severe disk and compute bottlenecks.</p>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Technologies
+                Used</strong>
+              <div class="proj-stack" style="margin-top:0.2rem; margin-bottom:1rem;">
+                <span class="pst">GCP</span><span class="pst">BigQuery</span><span class="pst">Cloud
+                  Dataflow</span><span class="pst">Apache Beam</span><span class="pst">Composer (Airflow)</span>
+              </div>
+            </div>
+            <div>
+              <strong style="color:var(--text); font-size:0.85rem; display:block; margin-bottom:0.4rem;">Scale &amp;
+                Metrics</strong>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:0.5rem;"><strong>Data
+                  Volume:</strong> Migrated 2 PB of structured and unstructured data; rebuilt 200+ pipelines.</p>
+              <p style="font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:1rem;">
+                <strong>Performance:</strong> Processing runtimes decreased by 65%; compute costs reduced by 40% through
+                automatic scaling.
+              </p>
+              <div class="proj-impact">Business Impact: Cluster decommissioned 3 months early, saving $2.4M annually in
+                ops costs.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Supporting Projects -->
+      <h3
+        style="font-family:var(--fh); font-size:1.4rem; font-weight:400; margin-bottom:1.5rem; border-left:3px solid var(--cyan); padding-left:0.75rem;"
+        class="fi">Other Key Achievements</h3>
+      <div class="proj-grid">
+        <div class="proj fi"><span class="proj-n">04</span>
+          <div class="proj-ttl">Metadata-Driven Ingestion Engine</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">Engineered a metadata-driven landing framework that automates source schema discovery,
+            maps data types automatically, and registers tables dynamically.</div>
+          <div class="proj-impact">Enabled analyst self-service ingestion</div>
+          <div class="proj-stack"><span class="pst">BigQuery</span><span class="pst">Python</span><span
+              class="pst">Cloud Functions</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">05</span>
+          <div class="proj-ttl">High-Throughput CDC Ingestion</div>
+          <div class="proj-org">@ Citi</div>
+          <div class="proj-desc">Designed an incremental Change Data Capture (CDC) system capture engine, decoupling
+            heavy read operations from transaction-heavy core banking databases.</div>
+          <div class="proj-impact">92% reduction in database load</div>
+          <div class="proj-stack"><span class="pst">Debezium</span><span class="pst">Kafka Connect</span><span
+              class="pst">GCP Pub/Sub</span></div>
+        </div>
+        <div class="proj fi"><span class="proj-n">06</span>
+          <div class="proj-ttl">Data Lakehouse Storage Layer</div>
+          <div class="proj-org">@ HCA Healthcare</div>
+          <div class="proj-desc">Implemented and standardized GCS-based Delta Lake storage formats, replacing siloed
+            folders with structured transactional tables using schema enforcement.</div>
+          <div class="proj-impact">99.7% pipeline operational reliability</div>
+          <div class="proj-stack"><span class="pst">Delta Lake</span><span class="pst">Terraform</span><span
+              class="pst">Google Cloud Storage</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTIVE PIPELINE PROTOTYPES -->
+  <section class="sec alt" id="prototypes">
+    <div class="sec-wrap">
+      <span class="sec-eyebrow">Simulations</span>
+      <h2 class="sec-title">Interactive Pipeline Prototypes</h2>
+      <p class="sec-sub">Click to build and monitor production-ready pipelines. Watch real-time logs stream from the
+        backend platform.</p>
+
+      <h3
+        style="font-family:var(--font-sans); font-size:1.4rem; font-weight:700; margin-bottom:1.5rem; border-left:3px solid var(--blue); padding-left:0.75rem;"
+        class="reveal">Finance Domain</h3>
+      <div class="expertise-grid reveal" style="margin-bottom: 4rem;">
+
+        <!-- Prototype 1 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(37, 99, 235, 0.1); color: var(--blue); border-color: rgba(37, 99, 235, 0.2);">Finance</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Real-time fraud detection pipeline
+            </h4>
+            <p class="exp-desc">Live transaction stream ➔ Kafka ➔ Spark Structured Streaming ➔ ML scoring ➔ alert
+              dashboard. Simulates 50K events/sec with configurable fraud rate.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Kafka</span><span class="exp-t-tag">PySpark</span><span class="exp-t-tag">Delta
+                Lake</span><span class="exp-t-tag">Streamlit</span><span class="exp-t-tag">Scikit-learn</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#"
+              onclick="launchPrototype('fraud_detection', 'Real-time fraud detection pipeline'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+        <!-- Prototype 2 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(37, 99, 235, 0.1); color: var(--blue); border-color: rgba(37, 99, 235, 0.2);">Finance</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Regulatory reporting lakehouse (Basel
+              III / AML)</h4>
+            <p class="exp-desc">Medallion architecture ingesting core banking data ➔ automated AML report generation ➔
+              audit trail. Mirrors Citi's production data lake environment.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Databricks</span><span class="exp-t-tag">Delta Lake</span><span
+                class="exp-t-tag">dbt</span><span class="exp-t-tag">Airflow</span><span
+                class="exp-t-tag">Snowflake</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#"
+              onclick="launchPrototype('regulatory_reporting', 'Regulatory reporting lakehouse'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+        <!-- Prototype 3 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(37, 99, 235, 0.1); color: var(--blue); border-color: rgba(37, 99, 235, 0.2);">Finance</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Market data CDC engine</h4>
+            <p class="exp-desc">Debezium captures trade book changes ➔ Kafka ➔ Iceberg tables ➔ live P&L dashboard.
+              Sub-second latency with schema evolution handled automatically.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Debezium</span><span class="exp-t-tag">Kafka</span><span class="exp-t-tag">Apache
+                Iceberg</span><span class="exp-t-tag">BigQuery</span><span class="exp-t-tag">Grafana</span>
+            </div>
+          </div>
+          <div style="margin-top:1.5rem;">
+            <a href="#" onclick="launchPrototype('cdc_engine', 'Market data CDC engine'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <h3
+        style="font-family:var(--font-sans); font-size:1.4rem; font-weight:700; margin-bottom:1.5rem; border-left:3px solid var(--green); padding-left:0.75rem;"
+        class="reveal">Healthcare Domain</h3>
       <div class="expertise-grid reveal">
-        <div class="exp-card">
-          <div class="exp-header">
-            <div class="exp-icon">🖥️</div>
-            <h3 class="exp-title">Languages &amp; Core</h3>
+
+        <!-- Prototype 4 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(16, 185, 129, 0.1); color: var(--green); border-color: rgba(16, 185, 129, 0.2);">Healthcare</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Clinical data lakehouse (HL7 / FHIR
+              pipeline)</h4>
+            <p class="exp-desc">Ingests EHR events (HL7/FHIR format) ➔ Bronze/Silver/Gold on GCS Delta Lake ➔ patient
+              cohort analytics. Directly mirrors HCA Healthcare work.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">GCP</span><span class="exp-t-tag">Delta Lake</span><span
+                class="exp-t-tag">PySpark</span><span class="exp-t-tag">FHIR</span><span
+                class="exp-t-tag">BigQuery</span>
+            </div>
           </div>
-          <p class="exp-desc">Optimized script pipelines and query execution paths built with type safety and structure.</p>
-          <div class="exp-techs">
-            <span class="exp-t-tag">SQL</span><span class="exp-t-tag">Advanced SQL</span><span class="exp-t-tag">Python</span>
-            <span class="exp-t-tag">Scala</span><span class="exp-t-tag">PySpark</span><span class="exp-t-tag">Shell</span>
+          <div style="margin-top:1.5rem;">
+            <a href="#" onclick="launchPrototype('clinical_lakehouse', 'Clinical data lakehouse'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
           </div>
-          <div class="exp-value">Business Value: Rapid pipeline development &amp; maintainable processing rules.</div>
         </div>
 
-        <div class="exp-card">
-          <div class="exp-header">
-            <div class="exp-icon">🐘</div>
-            <h3 class="exp-title">Big Data &amp; Storage</h3>
+        <!-- Prototype 5 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(16, 185, 129, 0.1); color: var(--green); border-color: rgba(16, 185, 129, 0.2);">Healthcare</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">HIPAA-compliant metadata-driven
+              ingestion</h4>
+            <p class="exp-desc">Self-service UI where analysts configure a new data source ➔ engine auto-discovers
+              schema ➔ registers table in catalog ➔ runs quality checks.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Cloud Functions</span><span class="exp-t-tag">BigQuery</span><span
+                class="exp-t-tag">Python</span><span class="exp-t-tag">Great Expectations</span><span
+                class="exp-t-tag">Terraform</span>
+            </div>
           </div>
-          <p class="exp-desc">Distributed execution orchestration over multi-node clusters and physical database storage layers.</p>
-          <div class="exp-techs">
-            <span class="exp-t-tag">Apache Spark</span><span class="exp-t-tag">Hadoop</span><span class="exp-t-tag">Hive</span>
-            <span class="exp-t-tag">Impala</span><span class="exp-t-tag">HDFS</span><span class="exp-t-tag">YARN</span>
+          <div style="margin-top:1.5rem;">
+            <a href="#"
+              onclick="launchPrototype('metadata_ingestion', 'Metadata-driven ingestion engine'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
           </div>
-          <div class="exp-value">Business Value: Efficient handling of petabyte-scale history layers.</div>
         </div>
 
-        <div class="exp-card">
-          <div class="exp-header">
-            <div class="exp-icon">⚡</div>
-            <h3 class="exp-title">Streaming Systems</h3>
+        <!-- Prototype 6 -->
+        <div class="exp-card" style="display:flex; flex-direction:column; justify-content:space-between;">
+          <div>
+            <div class="exp-header">
+              <span class="exp-t-tag"
+                style="background: rgba(16, 185, 129, 0.1); color: var(--green); border-color: rgba(16, 185, 129, 0.2);">Healthcare</span>
+            </div>
+            <h4 style="font-size:1.15rem; font-weight:700; margin-bottom:0.75rem;">Real-time ICU monitoring pipeline
+            </h4>
+            <p class="exp-desc">Simulated IoT vitals (HR, BP, SpO2) stream via Kafka ➔ Spark Streaming anomaly detection
+              ➔ alert escalation dashboard. 99.99% SLA engineering.</p>
+            <div class="exp-techs" style="margin-top:1rem;">
+              <span class="exp-t-tag">Kafka</span><span class="exp-t-tag">Spark Streaming</span><span
+                class="exp-t-tag">Azure Databricks</span><span class="exp-t-tag">Event Hubs</span><span
+                class="exp-t-tag">React</span>
+            </div>
           </div>
-          <p class="exp-desc">Decoupled real-time processing architectures, event brokers, and ingestion systems.</p>
-          <div class="exp-techs">
-            <span class="exp-t-tag">Apache Kafka</span><span class="exp-t-tag">Kafka Connect</span><span class="exp-t-tag">Kafka Streams</span>
-            <span class="exp-t-tag">Spark Structured Streaming</span>
+          <div style="margin-top:1.5rem;">
+            <a href="#" onclick="launchPrototype('icu_monitoring', 'Real-time ICU monitoring pipeline'); return false;"
+              style="color:var(--cyan); text-decoration:none; font-size:0.8rem; font-family:var(--font-mono); font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+              🎛️ Click to build this prototype
+            </a>
           </div>
-          <div class="exp-value">Business Value: Sub-second latency for immediate fraud detection and alerts.</div>
         </div>
 
-        <div class="exp-card">
-          <div class="exp-header">
-            <div class="exp-icon">☁️</div>
-            <h3 class="exp-title">Cloud Infrastructure</h3>
-          </div>
-          <p class="exp-desc">Design and deployment of native cloud resources, access controls, and managed warehouses.</p>
-          <div class="exp-techs">
-            <span class="exp-t-tag">AWS (EMR, S3, Redshift)</span><span class="exp-t-tag">GCP (BigQuery, Dataflow)</span><span class="exp-t-tag">Azure Synapse</span>
-          </div>
-          <div class="exp-value">Business Value: Scalable architectures with strict resource isolation.</div>
-        </div>
-
-        <div class="exp-card">
-          <div class="exp-header">
-            <div class="exp-icon">❄️</div>
-            <h3 class="exp-title">Modern Data Stack</h3>
-          </div>
-          <p class="exp-desc">Schema-enforced transactional formats, cloud data warehouses, and data modeling abstractions.</p>
-          <div class="exp-techs">
-            <span class="exp-t-tag">Databricks</span><span class="exp-t-tag">Delta Lake</span><span class="exp-t-tag">Snowflake</span>
-            <span class="exp-t-tag">dbt</span><span class="exp-t-tag">Apache Iceberg</span>
-          </div>
-          <div class="exp-value">Business Value: ACID compliance over Object Storage, cutting warehouse costs.</div>
-        </div>
-
-        <div class="exp-card">
-          <div class="exp-header">
-            <div class="exp-icon">⚙️</div>
-            <h3 class="exp-title">Orchestration &amp; DevOps</h3>
-          </div>
-          <p class="exp-desc">Deployments as code, cluster configuration automations, and DAG-based scheduling.</p>
-          <div class="exp-techs">
-            <span class="exp-t-tag">Apache Airflow</span><span class="exp-t-tag">Docker</span><span class="exp-t-tag">Kubernetes</span>
-            <span class="exp-t-tag">Terraform</span><span class="exp-t-tag">CI/CD</span>
-          </div>
-          <div class="exp-value">Business Value: 70% reduction in platform configuration/deployment failures.</div>
-        </div>
       </div>
     </div>
   </section>
 
-  <!-- ARCHITECTURE SHOWCASE -->
-  <section class="sec alt" id="showcase">
-    <div class="sec-wrap">
-      <span class="sec-eyebrow">Patterns</span>
-      <h2 class="sec-title">Architectural Blueprints</h2>
-      <p class="sec-sub">Production-proven patterns for ingestion, consistency, and storage optimization.</p>
-
-      <!-- Showcase 1 -->
-      <div class="showcase-block reveal">
-        <div class="showcase-header">
-          <h3 style="font-size: 1.5rem; font-weight:700; margin-bottom:0.5rem;">1. Medallion Lakehouse Architecture</h3>
-          <p style="color:var(--muted); font-size:0.9rem;">Consolidating transactional systems into unified analytical layers over object stores.</p>
+  <!-- TERMINAL OVERLAY MODAL -->
+  <div id="terminal-modal" class="modal-overlay">
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <span class="t-btn close" onclick="closeTerminal()"></span>
+          <span class="t-btn minimize"></span>
+          <span class="t-btn expand"></span>
         </div>
-        
-        <div class="showcase-details">
-          <div class="showcase-flow-container">
-            <div class="pipeline-flow" style="margin:0; background:transparent; border:none; padding:0;">
-              <div class="flow-node"><div class="node-title">Sources</div><p class="node-sub">DB/APIs</p></div>
-              <div class="flow-arrow">➔</div>
-              <div class="flow-node" style="border-color:var(--amber);"><div class="node-title">Bronze</div><p class="node-sub">Raw Landing</p></div>
-              <div class="flow-arrow">➔</div>
-              <div class="flow-node" style="border-color:var(--blue);"><div class="node-title">Silver</div><p class="node-sub">Cleansed</p></div>
-              <div class="flow-arrow">➔</div>
-              <div class="flow-node" style="border-color:var(--green);"><div class="node-title">Gold</div><p class="node-sub">Aggregated</p></div>
-            </div>
-          </div>
-          <div>
-            <p style="color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:1rem;"><strong>Problem:</strong> Siloed raw datasets are slow to query, contain duplicate records, and lack schema-enforcement, causing pipeline breaking downstream.</p>
-            <p style="color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:1rem;"><strong>Solution:</strong> Deployed a structured layout utilizing Databricks and GCS Delta Lake, segregating operations into raw landing (Bronze), deduplicated/validated historical records (Silver), and aggregates tailored for analytical consumption (Gold).</p>
-            <p style="color:var(--cyan); font-size:0.85rem; font-weight:600;">Business Impact: Unified ACID transaction logging over S3/GCS, eliminating reporting inaccuracies.</p>
-          </div>
-        </div>
+        <div class="terminal-title" id="terminal-title">Deploying Pipeline...</div>
+        <div style="width: 50px;"></div>
       </div>
-
-      <!-- Showcase 2 -->
-      <div class="showcase-block reveal">
-        <div class="showcase-header">
-          <h3 style="font-size: 1.5rem; font-weight:700; margin-bottom:0.5rem;">2. Real-Time Data Ingestion &amp; CDC</h3>
-          <p style="color:var(--muted); font-size:0.9rem;">Decoupling operational databases from heavy analytical queries.</p>
-        </div>
-        
-        <div class="showcase-details">
-          <div class="showcase-flow-container">
-            <div class="pipeline-flow" style="margin:0; background:transparent; border:none; padding:0;">
-              <div class="flow-node"><div class="node-title">Source DB</div><p class="node-sub">Transactional</p></div>
-              <div class="flow-arrow">➔</div>
-              <div class="flow-node" style="border-color:var(--violet);"><div class="node-title">Debezium</div><p class="node-sub">CDC Capture</p></div>
-              <div class="flow-arrow">➔</div>
-              <div class="flow-node" style="border-color:var(--blue);"><div class="node-title">Kafka</div><p class="node-sub">Topic Buffer</p></div>
-              <div class="flow-arrow">➔</div>
-              <div class="flow-node" style="border-color:var(--green);"><div class="node-title">Delta Tables</div><p class="node-sub">Micro-batch</p></div>
-            </div>
-          </div>
-          <div>
-            <p style="color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:1rem;"><strong>Problem:</strong> Nightly full-table extraction scripts lock operational tables, resulting in 6-hour delays and degrading front-end application response rates.</p>
-            <p style="color:var(--muted); font-size:0.9rem; line-height:1.7; margin-bottom:1rem;"><strong>Solution:</strong> Designed Change Data Capture streams using Debezium to read transaction binary logs, publishing row-level inserts and edits incrementally to Kafka topics, conformed by Spark Structured Streaming.</p>
-            <p style="color:var(--cyan); font-size:0.85rem; font-weight:600;">Business Impact: Slashed data latency from 6 hours to under 30 minutes incremental streaming, resolving transactional database locks.</p>
-          </div>
-        </div>
+      <div class="terminal-progress-bar">
+        <div class="progress-fill" id="progress-fill"></div>
       </div>
+      <div class="terminal-body" id="terminal-logs"></div>
     </div>
-  </section>
+  </div>
 
-  <!-- CASE STUDIES -->
-  <section class="sec" id="cases">
-    <div class="sec-wrap">
-      <span class="sec-eyebrow">Portfolio</span>
-      <h2 class="sec-title">Flagship Case Studies</h2>
-      <p class="sec-sub">Strategic data initiatives driving substantial query speed increases and annual compute cost reductions.</p>
-
-      <!-- Case Study A -->
-      <div class="case-card reveal">
-        <span class="case-num">CASE STUDY A</span>
-        <h3 class="case-title">Enterprise Databricks Lakehouse Platform</h3>
-        
-        <div class="case-grid">
-          <div>
-            <div style="margin-bottom: 2rem;">
-              <h4 class="case-section-title">Business Problem</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;">Enterprise operations were severely bottle-necked by siloed departmental databases. Raw extracts ran as full-table scans, creating massive processing backlogs. Nightly batch ingestion cycles took over 8 hours to complete, causing morning business intelligence dashboards to render with stale data.</p>
-            </div>
-            
-            <div style="margin-bottom: 2rem;">
-              <h4 class="case-section-title">Architecture Implementation</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7; margin-bottom:1rem;">Developed a multi-PB Medallion Lakehouse platform on Databricks using Apache Spark (Scala) and Delta Lake over AWS object storage. Standardized partition boundaries, resolved Spark executor memory bottlenecks, and automated cluster provisioning via Terraform.</p>
-              <div class="pipeline-flow">
-                <div class="flow-node"><div class="node-title">ERP Sources</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--amber);"><div class="node-title">Bronze Delta</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--blue);"><div class="node-title">Silver Delta</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--green);"><div class="node-title">Gold Delta</div></div>
-              </div>
-            </div>
-
-            <div>
-              <h4 class="case-section-title">Scale Profile</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;"><strong>Daily Volumetrics:</strong> 10B+ transactions ingested daily.<br><strong>Storage Footprint:</strong> 5+ PB raw and conformed storage layer size.</p>
-            </div>
-          </div>
-
-          <div>
-            <div class="case-results-card">
-              <h4 class="case-section-title" style="color:var(--text);">Performance Results</h4>
-              <div style="margin-bottom:1.5rem;">
-                <div class="case-stat-highlight">45 mins</div>
-                <p style="font-size:0.8rem; color:var(--muted);">ETL Ingestion Window (Reduced from 8 hours)</p>
-              </div>
-              <div style="margin-bottom:1.5rem;">
-                <div class="case-stat-highlight">75%</div>
-                <p style="font-size:0.8rem; color:var(--muted);">Reduction in Query Scan Latency via Z-Ordering</p>
-              </div>
-              <div>
-                <div class="case-stat-highlight">$380K</div>
-                <p style="font-size:0.8rem; color:var(--muted);">Annual AWS Compute Cost Savings achieved</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Case Study B -->
-      <div class="case-card reveal">
-        <span class="case-num">CASE STUDY B</span>
-        <h3 class="case-title">Real-Time Streaming Event Platform</h3>
-        
-        <div class="case-grid">
-          <div>
-            <div style="margin-bottom: 2rem;">
-              <h4 class="case-section-title">Business Problem</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;">Operational metrics and security audit logs required real-time analysis to detect operational anomalies. The legacy batch infrastructure was completely incapable of handling high-frequency telemetry, leading to data loss during peak application load periods.</p>
-            </div>
-            
-            <div style="margin-bottom: 2rem;">
-              <h4 class="case-section-title">Architecture Implementation</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7; margin-bottom:1rem;">Constructed an end-to-end event streaming framework utilizing Apache Kafka (decoupled topic partitioning) and Spark Structured Streaming hosted on Azure Databricks. Implemented exactly-once processing constraints using transaction log markers to prevent record duplication.</p>
-              <div class="pipeline-flow">
-                <div class="flow-node"><div class="node-title">App Telemetry</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--violet);"><div class="node-title">Kafka Connect</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--blue);"><div class="node-title">Spark Stream</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--green);"><div class="node-title">Delta Tables</div></div>
-              </div>
-            </div>
-
-            <div>
-              <h4 class="case-section-title">Scale Profile</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;"><strong>Daily Volumetrics:</strong> 500M+ real-time events ingested daily.<br><strong>Peak Load:</strong> 50,000 events/second raw ingestion rate.</p>
-            </div>
-          </div>
-
-          <div>
-            <div class="case-results-card" style="border-color: rgba(6, 182, 212, 0.25);">
-              <h4 class="case-section-title" style="color:var(--text);">Performance Results</h4>
-              <div style="margin-bottom:1.5rem;">
-                <div class="case-stat-highlight">&lt; 1 sec</div>
-                <p style="font-size:0.8rem; color:var(--muted);">End-to-End Processing Latency SLA</p>
-              </div>
-              <div style="margin-bottom:1.5rem;">
-                <div class="case-stat-highlight">92%</div>
-                <p style="font-size:0.8rem; color:var(--muted);">Reduction in database landing delay (6hr ➔ 30min)</p>
-              </div>
-              <div>
-                <div class="case-stat-highlight">70%</div>
-                <p style="font-size:0.8rem; color:var(--muted);">Reduction in operational failure rates via GKE/AKS</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Case Study C -->
-      <div class="case-card reveal">
-        <span class="case-num">CASE STUDY C</span>
-        <h3 class="case-title">Hadoop to GCP Migration Program</h3>
-        
-        <div class="case-grid">
-          <div>
-            <div style="margin-bottom: 2rem;">
-              <h4 class="case-section-title">Business Problem</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;">Maintaining a massive on-premise Hadoop cluster (200+ physical servers) incurred extreme licensing, storage-expansion, and hardware cooling costs. Processing resources were completely saturated during month-end closes, locking out analytics teams.</p>
-            </div>
-            
-            <div style="margin-bottom: 2rem;">
-              <h4 class="case-section-title">Architecture Implementation</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7; margin-bottom:1rem;">Designed and executed a full cloud-migration program to transition HDFS data directories into Google Cloud Storage. Rewrote complex HiveQL queries into native BigQuery SQL and transformed MapReduce scripts into auto-scaling Cloud Dataflow (Apache Beam) processing tasks.</p>
-              <div class="pipeline-flow">
-                <div class="flow-node"><div class="node-title">Hadoop Cluster</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--blue);"><div class="node-title">Cloud Storage</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--violet);"><div class="node-title">GCP Dataflow</div></div>
-                <div class="flow-arrow">➔</div>
-                <div class="flow-node" style="border-color:var(--green);"><div class="node-title">BigQuery</div></div>
-              </div>
-            </div>
-
-            <div>
-              <h4 class="case-section-title">Scale Profile</h4>
-              <p style="color:var(--muted); font-size:0.95rem; line-height:1.7;"><strong>Migrated Volume:</strong> 2+ PB historical files.<br><strong>Pipeline Scope:</strong> 200+ distinct MapReduce/Hive tasks migrated.</p>
-            </div>
-          </div>
-
-          <div>
-            <div class="case-results-card" style="border-color: rgba(124, 58, 237, 0.25);">
-              <h4 class="case-section-title" style="color:var(--text);">Performance Results</h4>
-              <div style="margin-bottom:1.5rem;">
-                <div class="case-stat-highlight">65%</div>
-                <p style="font-size:0.8rem; color:var(--muted);">Reduction in data pipeline processing times</p>
-              </div>
-              <div style="margin-bottom:1.5rem;">
-                <div class="case-stat-highlight">40%</div>
-                <p style="font-size:0.8rem; color:var(--muted);">Reduction in cloud compute operational overhead</p>
-              </div>
-              <div>
-                <div class="case-stat-highlight">$2.4M</div>
-                <p style="font-size:0.8rem; color:var(--muted);">Annual savings from Hadoop cluster decommissioning</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- PROJECT EXPERIENCE / INITIATIVES -->
+  <!-- ═══ EXPERIENCE ═══ -->
   <section class="sec" id="experience">
     <div class="sec-wrap">
-      <span class="sec-eyebrow">Timeline</span>
-      <h2 class="sec-title">Strategic Initiatives</h2>
-      <p class="sec-sub">A chronological log of data infrastructure ownership, challenges solved, and lessons learned.</p>
-      
-      <div class="exp-timeline reveal">
-        
-        <div class="timeline-item">
-          <div class="timeline-header">
-            <div>
-              <div class="timeline-co">HCA Healthcare</div>
-              <div class="exp-sub-title">Senior Data Platform Engineer</div>
-            </div>
-            <span class="timeline-dt">June 2024 — Present</span>
+      <span class="sec-eye fi">Career</span>
+      <h2 class="sec-h fi">Professional <em>Experience</em></h2>
+      <div class="timeline">
+        <div class="exp-item fi">
+          <div class="exp-top">
+            <div class="exp-co">HCA Healthcare</div><span class="exp-dt">June 2024 — Present</span>
           </div>
-
-          <div class="timeline-content-grid">
-            <div>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Challenge &amp; Scale</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.25rem;">Responsible for ingestion architectures processing 500M+ telemetry files daily. Upstream changes frequently broke schemas, locking downstream analytics models.</p>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Optimization Strategy</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">Implemented an automated metadata-driven ingestion engine that intercepts incoming files, deduces schema modifications, enforces schema drift boundaries, and alerts operations dynamically.</p>
-            </div>
-            <div>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Business Impact</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.25rem;">Maintained a 99.7% pipeline reliability rate. Consolidated GCS-based Delta Lake formats, reducing query processing overhead costs by 45% ($170K/year).</p>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Lessons Learned</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">In massive data organizations, self-serve data discovery and centralized schema-enforcement are critical to prevent resource degradation and pipeline failure cascades.</p>
-            </div>
-          </div>
+          <div class="exp-ttl">Senior Data Platform Engineer</div>
+          <div class="exp-loc">📍 Remote, US</div>
+          <ul class="exp-ul">
+            <li>Architect and support high-throughput cloud data platform pipelines processing 500M+ events daily across
+              GCP and hybrid environments.</li>
+            <li>Optimized BigQuery resources and partitioning strategies, saving 45% in operational compute and query
+              overhead costs.</li>
+            <li>Standardized GCS Delta Lakehouse architectures, consolidating corporate reporting layers and
+              establishing data quality schemas.</li>
+            <li>Deployed metadata-driven ingestion pipelines, allowing clinical and analytics units to self-serve
+              landing data schemas automatically.</li>
+          </ul>
+          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">BigQuery</span><span
+              class="exp-tag">Delta Lake</span><span class="exp-tag">Spark SQL</span><span
+              class="exp-tag">Terraform</span><span class="exp-tag">Kubernetes</span></div>
         </div>
-
-        <div class="timeline-item">
-          <div class="timeline-header">
-            <div>
-              <div class="timeline-co">Citi</div>
-              <div class="exp-sub-title">Cloud Data Engineer — Cloud Data Lake</div>
-            </div>
-            <span class="timeline-dt">July 2023 — May 2024</span>
+        <div class="exp-item fi">
+          <div class="exp-top">
+            <div class="exp-co">Citi</div><span class="exp-dt">July 2023 — May 2024</span>
           </div>
-
-          <div class="timeline-content-grid">
-            <div>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Challenge &amp; Scale</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.25rem;">Consolidating transactional databases to GCP. Nightly batch exports ran as full-table scans, creating massive transaction database load and database latency.</p>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Optimization Strategy</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">Deployed Change Data Capture (CDC) pipelines using Debezium and Kafka Connect, publishing transaction binary log edits incrementally to a high-capacity Kafka buffer.</p>
-            </div>
-            <div>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Business Impact</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.25rem;">Reduced database ingestion landing delays by 92% (from 6 hours batch to under 30 minutes incremental streaming). Migrated 2 PB to GCP and decommissioned the Hadoop cluster.</p>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Lessons Learned</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">Moving to cloud-native warehousing requires rewriting SQL processing logic; copy-pasting legacy queries results in major query cost overheads and resource saturation.</p>
-            </div>
-          </div>
+          <div class="exp-ttl">Cloud Data Engineer — Cloud Data Lake</div>
+          <div class="exp-loc">📍 Irving, TX</div>
+          <ul class="exp-ul">
+            <li>Re-engineered legacy batch pipelines into stream-ingested Change Data Capture (Debezium CDC + Pub/Sub),
+              decreasing raw database ingestion windows by 92% (from 6 hours to 30 minutes).</li>
+            <li>Executed cloud migration of 2 PB historical Hadoop database files to Google Cloud BigQuery and Dataflow,
+              achieving 65% processing speed improvements and full Hadoop cluster decommissioning.</li>
+            <li>Built automated CI/CD container deployment architectures using Google Kubernetes Engine (GKE), reducing
+              test deployment failure occurrences by 70%.</li>
+          </ul>
+          <div class="exp-tags"><span class="exp-tag">GCP</span><span class="exp-tag">Debezium CDC</span><span
+              class="exp-tag">Kafka / PubSub</span><span class="exp-tag">BigQuery</span><span
+              class="exp-tag">Dataflow</span><span class="exp-tag">GKE</span></div>
         </div>
-
-        <div class="timeline-item">
-          <div class="timeline-header">
-            <div>
-              <div class="timeline-co">Accenture</div>
-              <div class="exp-sub-title">Data Engineer — Cloud &amp; Big Data Platform</div>
-            </div>
-            <span class="timeline-dt">Aug 2020 — Jan 2022</span>
+        <div class="exp-item fi">
+          <div class="exp-top">
+            <div class="exp-co">Accenture</div><span class="exp-dt">Aug 2019 — Jan 2022</span>
           </div>
-
-          <div class="timeline-content-grid">
-            <div>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Challenge &amp; Scale</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.25rem;">Tuning query performance across massive enterprise Hadoop configurations running on 200+ physical server nodes.</p>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Optimization Strategy</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">Optimized Spark memory parameters, set custom executor configurations, and restructured partition schemes to resolve data skew during map-reduce shuffle cycles.</p>
-            </div>
-            <div>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Business Impact</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7; margin-bottom:1.25rem;">Reduced processing node loading by 55%. Scripted shell automations that eliminated manual database operation scripts by 60%.</p>
-              <strong style="color:var(--text); font-size:0.82rem; text-transform:uppercase; font-family:var(--font-mono); display:block; margin-bottom:0.5rem;">Lessons Learned</strong>
-              <p style="font-size:0.88rem; color:var(--muted); line-height:1.7;">Physical cluster resource constraints teach you the mathematical value of Spark executor scaling, which is directly applicable to managing cloud budgets.</p>
-            </div>
-          </div>
+          <div class="exp-ttl">Data Engineer — Cloud &amp; Big Data Platform</div>
+          <div class="exp-loc">📍 Bengaluru, India</div>
+          <ul class="exp-ul">
+            <li>Administered on-premise MapReduce, Hive, and Spark jobs running across 200+ node enterprise clusters,
+              reducing total processing load by 55% via query and partition tuning.</li>
+            <li>Automated operational infrastructure tasks using Python and Shell scripting, eliminating manual database
+              administration workflows by 60%.</li>
+          </ul>
+          <div class="exp-tags"><span class="exp-tag">PySpark</span><span class="exp-tag">Hadoop</span><span
+              class="exp-tag">Hive</span><span class="exp-tag">AWS EMR</span><span class="exp-tag">Python</span><span
+              class="exp-tag">Shell Scripting</span></div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- RECRUITER CONTACT -->
+  <!-- ═══ CERTIFICATIONS ═══ -->
+  <section class="sec alt" id="certs">
+    <div class="sec-wrap">
+      <span class="sec-eye fi">Credentials</span>
+      <h2 class="sec-h fi">Professional <em>Certifications</em></h2>
+      <div class="certs-grid">
+        <div class="cert fi">
+          <div class="cert-ico">⚡</div>
+          <div>
+            <div class="cert-name">Azure Databricks Associate</div>
+            <div class="cert-dt">Issued: October 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">❄️</div>
+          <div>
+            <div class="cert-name">Snowflake SnowPro Core</div>
+            <div class="cert-dt">Issued: October 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">🔵</div>
+          <div>
+            <div class="cert-name">Azure Data Engineer Associate</div>
+            <div class="cert-dt">Issued: March 2024</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">☁️</div>
+          <div>
+            <div class="cert-name">AWS Solutions Architect – Associate</div>
+            <div class="cert-dt">July 2023 – July 2026</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">📊</div>
+          <div>
+            <div class="cert-name">Certified Data Science Professional</div>
+            <div class="cert-dt">Issued: September 2023 · DataCamp</div><span class="cert-badge">Active</span>
+          </div>
+        </div>
+        <div class="cert fi">
+          <div class="cert-ico">🔴</div>
+          <div>
+            <div class="cert-name">Google Professional Data Engineer</div>
+            <div class="cert-dt">In Progress</div><span class="cert-badge"
+              style="color:var(--blue);border-color:rgba(91,140,255,0.3);background:rgba(91,140,255,0.08);">In
+              Progress</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT & RESUME ═══ -->
   <section class="sec" id="contact">
     <div class="sec-wrap">
-      <div class="cta-card reveal">
-        <span class="sec-eyebrow" style="color:var(--blue); margin-bottom:1.5rem;">Connect</span>
-        <h2>Let's Architect Your Data Foundation</h2>
-        <p>Currently open to Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, and Data Platform Architect opportunities. Let's design scalable platforms that reduce cloud compute overhead and eliminate processing silos.</p>
-        
-        <a class="btn-primary" href="https://github.com/shyamkarri/shyamkarri.github.io/raw/main/resume.pdf" download style="display:inline-flex; align-items:center; gap:8px;">
-          📄 Download PDF Resume
-        </a>
+      <div class="contact-card fi">
+        <h2>Let's Build Data Platforms <em style="font-style:italic;color:var(--blue);">at Scale</em></h2>
+        <p>I am looking for Senior Data Engineer, Lead Data Engineer, Staff Data Engineer, and Data Platform Architect
+          opportunities. If you need clean, high-performance data architectures that cut compute costs and scale
+          seamlessly, let's connect.</p>
 
-        <div class="cta-links">
-          <a class="cta-link-btn" href="mailto:ksprasadmvsa.1999@gmail.com">📧 ksprasadmvsa.1999@gmail.com</a>
-          <a class="cta-link-btn" href="tel:+18176015406">📱 +1 817-601-5406</a>
-          <a class="cta-link-btn" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻 github.com/shyamkarri</a>
-          <a class="cta-link-btn" href="https://linkedin.com/in/shyam-karri" target="_blank" rel="noopener noreferrer">🔗 linkedin.com/in/shyam-karri</a>
+        <div style="margin-bottom: 2.5rem;">
+          <a class="btn-glow" href="https://github.com/shyamkarri/shyamkarri.github.io/blob/main/raw/main/resume.pdf"
+            download style="display: inline-flex; align-items: center; gap: 8px;">
+            📄 Download Professional Resume (PDF)
+          </a>
+        </div>
+
+        <div class="c-links">
+          <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 </a>
+          <a class="c-link" href="tel:+18176015406">📱 </a>
+          <a class="c-link" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻
+            github.com/shyamkarri</a>
+          <a class="c-link" href="https://www.linkedin.com/in/karri-prasad-293374293/" target="_blank"
+            rel="noopener noreferrer">🔗
+            linkedin.com/in/karri-prasad-293374293/</a>
         </div>
       </div>
     </div>
   </section>
 
-  <footer>
-    <div>© 2026 Karri Prasad. All rights reserved.</div>
-    <div>Senior Data Platform Architect · shyamkarri.github.io</div>
-  </footer>
+  <footer>© 2026 Karri Prasad · Senior Data Platform Architect · Hosted on GitHub Pages</footer>
 
   <script>
     // ══════════════════════════════════════════════════════
-    //  THEME TOGGLE
+    //  ⚙️  CONFIG — SET YOUR RENDER BACKEND URL HERE
+    // ══════════════════════════════════════════════════════
+    const BACKEND_URL = 'https://prasad-voice-agent.onrender.com'; // ← change after Render deploy
+
+    // ══════════════════════════════════════════════════════
+    //  THEME TOGGLE (LIGHT / DARK)
     // ══════════════════════════════════════════════════════
     const themeToggle = document.getElementById('theme-toggle');
     themeToggle.addEventListener('click', () => {
       document.body.classList.toggle('light-mode');
       const isLight = document.body.classList.contains('light-mode');
       themeToggle.textContent = isLight ? '☀️' : '🌙';
-      localStorage.setItem('portfolio-theme-v4', isLight ? 'light' : 'dark');
+      localStorage.setItem('portfolio-theme', isLight ? 'light' : 'dark');
     });
-    if (localStorage.getItem('portfolio-theme-v4') === 'light') {
+    if (localStorage.getItem('portfolio-theme') === 'light') {
       document.body.classList.add('light-mode');
       themeToggle.textContent = '☀️';
     }
 
     // ══════════════════════════════════════════════════════
-    //  SCROLL FADE REVEALS
+    //  CURSOR
     // ══════════════════════════════════════════════════════
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.08 });
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx + 'px'; cur.style.top = my + 'px'; });
+    setInterval(() => { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = Math.round(rx) + 'px'; ring.style.top = Math.round(ry) + 'px'; }, 16);
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    // ══════════════════════════════════════════════════════
+    //  SCROLL FADE
+    // ══════════════════════════════════════════════════════
+    const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); }), { threshold: 0.1 });
+    document.querySelectorAll('.fi').forEach(el => obs.observe(el));
 
-    // Simple interaction to highlight downstream nodes when upstream is hovered
-    const nodes = document.querySelectorAll('.platform-node');
-    nodes.forEach((node, index) => {
-      node.addEventListener('mouseenter', () => {
-        // Highlight active connections
-        for (let i = 0; i < index; i++) {
-          nodes[i].style.borderColor = 'var(--blue)';
-          nodes[i].style.opacity = '0.7';
-        }
+    // ══════════════════════════════════════════════════════
+    //  VOICE BARS
+    // ══════════════════════════════════════════════════════
+    function setVoiceBars(active) {
+      document.querySelectorAll('.vb').forEach(b => {
+        if (active) { b.classList.add('active'); b.style.height = ''; }
+        else { b.classList.remove('active'); b.style.height = Math.floor(Math.random() * 12 + 4) + 'px'; }
       });
-      node.addEventListener('mouseleave', () => {
-        nodes.forEach(n => {
-          n.style.borderColor = '';
-          n.style.opacity = '';
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  🎭  EMOJI FACE ANIMATOR
+    // ══════════════════════════════════════════════════════
+    const Face = {
+      state: 'idle',
+      init() {
+        document.addEventListener('mousemove', e => {
+          const face = document.getElementById('face-container');
+          if (!face) return;
+          const rect = face.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+          const dx = e.clientX - cx;
+          const dy = e.clientY - cy;
+          // Apply a subtle 3D rotate tilt effect to the orb based on mouse distance
+          const tiltX = Math.max(-15, Math.min(15, (dy / window.innerHeight) * 40));
+          const tiltY = Math.max(-15, Math.min(15, (-dx / window.innerWidth) * 40));
+          const orb = document.getElementById('data-spirit-orb');
+          if (orb) {
+            orb.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+          }
         });
+
+        // Add perspective styling to the container for 3D tilt
+        const faceContainer = document.getElementById('face-container');
+        if (faceContainer) {
+          faceContainer.style.perspective = "1000px";
+        }
+      },
+
+      setState(newState) {
+        this.state = newState;
+        const orb = document.getElementById('data-spirit-orb');
+        const consoleEl = document.querySelector('.voice-console');
+        const cardEl = document.getElementById('avatar-card');
+
+        // Map laugh to speaking visual state
+        const stateClass = newState === 'laughing' ? 'speaking' : newState;
+
+        // Reset state classes
+        const classes = ['idle', 'listening', 'thinking', 'speaking'];
+
+        if (orb) {
+          classes.forEach(c => orb.classList.remove(c));
+          orb.classList.add(stateClass);
+        }
+        if (consoleEl) {
+          classes.forEach(c => consoleEl.classList.remove(c));
+          consoleEl.classList.add(stateClass);
+        }
+        if (cardEl) {
+          classes.forEach(c => cardEl.classList.remove(c));
+          cardEl.classList.add(stateClass);
+        }
+      },
+
+      checkForLaugh(text) {
+        const laughWords = ['haha', 'lol', 'funny', 'laugh', 'joke', 'hehe', '😄', '😂', 'great', 'awesome', 'amazing', 'love'];
+        return laughWords.some(w => text.toLowerCase().includes(w));
+      }
+    };
+
+    Face.init();
+
+    // ══════════════════════════════════════════════════════
+    //  STATE
+    // ══════════════════════════════════════════════════════
+    let history = [];
+    let isSpeaking = false;
+    let isListening = false;
+    let recognition = null;
+    let currentAudio = null;
+
+    // ══════════════════════════════════════════════════════
+    //  PLAY AUDIO FROM BACKEND
+    // ══════════════════════════════════════════════════════
+    function playAudioBase64(b64, onEnd) {
+      try {
+        stopAudio();
+        const audio = new Audio('data:audio/mp3;base64,' + b64);
+        currentAudio = audio;
+        audio.onended = () => {
+          isSpeaking = false;
+          if (onEnd) onEnd();
+        };
+        audio.onerror = () => {
+          isSpeaking = false;
+          if (onEnd) onEnd();
+        };
+        audio.play().catch(() => {
+          if (onEnd) onEnd();
+        });
+      } catch (e) {
+        if (onEnd) onEnd();
+      }
+    }
+
+    function stopAudio() {
+      if (currentAudio) {
+        try { currentAudio.pause(); currentAudio.currentTime = 0; } catch (e) { }
+        currentAudio = null;
+      }
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+    }
+
+    function speakFallback(text, onEnd) {
+      if (!window.speechSynthesis) { if (onEnd) onEnd(); return; }
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 0.95; utter.pitch = 1.0; utter.volume = 1;
+      const voices = window.speechSynthesis.getVoices();
+      const preferred = ['Google UK English Male', 'Microsoft David', 'Daniel', 'Alex'];
+      let chosen = voices.find(v => preferred.some(p => v.name.includes(p))) || voices.find(v => v.lang.startsWith('en') && !v.name.toLowerCase().includes('female')) || voices[0];
+      if (chosen) utter.voice = chosen;
+      utter.onend = () => { if (onEnd) onEnd(); };
+      window.speechSynthesis.speak(utter);
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  SPEAK
+    // ══════════════════════════════════════════════════════
+    function startSpeaking(text, audioB64) {
+      isSpeaking = true;
+      setStatus('speaking', '🔊 Speaking...');
+      setVoiceBars(true);
+      document.getElementById('avatar-card').classList.add('speaking');
+      document.getElementById('mode-label').textContent = 'Speaking';
+      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice speaking';
+      document.getElementById('voice-btn').textContent = '🔊 Speaking...';
+
+      if (Face.checkForLaugh(text)) {
+        Face.setState('laughing');
+        setTimeout(() => Face.setState('speaking'), 1200);
+      } else {
+        Face.setState('speaking');
+      }
+
+      const onEnd = () => {
+        isSpeaking = false;
+        setVoiceBars(false);
+        document.getElementById('avatar-card').classList.remove('speaking');
+        setStatus('ready', 'Ready — say something or type below');
+        document.getElementById('mode-label').textContent = 'Idle';
+        document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+        document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+        Face.setState('idle');
+        document.getElementById('voice-btn').disabled = false;
+      };
+
+      if (audioB64) {
+        playAudioBase64(audioB64, onEnd);
+      } else {
+        speakFallback(text, onEnd);
+      }
+    }
+
+    function stopAll() {
+      stopAudio();
+      isSpeaking = false;
+      setVoiceBars(false);
+      document.getElementById('avatar-card').classList.remove('speaking');
+      setStatus('ready', 'Stopped — ready when you are');
+      document.getElementById('mode-label').textContent = 'Idle';
+      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+      document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+      Face.setState('idle');
+      if (recognition) { try { recognition.stop(); } catch (e) { } }
+      isListening = false;
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  APPEND MESSAGE
+    // ══════════════════════════════════════════════════════
+    function appendMsg(role, text) {
+      const t = document.getElementById('transcript');
+      const div = document.createElement('div');
+      div.className = 'vc-msg ' + role;
+      div.innerHTML = `<div class="sender">${role === 'user' ? 'You' : 'Karri'}</div>${text}`;
+      t.appendChild(div);
+      t.scrollTop = t.scrollHeight;
+    }
+
+    function setStatus(state, txt) {
+      document.getElementById('avatar-status-txt').textContent = txt;
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  HANDLE MESSAGE
+    // ══════════════════════════════════════════════════════
+    async function handleMessage(userText) {
+      if (!userText.trim()) return;
+      appendMsg('user', userText);
+      setStatus('thinking', '⚙️ Thinking...');
+      document.getElementById('mode-label').textContent = 'Thinking';
+      document.getElementById('voice-btn').disabled = true;
+      Face.setState('thinking');
+
+      try {
+        const session_id = sessionStorage.getItem('chat_session_id') || null;
+        const res = await fetch(`${BACKEND_URL}/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: userText,
+            history: history,
+            session_id: session_id
+          })
+        });
+
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        if (data.session_id) {
+          sessionStorage.setItem('chat_session_id', data.session_id);
+        }
+
+        const reply = data.reply || "Sorry, I had a hiccup! Try asking again.";
+        const audioB64 = data.audio_base64 || '';
+
+        history.push({ role: 'user', content: userText });
+        history.push({ role: 'assistant', content: reply });
+
+        appendMsg('ai', reply);
+        startSpeaking(reply, audioB64);
+
+      } catch (e) {
+        const fallbackReply = "Hmm, looks like my backend is unreachable. Please check the backend deployment logs or try again in a moment!";
+        appendMsg('ai', fallbackReply);
+        document.getElementById('voice-btn').disabled = false;
+        document.getElementById('mode-label').textContent = 'Offline';
+        Face.setState('idle');
+        speakFallback(fallbackReply, () => {
+          setStatus('ready', 'Backend offline — try again');
+        });
+      }
+    }
+
+    function sendText() {
+      const inp = document.getElementById('text-input');
+      const val = inp.value.trim();
+      if (!val) return;
+      inp.value = '';
+      handleMessage(val);
+    }
+
+    function askChip(q) { handleMessage(q); }
+
+    // ══════════════════════════════════════════════════════
+    //  VOICE INPUT
+    // ══════════════════════════════════════════════════════
+    function setupRecognition() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) {
+        document.getElementById('vc-hint').textContent = '⌨️ Voice not supported in this browser — please type below';
+        return null;
+      }
+      const r = new SR();
+      r.lang = 'en-US';
+      r.continuous = false;
+      r.interimResults = false;
+      r.onresult = e => {
+        const txt = e.results[0][0].transcript;
+        stopListening();
+        handleMessage(txt);
+      };
+      r.onerror = e => {
+        stopListening();
+        if (e.error !== 'aborted') setStatus('ready', 'Mic error — try typing instead');
+      };
+      r.onend = () => { if (isListening) stopListening(); };
+      return r;
+    }
+
+    function startListening() {
+      if (isSpeaking) stopAll();
+      if (!recognition) recognition = setupRecognition();
+      if (!recognition) return;
+      try {
+        recognition.start();
+        isListening = true;
+        setStatus('listening', '🎙 Listening...');
+        setVoiceBars(true);
+        document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice listening';
+        document.getElementById('voice-btn').textContent = '🔴 Listening...';
+        document.getElementById('mode-label').textContent = 'Listening';
+        Face.setState('listening');
+      } catch (e) { }
+    }
+
+    function stopListening() {
+      if (recognition) { try { recognition.stop(); } catch (e) { } }
+      isListening = false;
+      setVoiceBars(false);
+      document.getElementById('voice-btn').className = 'vc-btn vc-btn-voice';
+      document.getElementById('voice-btn').textContent = '🎙 Tap to Talk';
+      document.getElementById('mode-label').textContent = 'Idle';
+      if (!isSpeaking) Face.setState('idle');
+    }
+
+    function toggleVoice() {
+      if (isListening) { stopListening(); }
+      else { startListening(); }
+    }
+
+    function startVoice() {
+      document.getElementById('voice-btn').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setTimeout(() => startListening(), 600);
+    }
+
+    // ══════════════════════════════════════════════════════
+    //  GREETING ON PAGE LOAD
+    // ══════════════════════════════════════════════════════
+    async function greetOnLoad() {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
+
+      try {
+        const session_id = sessionStorage.getItem('chat_session_id') || '';
+        const url = new URL(`${BACKEND_URL}/greet`);
+        if (session_id) {
+          url.searchParams.append('session_id', session_id);
+        }
+        const res = await fetch(url.toString(), { signal: controller.signal });
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        if (data.session_id) {
+          sessionStorage.setItem('chat_session_id', data.session_id);
+        }
+        const greeting = data.reply;
+        const audioB64 = data.audio_base64 || '';
+        appendMsg('ai', greeting);
+        startSpeaking(greeting, audioB64);
+      } catch (e) {
+        const warmGreeting = "Hello there! Welcome to my portfolio. I am Prasad's AI assistant. My backend brain is waking up right now, which takes about 20 seconds. I'm excited to talk with you about cloud data platforms, streaming pipelines, and scaling Databricks or Snowflake systems!";
+        appendMsg('ai', warmGreeting);
+        speakFallback(warmGreeting, () => {
+          setStatus('ready', 'Backend waking up — try chatting soon!');
+        });
+        Face.setState('speaking');
+        setTimeout(() => Face.setState('idle'), 6000);
+
+        fetch(`${BACKEND_URL}/health`).catch(() => console.log("Waking up backend"));
+      }
+    }
+
+    if (window.speechSynthesis) {
+      window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+      window.speechSynthesis.getVoices();
+    }
+
+    // 🌌 tsParticles Initializer
+    if (typeof tsParticles !== 'undefined') {
+      tsParticles.load("tsparticles", {
+        fpsLimit: 60,
+        particles: {
+          number: {
+            value: 65,
+            density: {
+              enable: true,
+              value_area: 800
+            }
+          },
+          color: {
+            value: "#00F0FF"
+          },
+          shape: {
+            type: "circle"
+          },
+          opacity: {
+            value: 0.15,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 0.5,
+              opacity_min: 0.05,
+              sync: false
+            }
+          },
+          size: {
+            value: 2.5,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 1,
+              size_min: 0.5,
+              sync: false
+            }
+          },
+          line_linked: {
+            enable: true,
+            distance: 140,
+            color: "#00F0FF",
+            opacity: 0.08,
+            width: 1
+          },
+          move: {
+            enable: true,
+            speed: 0.6,
+            direction: "none",
+            random: true,
+            straight: false,
+            out_mode: "out",
+            bounce: false,
+            attract: {
+              enable: true,
+              rotateX: 600,
+              rotateY: 1200
+            }
+          }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: {
+              enable: true,
+              mode: "grab"
+            },
+            onclick: {
+              enable: false
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 180,
+              line_linked: {
+                opacity: 0.2
+              }
+            }
+          }
+        },
+        retina_detect: true
       });
-    });
+
+      // Resource-saving pause on blur
+      window.addEventListener('blur', () => {
+        const container = tsParticles.domItem(0);
+        if (container) container.pause();
+      });
+      window.addEventListener('focus', () => {
+        const container = tsParticles.domItem(0);
+        if (container) container.play();
+      });
+    }
+
+    // 📈 CountUp Metrics Initializer
+    function initMetricsCountUp() {
+      if (typeof countUp === 'undefined' || !countUp.CountUp) return;
+
+      const metricElements = [];
+      document.querySelectorAll('.hstat-n').forEach(el => metricElements.push(el));
+      document.querySelectorAll('#about span').forEach(el => {
+        if (/[0-9]/.test(el.textContent) && el.textContent.length < 15) {
+          metricElements.push(el);
+        }
+      });
+
+      metricElements.forEach((el, index) => {
+        el.style.textShadow = '0 0 15px rgba(0, 240, 255, 0.4)';
+        el.style.position = 'relative';
+
+        const rawText = el.textContent.trim();
+        const match = rawText.match(/^([0-9.,]+)(.*)$/);
+        if (match) {
+          const numValue = parseFloat(match[1].replace(/,/g, ''));
+          const suffix = match[2];
+
+          const targetId = 'metric-anim-' + index;
+          el.id = targetId;
+
+          const decimals = match[1].includes('.') ? match[1].split('.')[1].length : 0;
+
+          const cu = new countUp.CountUp(targetId, numValue, {
+            startVal: 0,
+            duration: 2.5,
+            decimalPlaces: decimals,
+            suffix: suffix,
+            useEasing: true,
+            useGrouping: true
+          });
+
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                cu.start();
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+
+          observer.observe(el);
+        }
+      });
+    }
+    initMetricsCountUp();
+
+    // 🔀 Pipeline Flow Tooltips
+    function initPipelineTooltips() {
+      const tooltips = {
+        "Bronze Delta": { action: "Ingests raw ERP & RDBMS data directly into Delta Lake.", savings: "20% storage cost reduction via compression." },
+        "Silver Delta": { action: "Cleanses, deduplicates, and conforms data.", savings: "30% reduction in cluster runtime." },
+        "Gold Delta": { action: "Aggregates and builds business-level metrics.", savings: "45% infrastructure cost savings ($380K/year)." },
+        "Apache Kafka": { action: "High-throughput event broker ingestion.", savings: "Zero data loss during peak load." },
+        "Spark Stream": { action: "Exactly-once event processing and transformation.", savings: "Reduced ingestion latency from hours to seconds." },
+        "Delta Tables": { action: "Micro-batch storage for real-time query engines.", savings: "92% faster CDC ingestion windows." },
+        "GCS Storage": { action: "Sleek landing bucket for petabyte-scale raw files.", savings: "Decommissioned legacy physical servers." },
+        "Cloud Dataflow": { action: "Apache Beam streaming processing pipeline.", savings: "Saved 40% in compute resources." },
+        "BigQuery": { action: "Enterprise data warehouse for analytics.", savings: "Cut query times from hours to seconds." }
+      };
+
+      document.querySelectorAll('.flow-node').forEach(node => {
+        const titleEl = node.querySelector('.node-title');
+        if (!titleEl) return;
+        const titleText = titleEl.textContent.trim();
+        if (tooltips[titleText]) {
+          const info = tooltips[titleText];
+          node.setAttribute('data-tooltip', `${info.action} Cost Savings: ${info.savings}`);
+          node.style.borderColor = 'var(--cyan)';
+        } else {
+          node.setAttribute('data-tooltip', `Data ingestion flow stage.`);
+        }
+      });
+    }
+    initPipelineTooltips();
+
+    setTimeout(greetOnLoad, 1800);
   </script>
 </body>
 
