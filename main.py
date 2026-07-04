@@ -46,10 +46,11 @@ from apscheduler.triggers.cron import CronTrigger
 # Database
 from database import (
     init_db, seed_db, SessionLocal,
-    ConversationLog, AgentExecution, JobApplication,
+    ConversationLog, AgentExecution, JobApplication, JobPosting,
     Notification, SchedulerJob, SchedulerJobRun, Report, AdminUser, engine
 )
 from utils import sanitize_text
+from tts import synthesize_b64
 from sqlalchemy import func, desc, distinct
 
 # ─── Constants ───────────────────────────────────────────────────────────────
@@ -191,9 +192,14 @@ system_prompt = (
     "You ARE Karri — speak in first person as a world-class Senior Data Platform Engineer, warmly and naturally. "
     "IMPORTANT: Your responses will be read aloud to the user using text-to-speech. "
     "NEVER state that you are a text-based AI, a language model, or that you cannot speak, talk, or hear. "
-    "Always behave as if you are speaking directly to the user. "
-    "Be friendly, a little casual, engaging, and confident. Keep responses concise (2-4 sentences max) "
-    "unless the recruiter asks for detail. "
+    "Always behave as if you are speaking directly to the user.\n\n"
+    "SPEAKING STYLE (strict):\n"
+    "- You sound like a friendly, confident 28-year-old engineer from South India.\n"
+    "- Use simple, everyday English with perfectly correct grammar. Short sentences.\n"
+    "- No markdown, no bullet points, no emojis, no headings — plain spoken sentences only.\n"
+    "- Never use filler like 'um', 'well,', 'so,' at the start of a sentence.\n"
+    "- Keep replies to 2-4 sentences unless the recruiter explicitly asks for detail.\n"
+    "- End with a short, natural follow-up question when it helps the conversation.\n\n"
     "Use the retrieved context about your background (e.g. Spark, Kafka, Databricks, Snowflake, cloud migrations) "
     "to answer questions, focusing on scale, performance metrics, and business impact.\n\n"
     "Context: {context}"
@@ -258,6 +264,15 @@ def _run_job(job_name: str, job_type: str):
             from gmail_responder import check_and_reply_emails
             check_and_reply_emails(db, retrieval_chain)
             output = "Gmail check complete"
+        elif job_type == "job_scrape":
+            from job_scraper import run_scrape
+            from job_intel import score_new_jobs
+            output = run_scrape(companies=(job.config or {}).get("companies"))
+            output += " | " + score_new_jobs(db)
+        elif job_type == "followup_reminder":
+            output = _send_followup_reminders(db)
+        elif job_type == "morning_briefing":
+            output = _send_morning_briefing(db)
 
         duration_ms = (time.time() - start) * 1000
         run_record.status = "success"
@@ -352,6 +367,120 @@ def _send_daily_digest(db) -> str:
     db.add(notif)
     db.commit()
     return f"digest: {msgs} messages, {unread} unread"
+
+
+def _send_followup_reminders(db) -> str:
+    """Flag applications that have gone quiet and need a recruiter follow-up.
+
+    Rule: status is applied/screening/interview and nothing has changed for
+    5+ days. Creates one notification per stale application (deduped per day)
+    and emails you a digest listing exactly who to contact.
+    """
+    now = datetime.utcnow()
+    stale_cutoff = now - timedelta(days=5)
+    stale_apps = db.query(JobApplication).filter(
+        JobApplication.status.in_(["applied", "screening", "interview"]),
+        JobApplication.updated_at <= stale_cutoff,
+    ).order_by(JobApplication.updated_at.asc()).all()
+
+    if not stale_apps:
+        return "no follow-ups due"
+
+    lines = []
+    for a in stale_apps:
+        days_quiet = (now - (a.updated_at or a.created_at)).days
+        contact = a.contact_name or "the recruiter"
+        contact_email = f" <{a.contact_email}>" if a.contact_email else ""
+        lines.append(
+            f"- {a.company_name} — {a.position} ({a.status}, quiet {days_quiet}d): "
+            f"follow up with {contact}{contact_email}"
+        )
+
+        # One notification per app per day (avoid spamming on frequent crons)
+        title = f"Follow up: {a.company_name} — {a.position}"
+        already = db.query(Notification).filter(
+            Notification.title == title,
+            Notification.created_at >= now - timedelta(days=1),
+        ).first()
+        if not already:
+            db.add(Notification(
+                type="recruiter_email",
+                title=title,
+                message=f"No movement for {days_quiet} days. "
+                        f"Reach out to {contact}{contact_email}.",
+                data={"application_id": a.id},
+            ))
+    db.commit()
+
+    body = (
+        f"Follow-up digest — {now.strftime('%b %d')}\n\n"
+        f"{len(stale_apps)} application(s) need a nudge:\n\n" + "\n".join(lines)
+    )
+    if SMTP_USER:
+        _send_email(SMTP_USER, f"[Job Tracker] {len(stale_apps)} follow-ups due", body)
+    return f"{len(stale_apps)} follow-ups flagged"
+
+
+def _send_morning_briefing(db) -> str:
+    """Daily 8 AM email: top new matches, follow-ups due, pipeline snapshot."""
+    now = datetime.utcnow()
+
+    top_jobs = (
+        db.query(JobPosting)
+        .filter(JobPosting.is_new == True)  # noqa: E712
+        .filter(JobPosting.sponsorship_flag != "restricted")
+        .order_by(desc(JobPosting.match_score))
+        .limit(10)
+        .all()
+    )
+
+    stale_cutoff = now - timedelta(days=5)
+    followups = db.query(JobApplication).filter(
+        JobApplication.status.in_(["applied", "screening", "interview"]),
+        JobApplication.updated_at <= stale_cutoff,
+    ).all()
+
+    pipeline = dict(
+        db.query(JobApplication.status, func.count(JobApplication.id))
+        .group_by(JobApplication.status).all()
+    )
+
+    lines = [f"☀️ Morning briefing — {now.strftime('%A, %b %d')}", ""]
+
+    lines.append(f"── TOP NEW MATCHES ({len(top_jobs)}) " + "─" * 20)
+    if top_jobs:
+        for j in top_jobs:
+            score = f"{j.match_score}/100" if j.match_score is not None else "unscored"
+            lines.append(f"• [{score}] {j.title} @ {j.company}")
+            lines.append(f"    {j.location or '?'} | sponsorship: {j.sponsorship_flag}")
+            if j.match_reason:
+                lines.append(f"    {j.match_reason}")
+            lines.append(f"    {j.url}")
+    else:
+        lines.append("No new postings since yesterday.")
+
+    lines.append("")
+    lines.append(f"── FOLLOW-UPS DUE ({len(followups)}) " + "─" * 20)
+    for a in followups:
+        days_quiet = (now - (a.updated_at or a.created_at)).days
+        contact = a.contact_name or "recruiter"
+        lines.append(f"• {a.company_name} — {a.position} ({a.status}, {days_quiet}d quiet) → nudge {contact}")
+    if not followups:
+        lines.append("Nothing overdue. Nice.")
+
+    lines.append("")
+    lines.append("── PIPELINE " + "─" * 28)
+    lines.append("  " + " | ".join(f"{k}: {v}" for k, v in pipeline.items()) if pipeline else "  Empty")
+
+    body = "\n".join(lines)
+    subject = f"☀️ Briefing: {len(top_jobs)} new matches, {len(followups)} follow-ups due"
+    if SMTP_USER:
+        _send_email(SMTP_USER, subject, body)
+
+    from job_intel import send_telegram
+    send_telegram(body[:3500])
+
+    return f"briefing sent: {len(top_jobs)} jobs, {len(followups)} follow-ups"
 
 
 def _start_scheduler():
@@ -616,16 +745,7 @@ async def chat(req: ChatRequest, request: Request, db=Depends(get_db)):
         db.commit()
         logger.info(f"Chat processed: {user_msg_clean[:50]}", extra={"session_id": session_id})
 
-    try:
-        from gtts import gTTS
-        tts = gTTS(text=reply_text, lang="en", tld="com", slow=False)
-        mp3_buf = io.BytesIO()
-        tts.write_to_fp(mp3_buf)
-        mp3_buf.seek(0)
-        audio_b64 = base64.b64encode(mp3_buf.read()).decode("utf-8")
-    except Exception as e:
-        logger.error(f"TTS failed: {e}", extra={"session_id": session_id})
-        audio_b64 = ""
+    audio_b64 = await synthesize_b64(reply_text)
 
     return ChatResponse(reply=reply_text, audio_base64=audio_b64, session_id=session_id)
 
@@ -649,16 +769,7 @@ async def greet(
         "Feel free to ask me anything about my work, my architecture designs, or target technologies!"
     )
 
-    try:
-        from gtts import gTTS
-        tts = gTTS(text=greeting, lang="en", tld="com", slow=False)
-        mp3_buf = io.BytesIO()
-        tts.write_to_fp(mp3_buf)
-        mp3_buf.seek(0)
-        audio_b64 = base64.b64encode(mp3_buf.read()).decode("utf-8")
-    except Exception as e:
-        logger.error(f"TTS greeting failed: {e}")
-        audio_b64 = ""
+    audio_b64 = await synthesize_b64(greeting)
 
     duration = time.time() - start_time
     db.add(ConversationLog(
@@ -1272,6 +1383,152 @@ def _app_to_dict(a: JobApplication) -> dict:
 # ════════════════════════════════════════════════════════════════════════════
 # MODULE 4 — NOTIFICATIONS
 # ════════════════════════════════════════════════════════════════════════════
+
+# ─── Job Feed (scraped postings) ─────────────────────────────────────────────
+@app.get("/api/jobs")
+async def list_jobs(
+    page: int = Query(1, ge=1), limit: int = Query(30, ge=1, le=100),
+    source: Optional[str] = None, company: Optional[str] = None,
+    new_only: bool = False, sponsorship: Optional[str] = None,
+    remote_only: bool = False, sort: str = Query("recent", pattern="^(recent|score)$"),
+    db=Depends(get_db), current_user: AdminUser = Depends(get_current_user)
+):
+    q = db.query(JobPosting)
+    if source:
+        q = q.filter_by(source=source)
+    if company:
+        q = q.filter(JobPosting.company.ilike(f"%{company}%"))
+    if new_only:
+        q = q.filter_by(is_new=True)
+    if sponsorship:
+        q = q.filter_by(sponsorship_flag=sponsorship)
+    if remote_only:
+        q = q.filter_by(remote=True)
+    total = q.count()
+    order = desc(JobPosting.match_score) if sort == "score" else desc(JobPosting.scraped_at)
+    rows = q.order_by(order).offset((page - 1) * limit).limit(limit).all()
+    return {
+        "jobs": [{
+            "id": j.id, "source": j.source, "company": j.company, "title": j.title,
+            "location": j.location, "url": j.url, "remote": j.remote,
+            "sponsorship_flag": j.sponsorship_flag, "matched_keywords": j.matched_keywords,
+            "match_score": j.match_score, "match_reason": j.match_reason,
+            "posted_at": j.posted_at.isoformat() if j.posted_at else None,
+            "scraped_at": j.scraped_at.isoformat(), "is_new": j.is_new,
+            "tracked_application_id": j.tracked_application_id,
+        } for j in rows],
+        "total": total,
+        "new_count": db.query(func.count(JobPosting.id)).filter_by(is_new=True).scalar() or 0,
+    }
+
+
+@app.post("/api/jobs/scrape")
+async def trigger_scrape(
+    background_tasks: BackgroundTasks,
+    db=Depends(get_db), current_user: AdminUser = Depends(get_current_user)
+):
+    """Run the job scraper immediately in the background."""
+    from job_scraper import run_scrape
+    background_tasks.add_task(run_scrape)
+    return {"message": "Scrape started — new postings will appear in /api/jobs"}
+
+
+@app.post("/api/jobs/{job_id}/track", status_code=201)
+async def track_job(
+    job_id: int, db=Depends(get_db),
+    current_user: AdminUser = Depends(get_current_user)
+):
+    """Copy a scraped posting into the application kanban (status: saved)."""
+    posting = db.query(JobPosting).filter_by(id=job_id).first()
+    if not posting:
+        raise HTTPException(status_code=404, detail="Job posting not found")
+    if posting.tracked_application_id:
+        return {"application_id": posting.tracked_application_id, "message": "Already tracked"}
+    app_row = JobApplication(
+        company_name=posting.company, position=posting.title,
+        status="saved", job_url=posting.url, location=posting.location,
+        remote=posting.remote,
+        notes=f"From {posting.source} scraper. Sponsorship: {posting.sponsorship_flag}.",
+    )
+    db.add(app_row)
+    db.commit()
+    db.refresh(app_row)
+    posting.tracked_application_id = app_row.id
+    posting.is_new = False
+    db.commit()
+    return {"application_id": app_row.id, "message": "Added to kanban"}
+
+
+@app.post("/api/jobs/mark-seen")
+async def mark_jobs_seen(
+    ids: Optional[List[int]] = None, db=Depends(get_db),
+    current_user: AdminUser = Depends(get_current_user)
+):
+    q = db.query(JobPosting).filter_by(is_new=True)
+    if ids:
+        q = q.filter(JobPosting.id.in_(ids))
+    count = q.update({"is_new": False}, synchronize_session=False)
+    db.commit()
+    return {"marked": count}
+
+
+# ─── AI Writing Engine ───────────────────────────────────────────────────────
+class CoverLetterRequest(BaseModel):
+    job_posting_id: Optional[int] = None
+    application_id: Optional[int] = None
+    extra_notes: Optional[str] = ""
+
+
+def _resolve_job_context(db, job_posting_id=None, application_id=None):
+    """Return (title, company, description) from a posting or an application."""
+    if job_posting_id:
+        p = db.query(JobPosting).filter_by(id=job_posting_id).first()
+        if not p:
+            raise HTTPException(status_code=404, detail="Job posting not found")
+        return p.title, p.company, p.description_snippet or ""
+    if application_id:
+        a = db.query(JobApplication).filter_by(id=application_id).first()
+        if not a:
+            raise HTTPException(status_code=404, detail="Application not found")
+        return a.position, a.company_name, a.notes or ""
+    raise HTTPException(status_code=422, detail="Provide job_posting_id or application_id")
+
+
+@app.post("/api/ai/cover-letter")
+async def ai_cover_letter(
+    req: CoverLetterRequest, db=Depends(get_db),
+    current_user: AdminUser = Depends(get_current_user)
+):
+    from job_intel import draft_cover_letter
+    title, company, desc = _resolve_job_context(db, req.job_posting_id, req.application_id)
+    letter = draft_cover_letter(title, company, desc, req.extra_notes or "")
+    return {"cover_letter": letter, "job_title": title, "company": company}
+
+
+@app.post("/api/ai/follow-up/{app_id}")
+async def ai_follow_up(
+    app_id: int, db=Depends(get_db),
+    current_user: AdminUser = Depends(get_current_user)
+):
+    from job_intel import draft_follow_up
+    a = db.query(JobApplication).filter_by(id=app_id).first()
+    if not a:
+        raise HTTPException(status_code=404, detail="Application not found")
+    days_quiet = (datetime.utcnow() - (a.updated_at or a.created_at)).days
+    email = draft_follow_up(a.company_name, a.position, a.status, days_quiet, a.contact_name or "")
+    return {"email": email, "contact_email": a.contact_email, "days_quiet": days_quiet}
+
+
+@app.post("/api/ai/interview-prep")
+async def ai_interview_prep(
+    req: CoverLetterRequest, db=Depends(get_db),
+    current_user: AdminUser = Depends(get_current_user)
+):
+    from job_intel import interview_prep
+    title, company, desc = _resolve_job_context(db, req.job_posting_id, req.application_id)
+    prep = interview_prep(title, company, desc)
+    return {"prep": prep, "job_title": title, "company": company}
+
 
 @app.get("/api/notifications")
 async def list_notifications(
