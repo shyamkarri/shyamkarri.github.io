@@ -26,6 +26,11 @@ services:
         value: "1440"
       - key: REPORTS_DIR
         value: /tmp/reports
+      # Optional Telegram instant alerts (leave blank to disable)
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
       # Optional SMTP for email notifications (leave blank to disable)
       - key: SMTP_HOST
         sync: false
