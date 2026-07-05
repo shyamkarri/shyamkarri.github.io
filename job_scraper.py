@@ -1,8 +1,8 @@
 """
 Job scraper — pulls Data-Engineering roles from public job-board APIs.
 
-All sources here expose official public JSON endpoints (no login, no browser
-automation, no ToS games):
+All sources expose official public JSON endpoints (no login, no browser
+automation):
 
   greenhouse       boards-api.greenhouse.io/v1/boards/{token}/jobs
   lever            api.lever.co/v0/postings/{company}?mode=json
@@ -10,12 +10,23 @@ automation, no ToS games):
   smartrecruiters  api.smartrecruiters.com/v1/companies/{company}/postings
   workday          {tenant}.{host}.myworkdayjobs.com/wday/cxs/{tenant}/{site}/jobs
 
+MEMORY DESIGN (important — this runs on a 512MB Render instance):
+  * Greenhouse list calls do NOT include descriptions; full content is
+    fetched per-job, only for keyword-matched jobs, capped per company.
+  * One company processed at a time; the DB session is flushed and
+    expunged after each so memory never accumulates.
+  * A module lock prevents two scrapes from running at once (double
+    "Scrape Now" clicks used to stack runs and OOM the instance).
+
 Edit COMPANIES below (or override via the scheduler job's `config` JSON) to
-add/remove companies. Wrong tokens fail gracefully and are skipped.
+add/remove companies. Wrong or retired tokens 404 and are skipped silently —
+adding guesses is free.
 """
 
 import re
+import time
 import logging
+import threading
 from datetime import datetime
 from typing import Optional
 
@@ -31,7 +42,6 @@ KEYWORDS = [
     "big data", "spark", "databricks", "snowflake", "etl",
 ]
 
-# Work-auth signals scanned in job descriptions
 RESTRICTED_PATTERNS = [
     "no sponsorship", "without sponsorship", "unable to sponsor",
     "not able to sponsor", "cannot sponsor", "us citizenship required",
@@ -42,34 +52,81 @@ FRIENDLY_PATTERNS = [
     "h1b", "h-1b", "opt", "cpt", "work authorization assistance",
 ]
 
-# ─── Company registry (edit me) ──────────────────────────────────────────────
+# ─── Company registry ────────────────────────────────────────────────────────
+# Board tokens for companies known/likely to use each ATS. A wrong token just
+# 404s and is skipped, so it is safe to add guesses. To find a token: visit
+# boards.greenhouse.io/<guess> or jobs.lever.co/<guess> in a browser.
 COMPANIES = {
     "greenhouse": [
-        # board token = the slug in boards.greenhouse.io/<token>
-        "databricks", "stripe", "airbnb", "gitlab", "cloudflare",
-        "datadog", "coinbase", "instacart", "dropbox", "reddit",
+        # Big tech / data & infra
+        "databricks", "stripe", "airbnb", "gitlab", "cloudflare", "datadog",
+        "coinbase", "instacart", "dropbox", "reddit", "pinterest", "lyft",
+        "twitch", "doordashusa", "robinhood", "mongodb", "elastic",
+        "hashicorp", "twilio", "okta", "confluent", "snowflake", "asana",
+        "figma", "airtable", "amplitude", "anthropic", "vercel", "netlify",
+        "sourcegraph", "grammarly", "duolingo", "discord", "roblox",
+        # Fintech / commerce
+        "affirm", "chime", "brex", "carta", "sofi", "gusto", "checkr",
+        "marqeta", "mercury", "wise", "adyen", "klarna",
+        # SaaS / product
+        "hubspot", "klaviyo", "braze", "lattice", "launchdarkly", "mixpanel",
+        "segment", "sentry", "postman", "zapier", "calendly", "loom",
+        "miro", "monzo", "intercom", "amplitude", "clari", "gong",
+        # Marketplace / consumer
+        "faire", "flexport", "thumbtack", "nextdoor", "patreon", "peloton",
+        "etsy", "wish", "upwork", "udemy", "coursera", "quora", "buzzfeed",
+        "warbyparker", "squarespace", "vimeo", "toast", "samsara",
+        # Health / bio / other
+        "benchling", "tempus", "flatironhealth", "oscar", "ro", "cityblock",
+        "devoted", "komodohealth", "zocdoc", "hingehealth",
+        # Data / AI
+        "scaleai", "huggingface", "weightsandbiases", "pinecone", "dbtlabs",
+        "starburstdata", "fivetran", "airbyte", "astronomer", "montecarlodata",
+        "atlan", "alation", "sigmacomputing", "hex", "census", "hightouch",
+        "prefect", "dagsterlabs", "clickhouse", "singlestore", "cockroachlabs",
+        "planetscale", "timescale", "redpandadata", "materialize", "voltrondata",
     ],
     "lever": [
-        # slug in jobs.lever.co/<slug>
-        "palantir", "plaid",
+        "palantir", "plaid", "ramp", "attentive", "outreach", "highspot",
+        "veeva", "zoox", "aurora", "nuro", "kodiak", "saronic",
+        "voleon", "matchgroup", "spotify", "netflix", "atlassian",
+        "shield-ai", "eightsleep", "mistral", "valence",
     ],
     "ashby": [
-        # org in jobs.ashbyhq.com/<org>
-        "openai", "ramp", "linear", "notion",
+        "openai", "ramp", "linear", "notion", "cursor", "replit", "supabase",
+        "posthog", "vanta", "deel", "modal", "sierra", "perplexity-ai",
+        "elevenlabs", "cohere", "runway", "wander", "clever", "docker",
+        "monad", "ashby", "warp", "zed", "browserbase", "temporal-technologies",
     ],
     "smartrecruiters": [
-        # company id in careers.smartrecruiters.com/<id>
-        "ServiceNow",
+        "ServiceNow", "Visa", "Square", "Bosch", "McDonaldsCorporation",
+        "Experian", "Devsu", "Publicissapient", "Equinox",
     ],
     "workday": [
-        # each entry: tenant, host (wd1/wd5/wd12...), site name
+        # each entry: tenant, host (wd1/wd5/wd12...), site name — find via the
+        # company careers page URL: <tenant>.<host>.myworkdayjobs.com/<site>
         {"company": "NVIDIA", "tenant": "nvidia", "host": "wd5",
          "site": "NVIDIAExternalCareerSite"},
+        {"company": "Adobe", "tenant": "adobe", "host": "wd5",
+         "site": "external_experienced"},
+        {"company": "Salesforce", "tenant": "salesforce", "host": "wd12",
+         "site": "External_Career_Site"},
+        {"company": "Capital One", "tenant": "capitalone", "host": "wd12",
+         "site": "Capital_One"},
+        {"company": "Humana", "tenant": "humana", "host": "wd5",
+         "site": "Humana_External_Career_Site"},
+        {"company": "CVS Health", "tenant": "cvshealth", "host": "wd1",
+         "site": "CVS_Health_Careers"},
     ],
 }
 
-TIMEOUT = httpx.Timeout(20.0)
+TIMEOUT = httpx.Timeout(15.0)
 HEADERS = {"User-Agent": "Mozilla/5.0 (job-tracker; personal use)"}
+
+MAX_CONTENT_FETCHES = 20   # per-company cap on Greenhouse detail calls
+COMPANY_PAUSE = 0.3        # seconds between companies (smooth CPU, be polite)
+
+_scrape_lock = threading.Lock()
 
 
 def _matches_keywords(title: str) -> list:
@@ -104,31 +161,39 @@ def _parse_dt(value) -> Optional[datetime]:
 # ─── Per-source fetchers: each returns a list of normalized job dicts ────────
 
 def fetch_greenhouse(client: httpx.Client, token: str) -> list:
-    url = f"https://boards-api.greenhouse.io/v1/boards/{token}/jobs?content=true"
+    # Lightweight list call — titles/locations only, NO descriptions.
+    # (content=true on big boards returns tens of MB and OOMs the instance.)
+    url = f"https://boards-api.greenhouse.io/v1/boards/{token}/jobs"
     resp = client.get(url)
     resp.raise_for_status()
+    matched = [j for j in resp.json().get("jobs", [])
+               if _matches_keywords(j.get("title", ""))]
+
     jobs = []
-    for j in resp.json().get("jobs", []):
-        kws = _matches_keywords(j.get("title", ""))
-        if not kws:
-            continue
-        desc = _strip_html(j.get("content", ""))[:2000]
+    for j in matched[:MAX_CONTENT_FETCHES]:
+        desc = ""
+        try:  # fetch description per matched job only
+            detail = client.get(f"{url}/{j['id']}")
+            if detail.status_code == 200:
+                desc = _strip_html(detail.json().get("content", ""))[:2000]
+        except Exception:
+            pass
+        loc = (j.get("location") or {}).get("name") or ""
         jobs.append({
             "source": "greenhouse", "external_id": str(j["id"]),
             "company": token, "title": j.get("title", ""),
-            "location": (j.get("location") or {}).get("name"),
-            "url": j.get("absolute_url", ""),
+            "location": loc, "url": j.get("absolute_url", ""),
             "description_snippet": desc,
             "posted_at": _parse_dt(j.get("updated_at")),
-            "remote": "remote" in ((j.get("location") or {}).get("name") or "").lower(),
+            "remote": "remote" in loc.lower(),
             "sponsorship_flag": _sponsorship_flag(desc),
-            "matched_keywords": kws,
+            "matched_keywords": _matches_keywords(j.get("title", "")),
         })
     return jobs
 
 
 def fetch_lever(client: httpx.Client, company: str) -> list:
-    url = f"https://api.lever.co/v0/postings/{company}?mode=json"
+    url = f"https://api.lever.co/v0/postings/{company}?mode=json&limit=250"
     resp = client.get(url)
     resp.raise_for_status()
     jobs = []
@@ -239,10 +304,15 @@ def fetch_workday(client: httpx.Client, cfg: dict) -> list:
 def run_scrape(companies: dict = None) -> str:
     """Scrape all configured sources, insert new postings, notify on matches.
 
-    Returns a human-readable summary string (stored as the scheduler run output).
+    Memory-safe: one company at a time, session cleared after each commit,
+    and a lock so concurrent scrapes can't stack up.
+    Returns a human-readable summary (stored as the scheduler run output).
     """
+    if not _scrape_lock.acquire(blocking=False):
+        return "skipped — a scrape is already running"
+
     companies = companies or COMPANIES
-    found, new_count, errors = 0, 0, []
+    found, new_count, deduped, errors = 0, 0, 0, []
 
     db = SessionLocal()
     try:
@@ -259,18 +329,32 @@ def run_scrape(companies: dict = None) -> str:
                 try:
                     jobs = fetcher(client, target)
                     found += len(jobs)
+
+                    # one query per company instead of one per job
+                    existing_ids = {
+                        row[0] for row in db.query(JobPosting.external_id)
+                        .filter_by(source=source)
+                        .filter(JobPosting.external_id.in_(
+                            [j["external_id"] for j in jobs] or [""]
+                        )).all()
+                    }
                     for j in jobs:
-                        exists = db.query(JobPosting).filter_by(
-                            source=j["source"], external_id=j["external_id"]
-                        ).first()
-                        if exists:
+                        if j["external_id"] in existing_ids:
+                            deduped += 1
                             continue
                         db.add(JobPosting(**j))
                         new_count += 1
                     db.commit()
+                    db.expunge_all()  # release ORM objects — keep memory flat
+                except httpx.HTTPStatusError as e:
+                    if e.response.status_code == 404:
+                        pass  # unknown board token — free to ignore
+                    else:
+                        errors.append(f"{source}/{label}: HTTP {e.response.status_code}")
                 except Exception as e:
-                    errors.append(f"{source}/{label}: {e}")
+                    errors.append(f"{source}/{label}: {type(e).__name__}")
                     logger.warning(f"[Scraper] {source}/{label} failed: {e}")
+                time.sleep(COMPANY_PAUSE)
 
         if new_count:
             db.add(Notification(
@@ -281,10 +365,11 @@ def run_scrape(companies: dict = None) -> str:
             ))
             db.commit()
 
-        summary = f"{new_count} new / {found} matched; {len(errors)} source errors"
+        summary = f"{new_count} new + {deduped} deduped = {found} found; {len(errors)} errors"
         if errors:
             summary += " — " + "; ".join(errors[:5])
         logger.info(f"[Scraper] {summary}")
         return summary
     finally:
         db.close()
+        _scrape_lock.release()
