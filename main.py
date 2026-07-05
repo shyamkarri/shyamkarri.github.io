@@ -655,6 +655,43 @@ def root():
 def health():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
+@app.get("/proto/{key}/run")
+async def proto_run(key: str, request: Request):
+    """Live portfolio prototype demos — streams a REAL bounded mini-pipeline
+    run (actual ML/SQL/latency numbers) as Server-Sent Events. Public, but
+    rate-limited: max 2 concurrent runs, 10s per-IP cooldown."""
+    import prototypes
+
+    runner = prototypes.RUNNERS.get(key)
+    if not runner:
+        raise HTTPException(status_code=404, detail=f"unknown prototype '{key}'")
+
+    ip = request.client.host if request.client else "unknown"
+    err = prototypes.try_begin(ip)
+    if err:
+        raise HTTPException(status_code=429, detail=err)
+
+    logger.info(f"[Proto] run started: {key} (ip={ip})")
+
+    async def sse():
+        try:
+            async for ev in runner():
+                yield f"data: {json.dumps(ev)}\n\n"
+            logger.info(f"[Proto] run finished: {key}")
+        except Exception as e:
+            logger.error(f"[Proto] run failed: {key}: {e}")
+            yield "data: " + json.dumps(
+                {"t": "done", "line": f"⚠️ run aborted: {type(e).__name__}", "pct": 100}
+            ) + "\n\n"
+        finally:
+            prototypes.end_run()
+
+    return StreamingResponse(sse(), media_type="text/event-stream", headers={
+        "Cache-Control": "no-cache",
+        "X-Accel-Buffering": "no",  # defeat proxy buffering so events stream live
+    })
+
+
 @app.get("/api/health/jobs", response_model=dict)
 async def health_jobs(db=Depends(get_db), current_user: AdminUser = Depends(get_current_user)):
     """Diagnostic: what's actually configured and working."""

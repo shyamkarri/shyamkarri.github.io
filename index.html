@@ -3410,31 +3410,95 @@
     };
 
     let _termTimers = [];
-    function launchPrototype(key, title) {
-      const modal = document.getElementById('terminal-modal');
-      const logs = document.getElementById('terminal-logs');
-      const fill = document.getElementById('progress-fill');
-      document.getElementById('terminal-title').textContent = title;
-      logs.innerHTML = '';
-      fill.style.width = '0%';
-      modal.classList.add('active');
+    let _termAbort = null;
+    let _runSeq = 0;
 
+    function _termLine(text, kind) {
+      const logs = document.getElementById('terminal-logs');
+      const div = document.createElement('div');
+      div.textContent = text;
+      const color = (kind === 'ok' || kind === 'done' || text.startsWith('✅')) ? 'var(--green)'
+        : kind === 'alert' ? 'var(--violet)'
+          : (kind === 'cmd' || text.startsWith('$')) ? 'var(--cyan)'
+            : 'var(--muted)';
+      div.style.cssText = 'font-family:var(--fm);font-size:0.8rem;padding:3px 0;color:' + color;
+      logs.appendChild(div);
+      logs.scrollTop = logs.scrollHeight;
+    }
+
+    function _playCanned(key) {
+      const fill = document.getElementById('progress-fill');
       const lines = PROTO_SCRIPTS[key] || ['$ echo "demo coming soon"'];
       _termTimers.forEach(clearTimeout);
       _termTimers = lines.map((line, i) => setTimeout(() => {
-        const div = document.createElement('div');
-        div.textContent = line;
-        div.style.cssText = 'font-family:var(--fm);font-size:0.8rem;padding:3px 0;color:' +
-          (line.startsWith('✅') ? 'var(--green)' : line.startsWith('$') ? 'var(--cyan)' : 'var(--muted)');
-        logs.appendChild(div);
-        logs.scrollTop = logs.scrollHeight;
+        _termLine(line);
         fill.style.width = Math.round(((i + 1) / lines.length) * 100) + '%';
       }, 450 * (i + 1)));
     }
 
+    async function launchPrototype(key, title) {
+      const modal = document.getElementById('terminal-modal');
+      const logs = document.getElementById('terminal-logs');
+      const fill = document.getElementById('progress-fill');
+      const titleEl = document.getElementById('terminal-title');
+
+      _termTimers.forEach(clearTimeout); _termTimers = [];
+      if (_termAbort) _termAbort.abort();
+      const seq = ++_runSeq;
+
+      titleEl.textContent = title;
+      logs.innerHTML = '';
+      fill.style.width = '0%';
+      modal.classList.add('active');
+
+      _termLine('$ connecting to live backend…', 'cmd');
+      _termLine('⏳ waking backend (free tier — first run of the day can take ~40s)…');
+
+      _termAbort = new AbortController();
+      const ctl = _termAbort;
+      const wakeTimer = setTimeout(() => ctl.abort(), 45000);
+      try {
+        const resp = await fetch(`${BACKEND_URL}/proto/${key}/run`, { signal: ctl.signal });
+        if (!resp.ok || !resp.body) throw new Error('HTTP ' + resp.status);
+        if (seq !== _runSeq) return;
+        titleEl.textContent = title + '  ·  ● LIVE';
+        _termLine('● connected — every number below is computed live on the backend', 'ok');
+
+        const reader = resp.body.getReader();
+        const dec = new TextDecoder();
+        let buf = '';
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          clearTimeout(wakeTimer);
+          if (seq !== _runSeq) { reader.cancel(); return; }
+          buf += dec.decode(value, { stream: true });
+          let i;
+          while ((i = buf.indexOf('\n\n')) >= 0) {
+            const chunk = buf.slice(0, i); buf = buf.slice(i + 2);
+            for (const l of chunk.split('\n')) {
+              if (!l.startsWith('data: ')) continue;
+              try {
+                const ev = JSON.parse(l.slice(6));
+                _termLine(ev.line, ev.t);
+                if (ev.pct) fill.style.width = ev.pct + '%';
+              } catch (_) { /* skip malformed event */ }
+            }
+          }
+        }
+      } catch (e) {
+        clearTimeout(wakeTimer);
+        if (seq !== _runSeq) return; // user closed the modal — stay quiet
+        _termLine('⚠ backend unavailable right now — showing a recorded run (try again in ~1 min for the live one)');
+        _playCanned(key);
+      }
+    }
+
     function closeTerminal() {
+      _runSeq++;
       _termTimers.forEach(clearTimeout);
       _termTimers = [];
+      if (_termAbort) { _termAbort.abort(); _termAbort = null; }
       document.getElementById('terminal-modal').classList.remove('active');
     }
     document.getElementById('terminal-modal').addEventListener('click', e => {
