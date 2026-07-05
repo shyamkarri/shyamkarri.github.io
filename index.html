@@ -44,14 +44,14 @@
       /* Primary Glow: Cyan */
       --cyan: #00F0FF;
       /* Primary Glow: Cyan */
-      --magenta: #FF00E5;
-      /* Secondary Glow: Magenta */
+      --magenta: #D946EF;
+      /* Secondary accent: violet (was hot magenta — toned down) */
       --violet: #D946EF;
       --green: #10B981;
       --amber: #F59E0B;
-      --pink: #EC4899;
+      --pink: #D946EF;
       --glow: rgba(0, 240, 255, 0.25);
-      --glow2: rgba(255, 0, 229, 0.2);
+      --glow2: rgba(217, 70, 239, 0.15);
       --fh: 'Space Grotesk', sans-serif;
       --fb: 'Inter', sans-serif;
       --fm: 'JetBrains Mono', monospace;
@@ -466,7 +466,7 @@
     }
 
     .avatar-card.thinking {
-      box-shadow: 0 0 50px rgba(255, 0, 229, 0.45);
+      box-shadow: 0 0 50px rgba(217, 70, 239, 0.45);
       border-color: var(--magenta);
       animation: vibration 0.15s infinite;
     }
@@ -934,7 +934,7 @@
 
     .voice-console.thinking {
       border-color: var(--magenta);
-      box-shadow: 0 0 50px rgba(255, 0, 229, 0.45);
+      box-shadow: 0 0 50px rgba(217, 70, 239, 0.45);
       animation: vibration 0.15s infinite;
     }
 
@@ -1633,6 +1633,60 @@
       section.sec {
         padding: 4rem 1.5rem;
       }
+
+      /* battery + perf: no particle canvas on phones */
+      #tsparticles {
+        display: none !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      #tsparticles,
+      #cursor,
+      #cursor-ring {
+        display: none !important;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.15s !important;
+      }
+    }
+
+    /* ── BACK TO TOP ── */
+    #back-to-top {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 900;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid var(--border2);
+      background: var(--surface);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--cyan);
+      font-size: 1.1rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      transform: translateY(8px);
+    }
+
+    #back-to-top.show {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    #back-to-top:hover {
+      box-shadow: 0 0 18px var(--glow);
     }
 
     /* ── TERMINAL MODAL OVERLAY ── */
@@ -1939,7 +1993,7 @@
       position: absolute;
       width: 200%;
       height: 200%;
-      background: conic-gradient(from 0deg, transparent, rgba(0, 240, 255, 0.4), transparent, rgba(255, 0, 229, 0.3), transparent);
+      background: conic-gradient(from 0deg, transparent, rgba(0, 240, 255, 0.4), transparent, rgba(217, 70, 239, 0.3), transparent);
       animation: swirl 4s linear infinite;
       border-radius: 40%;
       opacity: 0.65;
@@ -1970,9 +2024,9 @@
     }
 
     .data-spirit-orb.thinking {
-      background: radial-gradient(circle, rgba(255, 0, 229, 0.9) 0%, rgba(255, 0, 229, 0.3) 50%, transparent 70%);
-      border-color: rgba(255, 0, 229, 0.6);
-      box-shadow: 0 0 80px #FF00E5, 0 0 120px rgba(255, 0, 229, 0.4), inset 0 0 30px rgba(255, 0, 229, 0.6);
+      background: radial-gradient(circle, rgba(217, 70, 239, 0.9) 0%, rgba(217, 70, 239, 0.3) 50%, transparent 70%);
+      border-color: rgba(217, 70, 239, 0.6);
+      box-shadow: 0 0 80px #D946EF, 0 0 120px rgba(217, 70, 239, 0.4), inset 0 0 30px rgba(217, 70, 239, 0.6);
       animation: orb-vibrate-pulse 0.15s linear infinite, orb-think-glow 0.8s ease-in-out infinite alternate;
     }
 
@@ -2012,11 +2066,11 @@
 
     @keyframes orb-think-glow {
       from {
-        box-shadow: 0 0 60px #FF00E5, inset 0 0 20px rgba(255, 0, 229, 0.4);
+        box-shadow: 0 0 60px #D946EF, inset 0 0 20px rgba(217, 70, 239, 0.4);
       }
 
       to {
-        box-shadow: 0 0 95px #FF00E5, inset 0 0 40px rgba(255, 0, 229, 0.7);
+        box-shadow: 0 0 95px #D946EF, inset 0 0 40px rgba(217, 70, 239, 0.7);
       }
     }
 
@@ -2875,15 +2929,15 @@
           seamlessly, let's connect.</p>
 
         <div style="margin-bottom: 2.5rem;">
-          <a class="btn-glow" href="https://github.com/shyamkarri/shyamkarri.github.io/blob/main/raw/main/resume.pdf"
-            download style="display: inline-flex; align-items: center; gap: 8px;">
+          <a class="btn-glow" href="https://shyamkarri.github.io/resume.pdf"
+            download="Karri_Prasad_Resume.pdf" style="display: inline-flex; align-items: center; gap: 8px;">
             📄 Download Professional Resume (PDF)
           </a>
         </div>
 
         <div class="c-links">
-          <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 </a>
-          <a class="c-link" href="tel:+18176015406">📱 </a>
+          <a class="c-link" href="mailto:ksprasadmvsa.1999@gmail.com">📧 ksprasadmvsa.1999@gmail.com</a>
+          <a class="c-link" href="tel:+18176015406">📱 +1 (817) 601-5406</a>
           <a class="c-link" href="https://github.com/shyamkarri" target="_blank" rel="noopener noreferrer">💻
             github.com/shyamkarri</a>
           <a class="c-link" href="https://www.linkedin.com/in/karri-prasad-293374293/" target="_blank"
@@ -2895,6 +2949,8 @@
   </section>
 
   <footer>© 2026 Karri Prasad · Senior Data Platform Architect · Hosted on GitHub Pages</footer>
+
+  <button id="back-to-top" aria-label="Back to top" title="Back to top">↑</button>
 
   <script>
     // ══════════════════════════════════════════════════════
@@ -2922,9 +2978,14 @@
     // ══════════════════════════════════════════════════════
     const cur = document.getElementById('cursor');
     const ring = document.getElementById('cursor-ring');
-    let mx = 0, my = 0, rx = 0, ry = 0;
-    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx + 'px'; cur.style.top = my + 'px'; });
-    setInterval(() => { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = Math.round(rx) + 'px'; ring.style.top = Math.round(ry) + 'px'; }, 16);
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cur.style.left = mx + 'px'; cur.style.top = my + 'px'; });
+      setInterval(() => { rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12; ring.style.left = Math.round(rx) + 'px'; ring.style.top = Math.round(ry) + 'px'; }, 16);
+    } else {
+      cur.style.display = 'none';
+      ring.style.display = 'none';
+    }
 
     // ══════════════════════════════════════════════════════
     //  SCROLL FADE
@@ -3293,8 +3354,107 @@
       window.speechSynthesis.getVoices();
     }
 
-    // 🌌 tsParticles Initializer
-    if (typeof tsParticles !== 'undefined') {
+    // ══════════════════════════════════════════════════════
+    //  🖥️  PROJECT TERMINAL DEMOS (launchPrototype / closeTerminal)
+    // ══════════════════════════════════════════════════════
+    const PROTO_SCRIPTS = {
+      fraud_detection: [
+        '$ spark-submit --deploy-mode cluster fraud_stream.py',
+        '[Kafka] Connected to broker cluster (3 nodes) — topic: card_txns',
+        '[Spark] Structured Streaming query started · trigger: 5s micro-batch',
+        '[Model] XGBoost fraud scorer loaded · AUC 0.97',
+        '[Stream] 48,211 txns/sec · p99 latency 212ms',
+        '[Alert] 17 high-risk transactions routed to case-management API',
+        '✅ Pipeline healthy — 99.99% SLA, exactly-once semantics verified',
+      ],
+      regulatory_reporting: [
+        '$ dbt run --select reg_reporting --target prod',
+        '[Delta] Reading CDC feed from bronze.card_master (2.1B rows)',
+        '[dbt] 34 models built · 0 errors · 4m 12s',
+        '[Audit] Column-level lineage captured to Unity Catalog',
+        '[CCAR] FR Y-14M extracts generated · checksums verified',
+        '✅ Regulatory pack delivered to secure SFTP — on-time, 100% reconciled',
+      ],
+      cdc_engine: [
+        '$ ./deploy_cdc.sh --source oracle --sink delta',
+        '[Debezium] Snapshot phase complete · 412M rows in 38m',
+        '[Kafka] Streaming redo-log events · lag: 0.8s',
+        '[Delta] MERGE applied · 1.2M upserts/min · ZORDER by trade_id',
+        '[DQ] Great Expectations suite: 96/96 checks passed',
+        '✅ Market data CDC live — downstream marts refreshed in near-real-time',
+      ],
+      clinical_lakehouse: [
+        '$ databricks bundle deploy --target prod',
+        '[ADF] Ingesting HL7/FHIR feeds from 14 hospital systems',
+        '[Bronze→Silver] PHI columns tokenized · HIPAA controls enforced',
+        '[Silver→Gold] Patient-360 dims rebuilt · SCD2 · 890M rows',
+        '[Serve] SQL Warehouse endpoints updated · Power BI refresh triggered',
+        '✅ Clinical lakehouse deployed — audit trail written to governance log',
+      ],
+      metadata_ingestion: [
+        '$ python ingest_engine.py --config pipelines.yaml',
+        '[Meta] 68 source definitions parsed from control tables',
+        '[Gen] Auto-generated 68 ingestion DAGs · schema drift handling ON',
+        '[Run] Parallel ingest: 42 full loads, 26 incremental',
+        '[Catalog] Assets registered · owners + SLAs attached',
+        '✅ Zero-code onboarding: new source → production in under 10 minutes',
+      ],
+      icu_monitoring: [
+        '$ kubectl apply -f icu-stream-pipeline.yaml',
+        '[Kafka] Vitals stream online · 2,400 beds · 12k events/sec',
+        '[Flink] Windowed anomaly detection · sepsis early-warning model v3',
+        '[Alert] 3 deterioration alerts pushed to clinician mobile app',
+        '[Grafana] Dashboards live · end-to-end latency 1.4s',
+        '✅ ICU monitoring pipeline running — zero dropped events in 30 days',
+      ],
+    };
+
+    let _termTimers = [];
+    function launchPrototype(key, title) {
+      const modal = document.getElementById('terminal-modal');
+      const logs = document.getElementById('terminal-logs');
+      const fill = document.getElementById('progress-fill');
+      document.getElementById('terminal-title').textContent = title;
+      logs.innerHTML = '';
+      fill.style.width = '0%';
+      modal.classList.add('active');
+
+      const lines = PROTO_SCRIPTS[key] || ['$ echo "demo coming soon"'];
+      _termTimers.forEach(clearTimeout);
+      _termTimers = lines.map((line, i) => setTimeout(() => {
+        const div = document.createElement('div');
+        div.textContent = line;
+        div.style.cssText = 'font-family:var(--fm);font-size:0.8rem;padding:3px 0;color:' +
+          (line.startsWith('✅') ? 'var(--green)' : line.startsWith('$') ? 'var(--cyan)' : 'var(--muted)');
+        logs.appendChild(div);
+        logs.scrollTop = logs.scrollHeight;
+        fill.style.width = Math.round(((i + 1) / lines.length) * 100) + '%';
+      }, 450 * (i + 1)));
+    }
+
+    function closeTerminal() {
+      _termTimers.forEach(clearTimeout);
+      _termTimers = [];
+      document.getElementById('terminal-modal').classList.remove('active');
+    }
+    document.getElementById('terminal-modal').addEventListener('click', e => {
+      if (e.target.id === 'terminal-modal') closeTerminal();
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTerminal(); });
+
+    // ══════════════════════════════════════════════════════
+    //  ⬆️ BACK TO TOP
+    // ══════════════════════════════════════════════════════
+    const backToTop = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      backToTop.classList.toggle('show', window.scrollY > 600);
+    }, { passive: true });
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // 🌌 tsParticles Initializer (skipped on phones & reduced-motion — saves battery)
+    const _lowPower = window.matchMedia('(max-width: 768px)').matches
+      || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (typeof tsParticles !== 'undefined' && !_lowPower) {
       tsParticles.load("tsparticles", {
         fpsLimit: 60,
         particles: {
