@@ -245,7 +245,9 @@ else:
     )
     engine = create_engine(
         "sqlite:///sessions.db",
-        connect_args={"check_same_thread": False}
+        # timeout: wait up to 30s for locks instead of instantly erroring
+        # while the scraper thread is writing
+        connect_args={"check_same_thread": False, "timeout": 30}
     )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

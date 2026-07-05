@@ -655,6 +655,54 @@ def root():
 def health():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
 
+@app.get("/api/health/jobs", response_model=dict)
+async def health_jobs(db=Depends(get_db), current_user: AdminUser = Depends(get_current_user)):
+    """Diagnostic: what's actually configured and working."""
+    from datetime import datetime, timedelta
+    now = datetime.utcnow()
+
+    return {
+        "timestamp": now.isoformat(),
+        "config": {
+            "smtp_configured": bool(SMTP_HOST and SMTP_USER),
+            "groq_key_set": bool(os.getenv("GROQ_API_KEY")),
+            "telegram_configured": bool(os.getenv("TELEGRAM_BOT_TOKEN") and os.getenv("TELEGRAM_CHAT_ID")),
+            "database": "postgresql" if "postgresql" in str(engine.url) else "sqlite (ephemeral — will lose data on restart!)",
+        },
+        "postings": {
+            "total": db.query(JobPosting).count(),
+            "new": db.query(JobPosting).filter_by(is_new=True).count(),
+            "scored": db.query(JobPosting).filter(JobPosting.match_score.isnot(None)).count(),
+            "unscored": db.query(JobPosting).filter(JobPosting.match_score.is_(None)).count(),
+            "sponsorship_friendly": db.query(JobPosting).filter_by(sponsorship_flag="friendly").count(),
+        },
+        "jobs": {
+            "total": db.query(SchedulerJob).count(),
+            "enabled": db.query(SchedulerJob).filter_by(enabled=True).count(),
+            "failed_recently": db.query(SchedulerJob).filter(SchedulerJob.fail_count > 0).count(),
+        },
+        "last_runs": [
+            {
+                "job": j.name,
+                "status": j.status,
+                "last_run": j.last_run.isoformat() if j.last_run else None,
+                "last_error": j.last_error[:200] if j.last_error else None,
+            }
+            for j in db.query(SchedulerJob).order_by(desc(SchedulerJob.last_run)).limit(10)
+        ],
+        "applications": {
+            "saved": db.query(JobApplication).filter_by(status="saved").count(),
+            "applied": db.query(JobApplication).filter_by(status="applied").count(),
+            "interview": db.query(JobApplication).filter_by(status="interview").count(),
+            "offer": db.query(JobApplication).filter_by(status="offer").count(),
+            "stale_5d": db.query(JobApplication).filter(
+                JobApplication.status.in_(["applied", "screening", "interview"]),
+                JobApplication.updated_at <= now - timedelta(days=5),
+            ).count(),
+        },
+    }
+
+
 @app.get("/api/test-gmail")
 def test_gmail(db=Depends(get_db)):
     from gmail_responder import check_and_reply_emails
