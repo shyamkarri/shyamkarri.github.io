@@ -647,9 +647,14 @@ def _send_email(to_addr: str, subject: str, body: str):
 # PUBLIC ENDPOINTS (portfolio chatbot — no auth required)
 # ════════════════════════════════════════════════════════════════════════════
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def root():
-    return {"status": "ok", "agent": "Karri Prasad RAG Agent", "version": "3.0.0"}
+    """Platform landing page — hub for the dashboard, demos, and API docs."""
+    try:
+        with open("landing_page.html", "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return JSONResponse({"status": "ok", "agent": "Karri Prasad RAG Agent", "version": "3.0.0"})
 
 @app.get("/health")
 def health():
