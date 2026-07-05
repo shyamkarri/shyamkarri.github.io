@@ -129,6 +129,31 @@ class JobApplication(Base):
     priority = Column(Integer, default=0)  # 0=normal, 1=high, 2=urgent
 
 
+class JobPosting(Base):
+    """Jobs discovered by the scraper from public job-board APIs."""
+    __tablename__ = "job_postings"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    scraped_at = Column(DateTime, default=datetime.utcnow, index=True)
+    source = Column(String(50), nullable=False, index=True)      # greenhouse / lever / ashby / smartrecruiters / workday
+    external_id = Column(String(255), nullable=False)            # platform-specific job id
+    company = Column(String(255), nullable=False, index=True)
+    title = Column(String(512), nullable=False)
+    location = Column(String(512), nullable=True)
+    url = Column(String(1024), nullable=False)
+    description_snippet = Column(Text, nullable=True)            # first ~2000 chars for keyword flags
+    posted_at = Column(DateTime, nullable=True)
+    remote = Column(Boolean, default=False)
+    # Work-auth signals found in the description
+    sponsorship_flag = Column(String(50), nullable=True)         # "friendly" / "restricted" / "unknown"
+    matched_keywords = Column(JSON, nullable=True)               # which search terms matched
+    is_new = Column(Boolean, default=True, index=True)           # unseen in dashboard
+    tracked_application_id = Column(Integer, ForeignKey("job_applications.id"), nullable=True)
+    # AI match scoring (filled in by job_intel after each scrape)
+    match_score = Column(Integer, nullable=True, index=True)     # 0-100 fit vs profile
+    match_reason = Column(Text, nullable=True)                   # one-line explanation
+
+
 class Notification(Base):
     """Notification center — stores alerts, summaries, reports ready."""
     __tablename__ = "notifications"
@@ -211,9 +236,18 @@ if DATABASE_URL:
         max_overflow=10,
     )
 else:
+    print(
+        "[DB] ⚠️  WARNING: DATABASE_URL is not set — falling back to local SQLite "
+        "(sessions.db). On Render the filesystem is EPHEMERAL: every deploy or "
+        "restart WIPES this file, and all conversation logs, applications, and "
+        "job data are LOST. Set DATABASE_URL to a durable Postgres instance "
+        "(e.g. Neon or Supabase free tier) to keep data permanently."
+    )
     engine = create_engine(
         "sqlite:///sessions.db",
-        connect_args={"check_same_thread": False}
+        # timeout: wait up to 30s for locks instead of instantly erroring
+        # while the scraper thread is writing
+        connect_args={"check_same_thread": False, "timeout": 30}
     )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -226,20 +260,23 @@ def init_db():
     # Create any missing tables
     Base.metadata.create_all(bind=engine)
 
-    # ── Legacy migration: add any missing columns to conversation_logs ──
-    if inspector.has_table("conversation_logs"):
-        existing_cols = {col["name"] for col in inspector.get_columns("conversation_logs")}
+    # ── Lightweight migration: add any missing columns to evolving tables ──
+    for model in (ConversationLog, JobPosting):
+        table_name = model.__tablename__
+        if not inspector.has_table(table_name):
+            continue
+        existing_cols = {col["name"] for col in inspector.get_columns(table_name)}
         with engine.begin() as conn:
-            for column in ConversationLog.__table__.columns:
+            for column in model.__table__.columns:
                 if column.name not in existing_cols:
                     type_str = str(column.type)
                     if "JSON" in type_str:
                         type_str = "JSON" if "postgresql" in engine.url.drivername else "TEXT"
                     try:
                         conn.execute(text(
-                            f"ALTER TABLE conversation_logs ADD COLUMN {column.name} {type_str}"
+                            f"ALTER TABLE {table_name} ADD COLUMN {column.name} {type_str}"
                         ))
-                        print(f"[DB] Added column '{column.name}' to conversation_logs")
+                        print(f"[DB] Added column '{column.name}' to {table_name}")
                     except Exception as e:
                         print(f"[DB] Column '{column.name}' migration skipped: {e}")
 
@@ -294,6 +331,27 @@ def seed_db():
                 "description": "Generate monthly report on 1st of each month",
                 "cron_expression": "0 7 1 * *",
                 "job_type": "monthly_report",
+                "enabled": True,
+            },
+            {
+                "name": "job_scrape",
+                "description": "Scrape Greenhouse/Lever/Ashby/SmartRecruiters/Workday for data-engineering roles every 6 hours",
+                "cron_expression": "0 */6 * * *",
+                "job_type": "job_scrape",
+                "enabled": True,
+            },
+            {
+                "name": "followup_reminder",
+                "description": "Flag applications quiet for 5+ days and email a follow-up digest, daily at 8:30 AM",
+                "cron_expression": "30 8 * * *",
+                "job_type": "followup_reminder",
+                "enabled": True,
+            },
+            {
+                "name": "morning_briefing",
+                "description": "Daily 8 AM email: top-scored new jobs, follow-ups due, pipeline stats",
+                "cron_expression": "0 8 * * *",
+                "job_type": "morning_briefing",
                 "enabled": True,
             },
         ]
