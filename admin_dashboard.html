@@ -452,6 +452,15 @@ tbody tr:last-child td{border-bottom:none;}
 .toast.info{border-left:3px solid var(--blue);}
 
 /* ─── Modal ─── */
+/* Tailor review diff */
+.diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;align-items:start;}
+.diff-old{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.28);border-radius:6px;padding:.45rem .6rem;font-size:.8rem;line-height:1.45;}
+.diff-new{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.28);border-radius:6px;padding:.45rem .6rem;font-size:.8rem;line-height:1.45;}
+.diff-new[contenteditable="true"]:focus{outline:1px solid var(--green,#34d399);}
+.diff-bullet{margin-bottom:.65rem;}
+.diff-meta{display:flex;align-items:center;gap:.6rem;margin-top:.25rem;font-size:.7rem;color:var(--text-muted);}
+.fact-chip{display:inline-block;background:rgba(99,130,255,.12);color:var(--blue);border-radius:4px;padding:0 .35rem;font-size:.65rem;cursor:help;}
+.tailor-exp-header{font-weight:700;font-size:.85rem;margin:1rem 0 .4rem;padding-bottom:.25rem;border-bottom:1px solid var(--card-border);}
 .modal-overlay{
   position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:500;
   display:none;align-items:center;justify-content:center;
@@ -629,9 +638,20 @@ hr.divider{border:none;border-top:1px solid var(--card-border);margin:1rem 0;}
         <div class="nav-item" data-page="kanban">
           <span class="nav-icon">🗂️</span> Kanban Board
         </div>
+        <div class="nav-item" data-page="applyqueue">
+          <span class="nav-icon">🚀</span> Apply Queue
+          <span class="nav-badge" id="pipeline-badge" style="display:none">0</span>
+        </div>
+        <div class="nav-item" data-page="profile">
+          <span class="nav-icon">👤</span> Profile &amp; Resumes
+        </div>
       </div>
       <div class="nav-section">
         <div class="nav-section-label">Operations</div>
+        <div class="nav-item" data-page="inbox">
+          <span class="nav-icon">📥</span> Inbox
+          <span class="nav-badge" id="inbox-badge" style="display:none">0</span>
+        </div>
         <div class="nav-item" data-page="notifications">
           <span class="nav-icon">🔔</span> Notifications
           <span class="nav-badge" id="notif-badge" style="display:none">0</span>
@@ -850,7 +870,10 @@ hr.divider{border:none;border-top:1px solid var(--card-border);margin:1rem 0;}
       <section class="page" id="page-jobsfeed">
         <div class="page-header flex-between">
           <div><h1>Jobs Feed</h1><p>Scraped every 6h from Greenhouse, Lever, Ashby, SmartRecruiters &amp; Workday — AI-scored against your profile</p></div>
-          <button class="btn-sm primary" id="scrape-now-btn" onclick="scrapeJobsNow()">🕷️ Scrape Now</button>
+          <div class="flex-gap">
+            <button class="btn-sm" onclick="enrichJobsNow()" title="Extract requirements + rescore unscored postings">🧠 Enrich &amp; Score</button>
+            <button class="btn-sm primary" id="scrape-now-btn" onclick="scrapeJobsNow()">🕷️ Scrape Now</button>
+          </div>
         </div>
         <div class="kpi-grid">
           <div class="kpi-card" style="--kpi-color:rgba(99,130,255,.2)">
@@ -896,6 +919,245 @@ hr.divider{border:none;border-top:1px solid var(--card-border);margin:1rem 0;}
                 <th>Sponsorship</th><th>Source</th><th>Found</th><th>Actions</th>
               </tr></thead>
               <tbody id="jobs-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ PAGE: APPLY QUEUE (Phase 4) ════ -->
+      <section class="page" id="page-applyqueue">
+        <div class="page-header flex-between">
+          <div><h1>Apply Queue</h1><p>Every posting moving through tailor → approve → auto-apply, in one place</p></div>
+          <div class="flex-gap">
+            <label style="display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--text-muted);cursor:pointer" title="Score ≥ threshold auto-tailors a draft (still needs your approval). Allowlisted companies go full-auto.">
+              <input type="checkbox" id="aq-automode" style="width:auto" onchange="toggleAutoMode()" /> Auto-mode
+            </label>
+            <button class="btn-sm primary" onclick="submitAllApproved()" title="Queue auto-apply for every approved posting">🚀 Submit all approved</button>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card" style="--kpi-color:rgba(251,191,36,.2)">
+            <span class="kpi-icon">📝</span><div class="kpi-label">Awaiting your approval</div>
+            <div class="kpi-value" id="aq-needs-approval">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+            <span class="kpi-icon">✅</span><div class="kpi-label">Ready to send</div>
+            <div class="kpi-value" id="aq-ready">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(99,130,255,.2)">
+            <span class="kpi-icon">⏳</span><div class="kpi-label">In flight</div>
+            <div class="kpi-value" id="aq-inflight">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(167,139,250,.2)">
+            <span class="kpi-icon">🎉</span><div class="kpi-label">Submitted</div>
+            <div class="kpi-value" id="aq-submitted">—</div>
+          </div>
+        </div>
+        <div id="aq-adapter-health" style="margin-bottom:1rem"></div>
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Pipeline</h3>
+            <div class="table-controls">
+              <select id="aq-stage-filter" style="width:180px" onchange="loadApplyQueue()">
+                <option value="">All stages</option>
+                <option value="needs_your_approval">📝 Needs your approval</option>
+                <option value="ready_to_send">✅ Ready to send</option>
+                <option value="tailoring">🪄 Tailoring</option>
+                <option value="queued">⏳ Queued</option>
+                <option value="running">🤖 Running</option>
+                <option value="awaiting_approval">✋ Awaiting answers</option>
+                <option value="needs_review">👀 Needs review</option>
+                <option value="submitted">🎉 Submitted</option>
+                <option value="failed">⚠️ Failed</option>
+                <option value="rejected">✗ Rejected</option>
+              </select>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr>
+                <th>Score</th><th>Role</th><th>ATS</th><th>Resume</th>
+                <th>Letter</th><th>Stage</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="aq-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════ PAGE: PROFILE & RESUMES (apply pipeline) ════ -->
+      <section class="page" id="page-profile">
+        <div class="page-header flex-between">
+          <div><h1>Profile &amp; Resumes</h1><p>Your candidate profile, base resumes, and the FactBank that grounds every tailored application</p></div>
+          <button class="btn-sm primary" onclick="saveProfile()">💾 Save Profile</button>
+        </div>
+
+        <div class="table-card" style="margin-bottom:1rem">
+          <div class="table-header"><h3>👤 Candidate Profile</h3>
+            <span style="font-size:.72rem;color:var(--text-muted)">Work-authorization answers are taken from here verbatim — never guessed</span>
+          </div>
+          <div style="padding:1rem 1.25rem">
+            <div class="form-row">
+              <div class="form-group-modal"><label>Full Name</label><input id="pf-name" placeholder="Karri Prasad" /></div>
+              <div class="form-group-modal"><label>Email</label><input id="pf-email" placeholder="you@email.com" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group-modal"><label>Phone</label><input id="pf-phone" placeholder="+1 ..." /></div>
+              <div class="form-group-modal"><label>Location</label><input id="pf-location" placeholder="e.g. Nashville, TN" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group-modal"><label>LinkedIn</label><input id="pf-linkedin" placeholder="https://linkedin.com/in/…" /></div>
+              <div class="form-group-modal"><label>GitHub / Portfolio</label><input id="pf-github" placeholder="https://…" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group-modal"><label>Work Authorization</label>
+                <select id="pf-auth">
+                  <option value="">— select —</option>
+                  <option value="citizen">US Citizen</option>
+                  <option value="green_card">Green Card</option>
+                  <option value="opt">OPT</option>
+                  <option value="stem_opt">STEM OPT</option>
+                  <option value="h1b">H-1B</option>
+                  <option value="needs_sponsorship">Needs Sponsorship</option>
+                </select>
+              </div>
+              <div class="form-group-modal"><label>Salary Floor (annual USD)</label><input id="pf-salary" type="number" placeholder="140000" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group-modal"><label>Target Titles (comma-separated)</label><input id="pf-titles" placeholder="Data Engineer, Data Platform Engineer" /></div>
+              <div class="form-group-modal"><label>Target Locations (comma-separated)</label><input id="pf-locations" placeholder="Remote, New York, NY" /></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group-modal"><label>Remote Preference</label>
+                <select id="pf-remote">
+                  <option value="any">Any</option>
+                  <option value="remote_only">Remote only</option>
+                  <option value="hybrid">Hybrid</option>
+                  <option value="onsite_ok">On-site OK</option>
+                </select>
+              </div>
+              <div class="form-group-modal"><label>EEO Answers (optional, used verbatim)</label><input id="pf-eeo" placeholder='e.g. gender: male, veteran: no, disability: no' /></div>
+            </div>
+            <div class="form-group-modal"><label>Voice / Tone Notes (for open-ended answers &amp; cover letters)</label>
+              <textarea id="pf-tone" rows="2" placeholder="e.g. direct and concrete, no buzzwords, lead with metrics, first person"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-bottom:1rem">
+          <div class="table-header"><h3>🛡️ Agent Guardrails</h3>
+            <span style="font-size:.72rem;color:var(--text-muted)">Enforced by the auto-apply engine (Phase 3+)</span>
+          </div>
+          <div style="padding:1rem 1.25rem">
+            <div class="form-row">
+              <div class="form-group-modal">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+                  <input type="checkbox" id="pf-kill" style="width:auto" /> 🔴 Kill switch — pause ALL automated applying
+                </label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;margin-top:.5rem">
+                  <input type="checkbox" id="pf-auto" style="width:auto" /> Auto-tailor when score ≥ threshold (approval still required)
+                </label>
+              </div>
+              <div>
+                <div class="form-group-modal"><label>Max applications / day</label><input id="pf-maxday" type="number" value="20" /></div>
+                <div class="form-group-modal"><label>Auto-tailor threshold (score)</label><input id="pf-threshold" type="number" value="80" /></div>
+              </div>
+            </div>
+            <div class="form-group-modal"><label>Full-auto company allowlist (comma-separated — everything else always needs manual approval)</label>
+              <input id="pf-allowlist" placeholder="leave empty to always approve manually" />
+            </div>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-bottom:1rem">
+          <div class="table-header"><h3>📄 Base Resumes</h3>
+            <div class="table-controls">
+              <input type="text" id="resume-label" placeholder="Label (e.g. Data Platform)" style="width:180px" />
+              <input type="file" id="resume-file" accept="application/pdf" style="width:210px" />
+              <button class="btn-sm primary" onclick="uploadResume()">⬆️ Upload PDF</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Default</th><th>Label</th><th>Parse Status</th><th>Facts</th><th>Uploaded</th><th>Actions</th></tr></thead>
+              <tbody id="resumes-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header"><h3>🧠 Fact Bank <span id="facts-count" style="font-weight:400;font-size:.75rem;color:var(--text-muted)"></span></h3>
+            <div class="table-controls">
+              <select id="facts-filter" style="width:140px" onchange="renderFacts()">
+                <option value="">All Categories</option>
+                <option value="experience">Experience</option>
+                <option value="skill">Skill</option>
+                <option value="metric">Metric</option>
+                <option value="project">Project</option>
+                <option value="education">Education</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div style="padding:.75rem 1.25rem;border-bottom:1px solid var(--card-border)">
+            <div style="display:grid;grid-template-columns:130px 1fr 220px auto;gap:.5rem">
+              <select id="new-fact-cat">
+                <option value="skill">Skill</option>
+                <option value="experience">Experience</option>
+                <option value="metric">Metric</option>
+                <option value="project">Project</option>
+                <option value="education">Education</option>
+                <option value="other">Other</option>
+              </select>
+              <input id="new-fact-text" placeholder="Add a true statement the tailor may use, e.g. 'Cut Spark job runtime 40% by tuning partitioning'" />
+              <input id="new-fact-context" placeholder="Context (role / project)" />
+              <button class="btn-sm primary" onclick="addFact()">+ Add Fact</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Category</th><th>Fact</th><th>Context</th><th>Source</th><th>Verified</th><th>Actions</th></tr></thead>
+              <tbody id="facts-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top:1rem">
+          <div class="table-header"><h3>💬 Answer Bank</h3>
+            <span style="font-size:.72rem;color:var(--text-muted)">Reused before the LLM generates anything — approved answers submit without pausing</span>
+          </div>
+          <div style="padding:.75rem 1.25rem;border-bottom:1px solid var(--card-border)">
+            <div style="display:grid;grid-template-columns:1fr 1fr 160px auto;gap:.5rem">
+              <input id="new-ans-q" placeholder="Question as it appears on forms" />
+              <input id="new-ans-a" placeholder="Your answer" />
+              <input id="new-ans-company" placeholder="Company (optional)" />
+              <button class="btn-sm primary" onclick="addAnswer()">+ Add</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Question</th><th>Answer</th><th>Company</th><th>Source</th><th>Used</th><th>Approved</th><th></th></tr></thead>
+              <tbody id="answers-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="table-card" style="margin-top:1rem">
+          <div class="table-header"><h3>🔐 Workday Tenant Credentials</h3>
+            <span style="font-size:.72rem;color:var(--text-muted)">Sealed with libsodium — this dashboard can store but never read them; only the worker decrypts</span>
+          </div>
+          <div style="padding:.75rem 1.25rem;border-bottom:1px solid var(--card-border)">
+            <div style="display:grid;grid-template-columns:160px 1fr 1fr auto;gap:.5rem">
+              <input id="new-cred-tenant" placeholder="Tenant (e.g. nvidia)" />
+              <input id="new-cred-user" placeholder="Username / email" />
+              <input id="new-cred-pass" type="password" placeholder="Password" />
+              <button class="btn-sm primary" onclick="addCredential()">🔒 Seal &amp; Save</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto">
+            <table>
+              <thead><tr><th>Tenant</th><th>Username</th><th>Notes</th><th></th></tr></thead>
+              <tbody id="creds-tbody"></tbody>
             </table>
           </div>
         </div>
@@ -962,6 +1224,51 @@ hr.divider{border:none;border-top:1px solid var(--card-border);margin:1rem 0;}
           <button class="btn-sm primary" id="kanban-add-btn">+ Add Application</button>
         </div>
         <div class="kanban" id="kanban-board"></div>
+      </section>
+
+      <!-- ════ PAGE: INBOX (Phase 5 — email routing) ════ -->
+      <section class="page" id="page-inbox">
+        <div class="page-header flex-between">
+          <div><h1>Inbox</h1><p>Recruiter mail read (read-only), classified, matched to applications, and auto-routed</p></div>
+          <div class="flex-gap">
+            <span id="inbox-source" style="font-size:.72rem;color:var(--text-muted)"></span>
+            <button class="btn-sm primary" onclick="checkInbox()">📥 Check now</button>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card" style="--kpi-color:rgba(52,211,153,.2)">
+            <span class="kpi-icon">🎉</span><div class="kpi-label">Interview invites</div>
+            <div class="kpi-value" id="inbox-interviews">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(56,217,245,.2)">
+            <span class="kpi-icon">✉️</span><div class="kpi-label">Recruiter replies</div>
+            <div class="kpi-value" id="inbox-replies">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(251,191,36,.2)">
+            <span class="kpi-icon">📝</span><div class="kpi-label">Assessments</div>
+            <div class="kpi-value" id="inbox-oa">—</div>
+          </div>
+          <div class="kpi-card" style="--kpi-color:rgba(248,113,113,.2)">
+            <span class="kpi-icon">🙁</span><div class="kpi-label">Rejections</div>
+            <div class="kpi-value" id="inbox-rejections">—</div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-header">
+            <h3>Threads by application</h3>
+            <div class="table-controls">
+              <select id="inbox-filter" style="width:170px" onchange="loadInbox()">
+                <option value="">All types</option>
+                <option value="interview_invite">🎉 Interview invites</option>
+                <option value="recruiter_reply">✉️ Recruiter replies</option>
+                <option value="OA_link">📝 Assessments</option>
+                <option value="rejection">🙁 Rejections</option>
+                <option value="spam">🗑️ Spam</option>
+              </select>
+            </div>
+          </div>
+          <div id="inbox-groups" style="padding:.5rem 1rem"></div>
+        </div>
       </section>
 
       <!-- ════ PAGE: NOTIFICATIONS ════ -->
@@ -1150,6 +1457,18 @@ hr.divider{border:none;border-top:1px solid var(--card-border);margin:1rem 0;}
   </div>
 </div>
 
+<!-- Tailor Review Modal (Phase 2 — human approval gate) -->
+<div class="modal-overlay" id="tailor-modal">
+  <div class="modal" style="width:980px;max-width:96vw">
+    <div class="modal-header">
+      <div class="modal-title" id="tailor-title">Tailor Review</div>
+      <button class="modal-close" onclick="closeTailorModal()">✕</button>
+    </div>
+    <div id="tailor-body" style="max-height:62vh;overflow-y:auto;padding-right:.25rem"></div>
+    <div class="modal-footer" id="tailor-footer"></div>
+  </div>
+</div>
+
 <!-- Session Detail Modal -->
 <div class="modal-overlay" id="session-modal">
   <div class="modal" style="width:650px">
@@ -1334,6 +1653,7 @@ if (AUTH_TOKEN) {
 const PAGE_TITLES = {
   dashboard: 'Dashboard', sessions: 'Session Logging', analytics: 'Agent Analytics',
   jobsfeed: 'Jobs Feed', applications: 'Applications', kanban: 'Kanban Board',
+  applyqueue: 'Apply Queue', profile: 'Profile & Resumes', inbox: 'Inbox',
   notifications: 'Notifications', scheduler: 'Scheduler', reports: 'Reports'
 };
 const PAGE_ADD_ACTIONS = {
@@ -1366,6 +1686,9 @@ function loadPage(page) {
     case 'sessions': loadSessions(); break;
     case 'analytics': loadAnalytics(); break;
     case 'jobsfeed': loadJobsFeed(); break;
+    case 'applyqueue': loadApplyQueue(); break;
+    case 'inbox': loadInbox(); break;
+    case 'profile': loadProfilePage(); break;
     case 'applications': loadApplications(); break;
     case 'kanban': loadKanban(); break;
     case 'notifications': loadNotifications(); break;
@@ -1749,6 +2072,24 @@ function scoreBadge(score) {
   return `<span style="font-weight:700;color:${color}">${fire}${score}</span>`;
 }
 
+// Hover text for a score: full weighted breakdown when available (Phase 1
+// explainable scoring), else the legacy one-line reason.
+function scoreTooltip(j) {
+  const b = j.match_breakdown;
+  if (!b) return j.match_reason || '';
+  const s = b.skills || {};
+  const lines = [
+    `Skills ${s.points}/${s.max}` +
+      (s.matched && s.matched.length ? ` — has: ${s.matched.slice(0, 8).join(', ')}` : '') +
+      (s.missing && s.missing.length ? ` | missing: ${s.missing.slice(0, 8).join(', ')}` : ''),
+    `Title/seniority ${b.title.points}/${b.title.max} — ${b.title.detail}`,
+    `Location/auth ${b.location_auth.points}/${b.location_auth.max} — ${b.location_auth.detail}`,
+    `Recency ${b.recency.points}/${b.recency.max} — ${b.recency.detail}`,
+  ];
+  if (b.thin_jd) lines.push('⚠ thin job description — low confidence');
+  return lines.join('\n');
+}
+
 async function loadJobsFeed() {
   try {
     const sort = document.getElementById('jobs-sort').value;
@@ -1781,7 +2122,7 @@ async function loadJobsFeed() {
     const spIcon = { friendly: '🛂 Friendly', restricted: '🚫 Restricted', unknown: '❔ Unknown' };
     tbody.innerHTML = d.jobs.map(j => `
       <tr ${j.is_new ? 'style="background:rgba(99,130,255,.04)"' : ''}>
-        <td title="${escJf(j.match_reason || '')}">${scoreBadge(j.match_score)}</td>
+        <td title="${escJf(scoreTooltip(j))}">${scoreBadge(j.match_score)}</td>
         <td>
           <a href="${escJf(j.url)}" target="_blank" rel="noopener" style="color:var(--text);font-weight:600;text-decoration:none">${escJf(j.title)}</a>
           <div style="font-size:.72rem;color:var(--text-muted)">${escJf(j.company)}${j.remote ? ' · 🏠 remote' : ''}</div>
@@ -1794,6 +2135,7 @@ async function loadJobsFeed() {
           ${j.tracked_application_id
             ? '<span style="font-size:.72rem;color:var(--green,#34d399)">✓ tracked</span>'
             : `<button class="btn-sm" onclick="trackJob(${j.id})" title="Add to kanban">➕ Track</button>`}
+          ${tailorBtn(j)}
           <button class="btn-sm" onclick="aiCoverLetter(${j.id}, this)" title="Draft cover letter">✍️</button>
           <button class="btn-sm" onclick="aiInterviewPrep(${j.id}, this)" title="Interview prep pack">🎤</button>
         </td>
@@ -1824,6 +2166,905 @@ async function trackJob(id) {
   } catch (e) {
     toast('Track failed: ' + e.message, 'error');
   }
+}
+
+// ─── Profile & Resumes (apply pipeline) ──────────────────────────────────────
+let FACTS_CACHE = [];
+let resumePollTimer = null;
+
+const gv = id => document.getElementById(id).value.trim();
+const sv = (id, v) => { document.getElementById(id).value = v ?? ''; };
+const csv = s => s.split(',').map(x => x.trim()).filter(Boolean);
+
+async function loadProfilePage() {
+  try {
+    const [p, r, f] = await Promise.all([
+      apiCall('/api/profile'), apiCall('/api/resumes'), apiCall('/api/facts'),
+    ]);
+    if (!p) return;
+    sv('pf-name', p.full_name); sv('pf-email', p.email); sv('pf-phone', p.phone);
+    sv('pf-location', p.location);
+    sv('pf-linkedin', (p.links || {}).linkedin); sv('pf-github', (p.links || {}).github);
+    sv('pf-auth', p.work_authorization); sv('pf-salary', p.salary_floor);
+    sv('pf-titles', (p.target_titles || []).join(', '));
+    sv('pf-locations', (p.target_locations || []).join(', '));
+    sv('pf-remote', p.remote_pref || 'any');
+    sv('pf-eeo', Object.entries(p.eeo_answers || {}).map(([k, v]) => `${k}: ${v}`).join(', '));
+    sv('pf-tone', p.tone_notes);
+    document.getElementById('pf-kill').checked = !!p.kill_switch;
+    document.getElementById('pf-auto').checked = !!p.auto_mode;
+    sv('pf-maxday', p.max_apps_per_day ?? 20); sv('pf-threshold', p.auto_threshold ?? 80);
+    sv('pf-allowlist', (p.company_allowlist || []).join(', '));
+    renderResumes(r ? r.resumes : []);
+    FACTS_CACHE = f ? f.facts : [];
+    renderFacts();
+    loadAnswerBank();
+    loadCredentials();
+  } catch (e) { toast('Failed to load profile: ' + e.message, 'error'); }
+}
+
+// ── Answer bank + sealed credentials (Phase 3) ──
+async function loadAnswerBank() {
+  try {
+    const d = await apiCall('/api/answers');
+    const tbody = document.getElementById('answers-tbody');
+    if (!d.answers.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:1.2rem">Empty — answers you approve during apply runs land here and get reused.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = d.answers.map(a => `
+      <tr ${a.approved ? '' : 'style="opacity:.55"'}>
+        <td style="font-size:.75rem;max-width:280px">${escJf(a.question)}</td>
+        <td style="font-size:.75rem;max-width:300px">${escJf(a.answer.slice(0, 160))}${a.answer.length > 160 ? '…' : ''}</td>
+        <td style="font-size:.72rem">${escJf(a.company || '—')}</td>
+        <td style="font-size:.7rem">${escJf(a.source)}</td>
+        <td style="font-size:.72rem">${a.times_reused}×</td>
+        <td><input type="checkbox" style="width:auto" ${a.approved ? 'checked' : ''} onchange="patchAnswer(${a.id}, {approved: this.checked})" /></td>
+        <td><button class="btn-sm" onclick="deleteAnswer(${a.id})">🗑️</button></td>
+      </tr>`).join('');
+  } catch (e) { /* card is optional on older deploys */ }
+}
+
+async function addAnswer() {
+  const q = gv('new-ans-q'), a = gv('new-ans-a');
+  if (!q || !a) { toast('Question and answer required', 'error'); return; }
+  try {
+    await apiCall('/api/answers', { method: 'POST', body: JSON.stringify({ question: q, answer: a, company: gv('new-ans-company') || null }) });
+    sv('new-ans-q', ''); sv('new-ans-a', ''); sv('new-ans-company', '');
+    loadAnswerBank();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function patchAnswer(id, changes) {
+  try { await apiCall(`/api/answers/${id}`, { method: 'PATCH', body: JSON.stringify(changes) }); loadAnswerBank(); }
+  catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteAnswer(id) {
+  try { await apiCall(`/api/answers/${id}`, { method: 'DELETE' }); loadAnswerBank(); }
+  catch (e) { toast(e.message, 'error'); }
+}
+
+async function loadCredentials() {
+  try {
+    const d = await apiCall('/api/ats-credentials');
+    const tbody = document.getElementById('creds-tbody');
+    tbody.innerHTML = d.credentials.length ? d.credentials.map(c => `
+      <tr><td style="font-weight:600">${escJf(c.tenant)}</td>
+          <td style="font-size:.78rem">${escJf(c.username)}</td>
+          <td style="font-size:.72rem;color:var(--text-muted)">${escJf(c.notes || '')}</td>
+          <td><button class="btn-sm" onclick="deleteCredential(${c.id})">🗑️</button></td></tr>`).join('')
+      : '<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:1.2rem">None — Workday runs auto-create accounts and seal the passwords here.</td></tr>';
+  } catch (e) { /* optional */ }
+}
+
+async function addCredential() {
+  const tenant = gv('new-cred-tenant'), user = gv('new-cred-user'), pass = document.getElementById('new-cred-pass').value;
+  if (!tenant || !user || !pass) { toast('All three fields required', 'error'); return; }
+  try {
+    await apiCall('/api/ats-credentials', { method: 'POST', body: JSON.stringify({ tenant, username: user, password: pass }) });
+    toast('Sealed — only the worker can decrypt it', 'success');
+    sv('new-cred-tenant', ''); sv('new-cred-user', ''); document.getElementById('new-cred-pass').value = '';
+    loadCredentials();
+  } catch (e) { toast(e.message.replace(/^{"detail":"|"}$/g, ''), 'error'); }
+}
+
+async function deleteCredential(id) {
+  try { await apiCall(`/api/ats-credentials/${id}`, { method: 'DELETE' }); loadCredentials(); }
+  catch (e) { toast(e.message, 'error'); }
+}
+
+async function saveProfile() {
+  const eeo = {};
+  gv('pf-eeo').split(',').forEach(pair => {
+    const [k, ...v] = pair.split(':');
+    if (k && v.length) eeo[k.trim()] = v.join(':').trim();
+  });
+  const payload = {
+    full_name: gv('pf-name') || null, email: gv('pf-email') || null,
+    phone: gv('pf-phone') || null, location: gv('pf-location') || null,
+    links: { linkedin: gv('pf-linkedin') || null, github: gv('pf-github') || null },
+    work_authorization: gv('pf-auth') || null,
+    salary_floor: gv('pf-salary') ? parseInt(gv('pf-salary')) : null,
+    target_titles: csv(gv('pf-titles')), target_locations: csv(gv('pf-locations')),
+    remote_pref: gv('pf-remote'), eeo_answers: eeo, tone_notes: gv('pf-tone') || null,
+    kill_switch: document.getElementById('pf-kill').checked,
+    auto_mode: document.getElementById('pf-auto').checked,
+    max_apps_per_day: parseInt(gv('pf-maxday')) || 20,
+    auto_threshold: parseInt(gv('pf-threshold')) || 80,
+    company_allowlist: csv(gv('pf-allowlist')),
+  };
+  try {
+    await apiCall('/api/profile', { method: 'PUT', body: JSON.stringify(payload) });
+    toast('Profile saved — job scores will refresh in the background', 'success');
+  } catch (e) { toast('Save failed: ' + e.message, 'error'); }
+}
+
+// ── Resumes ──
+const PARSE_CHIP = {
+  pending: '<span class="badge badge-muted">⏳ queued</span>',
+  parsing: '<span class="badge badge-amber">🧠 parsing…</span>',
+  ready: '<span class="badge badge-green">✓ ready</span>',
+  failed: '<span class="badge badge-red">✗ failed</span>',
+};
+
+function renderResumes(resumes) {
+  const tbody = document.getElementById('resumes-tbody');
+  if (!resumes.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem">Upload your resume PDF — it will be parsed into an editable fact bank.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = resumes.map(r => `
+    <tr>
+      <td><input type="radio" name="default-resume" style="width:auto" ${r.is_default ? 'checked' : ''} onclick="setDefaultResume(${r.id})" /></td>
+      <td style="font-weight:600">${escJf(r.label)}</td>
+      <td>${PARSE_CHIP[r.parse_status] || escJf(r.parse_status)}${r.parse_error ? `<div style="font-size:.7rem;color:var(--red,#f87171)" title="${escJf(r.parse_error)}">${escJf(r.parse_error.slice(0, 60))}…</div>` : ''}</td>
+      <td>${r.fact_count ?? '—'}</td>
+      <td style="font-size:.75rem">${timeAgo(r.uploaded_at)}</td>
+      <td style="white-space:nowrap">
+        ${r.has_file ? `<button class="btn-sm" onclick="downloadResume(${r.id}, '${escJf(r.label)}')" title="Download PDF">⬇️</button>` : ''}
+        <button class="btn-sm" onclick="reparseResume(${r.id})" title="Re-parse & rebuild facts">🔁</button>
+        <button class="btn-sm" onclick="deleteResume(${r.id})" title="Delete resume + its facts">🗑️</button>
+      </td>
+    </tr>`).join('');
+  // keep polling while anything is still parsing
+  clearTimeout(resumePollTimer);
+  if (resumes.some(r => r.parse_status === 'pending' || r.parse_status === 'parsing')) {
+    resumePollTimer = setTimeout(async () => {
+      if (currentPage !== 'profile') return;
+      const [r2, f2] = await Promise.all([apiCall('/api/resumes'), apiCall('/api/facts')]);
+      if (r2) renderResumes(r2.resumes);
+      if (f2) { FACTS_CACHE = f2.facts; renderFacts(); }
+    }, 4000);
+  }
+}
+
+async function uploadResume() {
+  const fileInput = document.getElementById('resume-file');
+  const file = fileInput.files[0];
+  if (!file) { toast('Choose a PDF first', 'error'); return; }
+  const fd = new FormData();
+  fd.append('file', file);
+  fd.append('label', gv('resume-label') || file.name.replace(/\.pdf$/i, ''));
+  try {
+    const res = await fetch(`${API}/api/resumes`, {
+      method: 'POST', headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }, body: fd,
+    });
+    if (!res.ok) throw new Error(await res.text());
+    toast('Uploaded — parsing into the fact bank now', 'success');
+    fileInput.value = ''; sv('resume-label', '');
+    const r = await apiCall('/api/resumes');
+    if (r) renderResumes(r.resumes);
+  } catch (e) { toast('Upload failed: ' + e.message, 'error'); }
+}
+
+async function downloadResume(id, label) {
+  try {
+    const res = await fetch(`${API}/api/resumes/${id}/download`, {
+      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` },
+    });
+    if (!res.ok) throw new Error('download failed');
+    const url = URL.createObjectURL(await res.blob());
+    const a = Object.assign(document.createElement('a'), { href: url, download: `${label}.pdf` });
+    a.click(); URL.revokeObjectURL(url);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function reparseResume(id) {
+  try {
+    await apiCall(`/api/resumes/${id}/reparse`, { method: 'POST' });
+    toast('Re-parse started', 'success');
+    const r = await apiCall('/api/resumes');
+    if (r) renderResumes(r.resumes);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function setDefaultResume(id) {
+  try {
+    const r = await apiCall(`/api/resumes/${id}/default`, { method: 'POST' });
+    toast(r.message, 'success');
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteResume(id) {
+  if (!confirm('Delete this resume and all facts extracted from it?')) return;
+  try {
+    await apiCall(`/api/resumes/${id}`, { method: 'DELETE' });
+    toast('Resume deleted', 'success');
+    loadProfilePage();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ── Fact bank ──
+const CAT_BADGE = {
+  experience: 'badge-blue', skill: 'badge-cyan', metric: 'badge-green',
+  project: 'badge-violet', education: 'badge-amber', other: 'badge-muted',
+};
+
+function renderFacts() {
+  const filter = document.getElementById('facts-filter').value;
+  const facts = filter ? FACTS_CACHE.filter(f => f.category === filter) : FACTS_CACHE;
+  document.getElementById('facts-count').textContent = `— ${FACTS_CACHE.length} facts (${FACTS_CACHE.filter(f => f.verified).length} verified)`;
+  const tbody = document.getElementById('facts-tbody');
+  if (!facts.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:1.5rem">No facts yet — upload a resume or add one manually above.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = facts.map(f => `
+    <tr id="fact-row-${f.id}" ${f.verified ? '' : 'style="opacity:.5"'}>
+      <td><span class="badge ${CAT_BADGE[f.category] || 'badge-muted'}">${escJf(f.category)}</span></td>
+      <td id="fact-text-${f.id}" style="font-size:.82rem;max-width:420px">${escJf(f.fact)}</td>
+      <td id="fact-ctx-${f.id}" style="font-size:.75rem;color:var(--text-muted);max-width:200px">${escJf(f.context || '')}</td>
+      <td style="font-size:.72rem">${f.source === 'manual' ? '✍️ manual' : '📄 resume'}</td>
+      <td><input type="checkbox" style="width:auto" ${f.verified ? 'checked' : ''} onchange="patchFact(${f.id}, {verified: this.checked})" title="Unverified facts are never used for tailoring" /></td>
+      <td style="white-space:nowrap">
+        <button class="btn-sm" id="fact-edit-${f.id}" onclick="editFact(${f.id})" title="Edit">✏️</button>
+        <button class="btn-sm" onclick="deleteFact(${f.id})" title="Delete">🗑️</button>
+      </td>
+    </tr>`).join('');
+}
+
+async function addFact() {
+  const fact = gv('new-fact-text');
+  if (!fact) { toast('Write the fact first', 'error'); return; }
+  try {
+    const f = await apiCall('/api/facts', {
+      method: 'POST',
+      body: JSON.stringify({ category: gv('new-fact-cat'), fact, context: gv('new-fact-context') || null }),
+    });
+    FACTS_CACHE.push(f);
+    sv('new-fact-text', ''); sv('new-fact-context', '');
+    renderFacts();
+    toast('Fact added', 'success');
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+function editFact(id) {
+  const textEl = document.getElementById(`fact-text-${id}`);
+  const ctxEl = document.getElementById(`fact-ctx-${id}`);
+  const btn = document.getElementById(`fact-edit-${id}`);
+  if (btn.textContent === '✏️') {
+    [textEl, ctxEl].forEach(el => { el.contentEditable = 'true'; el.style.outline = '1px solid var(--blue)'; });
+    textEl.focus();
+    btn.textContent = '💾';
+  } else {
+    [textEl, ctxEl].forEach(el => { el.contentEditable = 'false'; el.style.outline = ''; });
+    btn.textContent = '✏️';
+    patchFact(id, { fact: textEl.textContent.trim(), context: ctxEl.textContent.trim() || null });
+  }
+}
+
+async function patchFact(id, changes) {
+  try {
+    const f = await apiCall(`/api/facts/${id}`, { method: 'PATCH', body: JSON.stringify(changes) });
+    const i = FACTS_CACHE.findIndex(x => x.id === id);
+    if (i >= 0) FACTS_CACHE[i] = f;
+    renderFacts();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function deleteFact(id) {
+  try {
+    await apiCall(`/api/facts/${id}`, { method: 'DELETE' });
+    FACTS_CACHE = FACTS_CACHE.filter(f => f.id !== id);
+    renderFacts();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function enrichJobsNow() {
+  try {
+    await apiCall('/api/jobs/enrich', { method: 'POST', body: JSON.stringify({ rescore_all: false, limit: 40 }) });
+    toast('Enrichment started — scores appear as postings are analyzed', 'success');
+    setTimeout(loadJobsFeed, 20000);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ─── Tailoring (Phase 2) — review & approval modal ────────────────────────────
+let TAILOR_CTX = { jobId: null, bundle: null, factMap: {} };
+let tailorPollTimer = null;
+
+function tailorBtn(j) {
+  const t = j.tailored;
+  if (!t) return `<button class="btn-sm" onclick="tailorJob(${j.id})" title="Tailor resume to this job">🪄</button>`;
+  const icons = { queued: '⏳', generating: '⏳', draft: '📝', approved: '✅', rejected: '🪄', failed: '⚠️' };
+  const titles = { queued: 'Tailoring queued…', generating: 'Tailoring…', draft: 'Review tailored draft',
+                   approved: 'Approved — view / download', rejected: 'Rejected — re-tailor', failed: 'Failed — details' };
+  return `<button class="btn-sm" onclick="openTailorReview(${j.id})" title="${titles[t.status] || 'Tailor'}">${icons[t.status] || '🪄'}</button>`;
+}
+
+async function tailorJob(jobId) {
+  try {
+    await apiCall(`/api/jobs/${jobId}/tailor`, { method: 'POST', body: JSON.stringify({}) });
+    openTailorReview(jobId);
+  } catch (e) { toast('Tailor failed: ' + e.message, 'error'); }
+}
+
+async function openTailorReview(jobId) {
+  TAILOR_CTX.jobId = jobId;
+  openModal('tailor-modal');
+  document.getElementById('tailor-body').innerHTML =
+    '<div style="text-align:center;padding:2rem;color:var(--text-muted)">Loading…</div>';
+  document.getElementById('tailor-footer').innerHTML = '';
+  if (!Object.keys(TAILOR_CTX.factMap).length) {
+    const f = await apiCall('/api/facts').catch(() => null);
+    if (f) f.facts.forEach(x => { TAILOR_CTX.factMap[x.id] = x.fact; });
+  }
+  refreshTailorReview();
+}
+
+function closeTailorModal() {
+  clearTimeout(tailorPollTimer);
+  closeModal('tailor-modal');
+  if (currentPage === 'jobsfeed') loadJobsFeed();
+  if (currentPage === 'applyqueue') loadApplyQueue();
+}
+
+async function refreshTailorReview() {
+  try {
+    const bundle = await apiCall(`/api/jobs/${TAILOR_CTX.jobId}/review`);
+    if (!bundle) return;
+    TAILOR_CTX.bundle = bundle;
+    renderTailorReview();
+    const st = bundle.tailored && bundle.tailored.status;
+    clearTimeout(tailorPollTimer);
+    if (st === 'queued' || st === 'generating') {
+      tailorPollTimer = setTimeout(refreshTailorReview, 3000);
+    }
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+function renderTailorReview() {
+  const { posting, tailored: t, cover_letter: letter } = TAILOR_CTX.bundle;
+  document.getElementById('tailor-title').textContent =
+    `Tailor Review — ${posting.title} @ ${posting.company}`;
+  const body = document.getElementById('tailor-body');
+  const footer = document.getElementById('tailor-footer');
+
+  if (!t || t.status === 'queued' || t.status === 'generating') {
+    body.innerHTML = `<div style="text-align:center;padding:2.5rem;color:var(--text-muted)">
+      🪄 Rewriting bullets against the JD using only your fact bank…<br>
+      <span style="font-size:.75rem">usually done in under a minute</span></div>` + letterSection(letter);
+    footer.innerHTML = '';
+    return;
+  }
+  if (t.status === 'failed') {
+    body.innerHTML = `<div style="padding:1rem;color:var(--red,#f87171)">✗ Tailoring failed: ${escJf(t.error || 'unknown')}</div>`;
+    footer.innerHTML = `<button class="btn-sm primary" onclick="tailorJob(${posting.id})">↻ Retry</button>`;
+    return;
+  }
+
+  const d = t.diff_json || {};
+  const editable = t.status === 'draft';
+  let html = '';
+
+  const s = d.summary || {};
+  if (s.new) {
+    html += `<div class="tailor-exp-header">Tailored summary</div>
+      <div class="diff-new" ${editable ? '' : ''}>${escJf(s.new)}</div>
+      <div class="diff-meta"><label style="display:flex;gap:5px;align-items:center;cursor:pointer">
+        <input type="checkbox" id="tailor-summary-accept" style="width:auto" ${s.accepted ? 'checked' : ''} ${editable ? '' : 'disabled'} /> include summary</label></div>`;
+  }
+  if ((d.skills_order || []).length) {
+    html += `<div class="tailor-exp-header">Skills — reordered for this JD (nothing added)</div>
+      <div style="font-size:.8rem">${escJf(d.skills_order.join(', '))}</div>
+      <div class="diff-meta"><label style="display:flex;gap:5px;align-items:center;cursor:pointer">
+        <input type="checkbox" id="tailor-skills-accept" style="width:auto" ${d.skills_accepted !== false ? 'checked' : ''} ${editable ? '' : 'disabled'} /> use this order</label></div>`;
+  }
+
+  (d.experiences || []).forEach(exp => {
+    const changed = (exp.bullets || []).filter(b => b.new);
+    if (!changed.length) return;
+    const kept = (exp.bullets || []).length - changed.length;
+    html += `<div class="tailor-exp-header">${escJf(exp.title)} — ${escJf(exp.company)}
+      <span style="font-weight:400;font-size:.72rem;color:var(--text-muted)"> ${escJf(exp.start)}–${escJf(exp.end)}${kept ? ` · ${kept} bullet${kept > 1 ? 's' : ''} unchanged` : ''}</span></div>`;
+    changed.forEach(b => {
+      const chips = (b.fact_ids || []).map(id =>
+        `<span class="fact-chip" title="${escJf(TAILOR_CTX.factMap[id] || 'fact #' + id)}">#${id}</span>`).join('');
+      const current = b.edited || b.new;
+      html += `<div class="diff-bullet" data-ref="${escJf(b.ref)}" data-orig="${escJf(b.new)}">
+        <div class="diff-grid">
+          <div class="diff-old">− ${escJf(b.old)}</div>
+          <div class="diff-new" ${editable ? 'contenteditable="true" title="Click to edit"' : ''}>${escJf(current)}</div>
+        </div>
+        <div class="diff-meta">
+          <label style="display:flex;gap:5px;align-items:center;cursor:pointer">
+            <input type="checkbox" class="bullet-accept" style="width:auto" ${b.accepted ? 'checked' : ''} ${editable ? '' : 'disabled'} /> accept</label>
+          <span>grounded in: ${chips || '—'}</span>
+        </div></div>`;
+    });
+  });
+  if (!d.changed_count) {
+    html += '<div style="padding:1rem;color:var(--text-muted)">The model found no bullets worth rewriting for this JD — your base resume already aligns.</div>';
+  }
+
+  const dropped = d.dropped_by_validator || [];
+  if (dropped.length) {
+    html += `<div class="tailor-exp-header" style="color:var(--amber,#fbbf24)">🛡️ Blocked by the anti-hallucination validator (${dropped.length})</div>` +
+      dropped.map(x => `<div style="font-size:.75rem;color:var(--text-muted);margin-bottom:.3rem">
+        <b>${escJf(x.ref)}</b>: "${escJf(x.new)}" — <i>${escJf(x.reason)}</i></div>`).join('');
+  }
+
+  body.innerHTML = html + letterSection(letter) + runSection(TAILOR_CTX.bundle.run);
+  loadRunShots(TAILOR_CTX.bundle.run);
+
+  const run = TAILOR_CTX.bundle.run;
+  const canApply = t.status === 'approved' && (!run || ['failed', 'cancelled'].includes(run.status));
+  const statusBadge = { draft: '<span class="badge badge-amber">draft</span>',
+    approved: '<span class="badge badge-green">✓ approved</span>',
+    rejected: '<span class="badge badge-red">rejected</span>' }[t.status] || '';
+  footer.innerHTML = `
+    <span style="margin-right:auto">${statusBadge}</span>
+    ${t.status === 'draft' ? `
+      <button class="btn-sm" onclick="setTailoredStatus('rejected')">✗ Reject</button>
+      <button class="btn-sm" onclick="saveTailorEdits(null)">💾 Save edits</button>
+      <button class="btn-sm" onclick="saveTailorEdits('approved')">✅ Approve only</button>
+      <button class="btn-sm primary" onclick="approveAndSend()" title="Approve the resume and queue auto-apply in one step">🚀 Approve &amp; Send</button>` : ''}
+    ${t.status === 'approved' ? `
+      <button class="btn-sm" onclick="setTailoredStatus('draft')">↩ Re-open draft</button>
+      <button class="btn-sm" onclick="downloadTailoredPdf(${t.id}, '${escJf(posting.company)}')">⬇️ Download ATS PDF</button>` : ''}
+    ${canApply ? `
+      <button class="btn-sm primary" onclick="applyJob(${posting.id})">🚀 Queue Auto-Apply</button>` : ''}
+    ${t.status === 'rejected' ? `
+      <button class="btn-sm primary" onclick="tailorJob(${posting.id})">🪄 Re-tailor</button>` : ''}`;
+
+  // keep polling while the worker is on it
+  const activeRun = run && ['queued', 'running', 'submitting'].includes(run.status);
+  if (activeRun) {
+    clearTimeout(tailorPollTimer);
+    tailorPollTimer = setTimeout(refreshTailorReview, 5000);
+  }
+}
+
+// ── Auto-apply run panel (Phase 3) ──
+const RUN_BADGE = {
+  queued: 'badge-muted', running: 'badge-blue', submitting: 'badge-blue',
+  awaiting_approval: 'badge-amber', needs_review: 'badge-amber',
+  submitted: 'badge-green', failed: 'badge-red', cancelled: 'badge-muted', skipped: 'badge-muted',
+};
+
+function runSection(run) {
+  let inner;
+  if (!run) {
+    inner = '<div style="font-size:.78rem;color:var(--text-muted);padding:.4rem 0">No apply run yet — approve the resume, then 🚀 Queue Auto-Apply.</div>';
+  } else {
+    const receipts = (run.field_receipts || []).map(r => `
+      <tr><td style="font-size:.72rem">${escJf(r.label)}</td>
+          <td style="font-size:.72rem;max-width:320px;overflow-wrap:anywhere">${escJf(r.value)}</td>
+          <td style="font-size:.68rem;color:var(--text-muted)">${escJf(r.source)}</td></tr>`).join('');
+    const pending = (run.pending_answers || []).map((p, i) => `
+      <div style="margin-bottom:.6rem">
+        <div style="font-size:.76rem;font-weight:600">${escJf(p.question)}</div>
+        <textarea class="pending-answer" data-q="${escJf(p.question)}" rows="3" style="font-size:.76rem;margin-top:.2rem">${escJf(p.answer)}</textarea>
+      </div>`).join('');
+    inner = `
+      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin-bottom:.5rem">
+        <span class="badge ${RUN_BADGE[run.status] || 'badge-muted'}">${escJf(run.status)}</span>
+        <span style="font-size:.72rem;color:var(--text-muted)">run #${run.id} · ${run.receipt_count} field receipts${run.duration_ms ? ` · ${(run.duration_ms / 1000).toFixed(0)}s` : ''}</span>
+        ${run.current_url ? `<a href="${escJf(run.current_url)}" target="_blank" rel="noopener" style="font-size:.72rem;color:var(--blue)">open form ↗</a>` : ''}
+      </div>
+      ${run.needs_review_reason ? `<div style="font-size:.78rem;color:var(--amber,#fbbf24);margin-bottom:.5rem">⚠ ${escJf(run.needs_review_reason)}</div>` : ''}
+      ${run.error ? `<div style="font-size:.78rem;color:var(--red,#f87171);margin-bottom:.5rem">✗ ${escJf(run.error)}</div>` : ''}
+      ${run.confirmation_text ? `<div style="font-size:.78rem;color:var(--green,#34d399);margin-bottom:.5rem">✓ ${escJf(run.confirmation_text)}</div>` : ''}
+      ${pending ? `<div style="border:1px solid rgba(251,191,36,.35);border-radius:8px;padding:.6rem;margin-bottom:.6rem">
+        <div style="font-weight:600;font-size:.8rem;margin-bottom:.5rem">✋ Generated answers need your approval (edit freely):</div>
+        ${pending}
+        <button class="btn-sm primary" onclick="approvePendingAnswers(${run.id})">✅ Approve answers &amp; continue run</button>
+      </div>` : ''}
+      ${receipts ? `<details style="margin-bottom:.5rem"><summary style="cursor:pointer;font-size:.78rem">📋 Field receipts (${run.receipt_count})</summary>
+        <div style="overflow-x:auto;margin-top:.4rem"><table>
+          <thead><tr><th>Field</th><th>Value sent</th><th>Source</th></tr></thead>
+          <tbody>${receipts}</tbody></table></div></details>` : ''}
+      <div id="run-shots" style="display:flex;gap:.5rem;flex-wrap:wrap"></div>
+      <div style="display:flex;gap:.5rem;margin-top:.5rem;flex-wrap:wrap">
+        ${run.status === 'needs_review' ? `
+          <button class="btn-sm primary" onclick="resumeRun(${run.id})" title="After solving the CAPTCHA in the worker's browser">▶ Resume run</button>
+          <button class="btn-sm" onclick="markRunSubmitted(${run.id})">✓ I submitted it manually</button>` : ''}
+        ${['failed', 'needs_review', 'cancelled'].includes(run.status) ? `
+          <button class="btn-sm" onclick="retryRun(${run.id})">↻ Retry</button>` : ''}
+        ${['queued', 'running', 'needs_review', 'awaiting_approval'].includes(run.status) ? `
+          <button class="btn-sm" onclick="cancelRun(${run.id})">✗ Cancel</button>` : ''}
+      </div>`;
+  }
+  return `<div class="tailor-exp-header">🚀 Auto-apply run</div>${inner}`;
+}
+
+async function loadRunShots(run) {
+  const box = document.getElementById('run-shots');
+  if (!box || !run || !(run.screenshots || []).length) return;
+  for (const s of run.screenshots.slice(-8)) {
+    try {
+      const res = await fetch(`${API}/api/runs/${run.id}/artifact/${s.id}`,
+        { headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` } });
+      if (!res.ok) continue;
+      const url = URL.createObjectURL(await res.blob());
+      const a = document.createElement('a');
+      a.href = url; a.target = '_blank'; a.title = s.name;
+      a.innerHTML = `<img src="${url}" style="width:110px;border:1px solid var(--card-border);border-radius:6px" />`;
+      box.appendChild(a);
+    } catch (e) { /* thumbnail is best-effort */ }
+  }
+}
+
+async function applyJob(jobId) {
+  try {
+    await apiCall(`/api/jobs/${jobId}/apply`, { method: 'POST' });
+    toast('Queued — the worker will fill and submit with full receipts', 'success');
+    refreshTailorReview();
+  } catch (e) { toast('Refused: ' + e.message.replace(/^{"detail":"|"}$/g, ''), 'error'); }
+}
+
+async function approvePendingAnswers(runId) {
+  const answers = [...document.querySelectorAll('#tailor-body .pending-answer')]
+    .map(el => ({ question: el.dataset.q, answer: el.value.trim() }));
+  try {
+    await apiCall(`/api/runs/${runId}/approve-answers`, {
+      method: 'POST', body: JSON.stringify({ answers }) });
+    toast('Answers approved and saved to your Answer Bank — run continuing', 'success');
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function resumeRun(runId) {
+  try {
+    await apiCall(`/api/runs/${runId}/resume`, { method: 'POST' });
+    toast('Resume requested', 'success');
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function retryRun(runId) {
+  try {
+    await apiCall(`/api/runs/${runId}/retry`, { method: 'POST' });
+    toast('Run re-queued', 'success');
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function cancelRun(runId) {
+  try {
+    await apiCall(`/api/runs/${runId}/cancel`, { method: 'POST' });
+    toast('Run cancelled', 'success');
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function markRunSubmitted(runId) {
+  try {
+    await apiCall(`/api/runs/${runId}/mark-submitted`, { method: 'POST', body: JSON.stringify({ note: '' }) });
+    toast('Recorded as submitted — tracker card created', 'success');
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+// ─── Apply Queue page (Phase 4) ───────────────────────────────────────────────
+let applyQueueTimer = null;
+
+const STAGE_CHIP = {
+  needs_your_approval: '<span class="badge badge-amber">📝 your approval</span>',
+  ready_to_send: '<span class="badge badge-green">✅ ready to send</span>',
+  tailoring: '<span class="badge badge-blue">🪄 tailoring…</span>',
+  queued: '<span class="badge badge-muted">⏳ queued</span>',
+  running: '<span class="badge badge-blue">🤖 running…</span>',
+  awaiting_approval: '<span class="badge badge-amber">✋ answers</span>',
+  needs_review: '<span class="badge badge-amber">👀 needs review</span>',
+  submitted: '<span class="badge badge-green">🎉 submitted</span>',
+  failed: '<span class="badge badge-red">⚠️ failed</span>',
+  rejected: '<span class="badge badge-red">✗ rejected</span>',
+  cancelled: '<span class="badge badge-muted">cancelled</span>',
+};
+const MAT_CHIP = {
+  approved: '<span class="badge badge-green">approved</span>',
+  draft: '<span class="badge badge-amber">draft</span>',
+  rejected: '<span class="badge badge-red">rejected</span>',
+  queued: '<span class="badge badge-muted">queued</span>',
+  generating: '<span class="badge badge-blue">…</span>',
+  failed: '<span class="badge badge-red">failed</span>',
+};
+
+async function loadApplyQueue() {
+  try {
+    const stage = document.getElementById('aq-stage-filter').value;
+    const d = await apiCall('/api/pipeline');
+    if (!d) return;
+    const p = await apiCall('/api/profile');
+    if (p) document.getElementById('aq-automode').checked = !!p.auto_mode;
+
+    const c = d.counts || {};
+    document.getElementById('aq-needs-approval').textContent = c.needs_your_approval || 0;
+    document.getElementById('aq-ready').textContent = c.ready_to_send || 0;
+    document.getElementById('aq-inflight').textContent =
+      (c.queued || 0) + (c.running || 0) + (c.awaiting_approval || 0) + (c.needs_review || 0) + (c.tailoring || 0);
+    document.getElementById('aq-submitted').textContent = c.submitted || 0;
+
+    const badge = document.getElementById('pipeline-badge');
+    const actionable = (c.needs_your_approval || 0) + (c.ready_to_send || 0) +
+      (c.awaiting_approval || 0) + (c.needs_review || 0);
+    badge.style.display = actionable > 0 ? '' : 'none';
+    badge.textContent = actionable;
+
+    let items = d.items;
+    if (stage) items = items.filter(i => i.stage === stage);
+    const tbody = document.getElementById('aq-tbody');
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:2rem">Nothing here yet. Tailor a posting in the Jobs Feed (🪄) to start the pipeline.</td></tr>';
+    } else {
+      tbody.innerHTML = items.map(i => `
+        <tr>
+          <td>${scoreBadge(i.match_score)}</td>
+          <td><div style="font-weight:600">${escJf(i.title)}</div>
+              <div style="font-size:.72rem;color:var(--text-muted)">${escJf(i.company)}</div></td>
+          <td style="font-size:.74rem">${escJf(i.ats_type)}</td>
+          <td>${MAT_CHIP[i.tailored_status] || '—'}</td>
+          <td>${i.cover_letter_status ? MAT_CHIP[i.cover_letter_status] || escJf(i.cover_letter_status) : '<span style="color:var(--text-muted);font-size:.72rem">none</span>'}</td>
+          <td>${STAGE_CHIP[i.stage] || escJf(i.stage)}${i.needs_review_reason ? `<div style="font-size:.66rem;color:var(--text-muted);max-width:180px">${escJf(i.needs_review_reason.slice(0,70))}</div>` : ''}</td>
+          <td style="white-space:nowrap">
+            <button class="btn-sm" onclick="openTailorReview(${i.job_posting_id})">Review</button>
+            ${i.stage === 'ready_to_send' ? `<button class="btn-sm primary" onclick="aqSend(${i.job_posting_id})" title="Queue auto-apply">🚀</button>` : ''}
+            ${i.stage === 'needs_your_approval' ? `<button class="btn-sm primary" onclick="openTailorReview(${i.job_posting_id})" title="Review &amp; approve">📝</button>` : ''}
+          </td>
+        </tr>`).join('');
+    }
+
+    loadAdapterHealth();
+
+    // live-refresh while anything is in motion
+    clearTimeout(applyQueueTimer);
+    if (d.items.some(i => ['tailoring', 'queued', 'running', 'awaiting_approval'].includes(i.stage))) {
+      applyQueueTimer = setTimeout(() => { if (currentPage === 'applyqueue') loadApplyQueue(); }, 5000);
+    }
+  } catch (e) { toast('Failed to load queue: ' + e.message, 'error'); }
+}
+
+async function loadAdapterHealth() {
+  try {
+    const h = await apiCall('/api/ops/health');
+    const box = document.getElementById('aq-adapter-health');
+    if (!h) return;
+    const active = h.adapters.filter(a => a.runs > 0);
+    if (!active.length) { box.innerHTML = ''; return; }
+    const chips = active.map(a => {
+      const pct = Math.round((a.success_rate ?? 0) * 100);
+      const color = a.healthy === false ? 'var(--red,#f87171)' : a.healthy ? 'var(--green,#34d399)' : 'var(--text-muted)';
+      const icon = a.healthy === false ? '⚠️' : '●';
+      return `<span style="font-size:.74rem;color:${color};margin-right:1rem" title="last ${a.runs} runs">${icon} ${escJf(a.adapter)} ${pct}%</span>`;
+    }).join('');
+    const drift = active.some(a => a.healthy === false);
+    box.innerHTML = `<div class="table-card" style="padding:.6rem 1rem">
+      <span style="font-size:.72rem;font-weight:600;margin-right:1rem">Adapter health${drift ? ' <span style="color:var(--red,#f87171)">— drift detected</span>' : ''}:</span>${chips}</div>`;
+  } catch (e) { /* ops health is admin-only best-effort */ }
+}
+
+async function aqSend(jobId) {
+  try {
+    await apiCall(`/api/jobs/${jobId}/apply`, { method: 'POST' });
+    toast('Queued for auto-apply', 'success');
+    loadApplyQueue();
+  } catch (e) { toast('Refused: ' + e.message.replace(/^{"detail":"|"}$/g, ''), 'error'); }
+}
+
+async function submitAllApproved() {
+  if (!confirm('Queue auto-apply for every approved posting?')) return;
+  try {
+    const r = await apiCall('/api/pipeline/submit-approved', { method: 'POST' });
+    toast(r.message, 'success');
+    if (r.skipped && r.skipped.length) {
+      showAiText('Skipped by guardrails', r.skipped.map(s => `• ${s.company} — ${s.title}: ${s.reason}`).join('\n'));
+    }
+    loadApplyQueue();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function toggleAutoMode() {
+  const on = document.getElementById('aq-automode').checked;
+  try {
+    await apiCall('/api/profile', { method: 'PUT', body: JSON.stringify({ auto_mode: on }) });
+    toast(on ? 'Auto-mode ON — high scorers auto-tailor a draft for your approval' : 'Auto-mode off', 'success');
+  } catch (e) { toast(e.message, 'error'); document.getElementById('aq-automode').checked = !on; }
+}
+
+// ─── Inbox / email routing (Phase 5) ──────────────────────────────────────────
+const CLS_CHIP = {
+  interview_invite: '<span class="badge badge-green">🎉 interview</span>',
+  recruiter_reply: '<span class="badge badge-cyan">✉️ reply</span>',
+  OA_link: '<span class="badge badge-amber">📝 assessment</span>',
+  rejection: '<span class="badge badge-red">🙁 rejection</span>',
+  spam: '<span class="badge badge-muted">🗑️ spam</span>',
+  other: '<span class="badge badge-muted">•</span>',
+};
+
+async function loadInbox() {
+  try {
+    const [status, d] = await Promise.all([
+      apiCall('/api/email/status'), apiCall('/api/inbox'),
+    ]);
+    const src = document.getElementById('inbox-source');
+    if (status) src.textContent = status.connected
+      ? `📡 ${status.mode}` : '⚠ no email source configured (set Gmail OAuth or app password)';
+    if (!d) return;
+    const c = d.counts || {};
+    document.getElementById('inbox-interviews').textContent = c.interview_invite || 0;
+    document.getElementById('inbox-replies').textContent = c.recruiter_reply || 0;
+    document.getElementById('inbox-oa').textContent = c.OA_link || 0;
+    document.getElementById('inbox-rejections').textContent = c.rejection || 0;
+
+    const badge = document.getElementById('inbox-badge');
+    badge.style.display = d.unread > 0 ? '' : 'none';
+    badge.textContent = d.unread;
+
+    const filter = document.getElementById('inbox-filter').value;
+    const box = document.getElementById('inbox-groups');
+    let groups = d.groups;
+    if (filter) {
+      groups = groups.map(g => ({ ...g, threads: g.threads.filter(t => t.classification === filter) }))
+        .filter(g => g.threads.length);
+    }
+    if (!groups.length) {
+      box.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:2rem">No threads yet. Hit 📥 Check now — new recruiter mail routes automatically every 5 minutes.</div>';
+      return;
+    }
+    box.innerHTML = groups.map(g => `
+      <div style="margin-bottom:1.1rem">
+        <div style="font-weight:700;font-size:.85rem;margin-bottom:.4rem;padding-bottom:.25rem;border-bottom:1px solid var(--card-border)">
+          ${g.company ? '📁 ' + escJf(g.company) : '❓ Unmatched'} <span style="font-weight:400;font-size:.72rem;color:var(--text-muted)">· ${g.count}</span>
+        </div>
+        ${g.threads.map(t => inboxRow(t)).join('')}
+      </div>`).join('');
+  } catch (e) { toast('Failed to load inbox: ' + e.message, 'error'); }
+}
+
+function inboxRow(t) {
+  return `<div style="display:flex;gap:.6rem;align-items:flex-start;padding:.5rem 0;border-bottom:1px solid rgba(127,127,127,.08);${t.is_read ? 'opacity:.65' : ''}">
+    <div style="flex-shrink:0;margin-top:.1rem">${CLS_CHIP[t.classification] || ''}</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:.8rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escJf(t.subject || '(no subject)')}</div>
+      <div style="font-size:.72rem;color:var(--text-muted)">${escJf(t.from_name || t.from_email || '')} · ${timeAgo(t.last_message_at)}</div>
+      ${t.summary ? `<div style="font-size:.74rem;margin-top:.15rem">${escJf(t.summary)}</div>` : ''}
+      ${t.auto_action ? `<div style="font-size:.7rem;color:var(--green,#34d399);margin-top:.15rem">⚡ ${escJf(t.auto_action)}</div>` : ''}
+    </div>
+    <div style="flex-shrink:0;white-space:nowrap">
+      ${t.can_undo ? `<button class="btn-sm" onclick="undoThread(${t.id})" title="Undo the auto status move">↩ Undo</button>` : ''}
+      ${!t.is_read ? `<button class="btn-sm" onclick="markThreadRead(${t.id})" title="Mark read">✓</button>` : ''}
+    </div>
+  </div>`;
+}
+
+async function checkInbox() {
+  try {
+    await apiCall('/api/inbox/check', { method: 'POST' });
+    toast('Checking inbox (read-only) — refreshing in ~8s', 'success');
+    setTimeout(loadInbox, 8000);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function undoThread(id) {
+  try {
+    const r = await apiCall(`/api/inbox/${id}/undo`, { method: 'POST' });
+    toast(r.message || 'Undone', 'success');
+    loadInbox();
+  } catch (e) { toast(e.message.replace(/^{"detail":"|"}$/g, ''), 'error'); }
+}
+
+async function markThreadRead(id) {
+  try {
+    await apiCall(`/api/inbox/${id}/read`, { method: 'POST' });
+    loadInbox();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+function letterSection(letter) {
+  const badge = letter ? ({ draft: '<span class="badge badge-amber">draft</span>',
+    approved: '<span class="badge badge-green">✓ approved</span>',
+    rejected: '<span class="badge badge-red">rejected</span>' }[letter.status] || '') : '';
+  return `<div class="tailor-exp-header">✉️ Cover letter ${badge}</div>` + (letter ? `
+    <textarea id="tailor-letter-text" rows="9" style="font-size:.8rem;line-height:1.5">${escJf(letter.text || '')}</textarea>
+    <div style="display:flex;gap:.5rem;justify-content:flex-end;margin-top:.4rem">
+      <button class="btn-sm" onclick="genTailorLetter()">↻ Regenerate</button>
+      <button class="btn-sm" onclick="saveTailorLetter('draft')">💾 Save</button>
+      <button class="btn-sm primary" onclick="saveTailorLetter('approved')">✅ Approve letter</button>
+    </div>` : `
+    <div style="padding:.5rem 0">
+      <button class="btn-sm primary" onclick="genTailorLetter()">✍️ Generate cover letter</button>
+      <span style="font-size:.72rem;color:var(--text-muted)"> 3 short paragraphs, your tone notes, facts only</span>
+    </div>`);
+}
+
+function collectTailorEdits() {
+  const changes = [];
+  document.querySelectorAll('#tailor-body .diff-bullet').forEach(el => {
+    const text = el.querySelector('.diff-new').textContent.trim();
+    changes.push({
+      ref: el.dataset.ref,
+      accepted: el.querySelector('.bullet-accept').checked,
+      edited: text !== el.dataset.orig ? text : null,
+    });
+  });
+  const sk = document.getElementById('tailor-skills-accept');
+  const su = document.getElementById('tailor-summary-accept');
+  return {
+    changes,
+    ...(sk ? { skills_accepted: sk.checked } : {}),
+    ...(su ? { summary_accepted: su.checked } : {}),
+  };
+}
+
+async function saveTailorEdits(status) {
+  const t = TAILOR_CTX.bundle.tailored;
+  const payload = collectTailorEdits();
+  if (status) payload.status = status;
+  try {
+    await apiCall(`/api/tailored/${t.id}`, { method: 'PATCH', body: JSON.stringify(payload) });
+    toast(status === 'approved' ? 'Approved — ATS-safe PDF rendered ✓' : 'Edits saved', 'success');
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function approveAndSend() {
+  const t = TAILOR_CTX.bundle.tailored;
+  try {
+    await apiCall(`/api/tailored/${t.id}`, { method: 'PATCH', body: JSON.stringify(collectTailorEdits()) });
+    const r = await apiCall(`/api/tailored/${t.id}/approve-and-send`, { method: 'POST' });
+    toast(r.message || 'Approved and queued', 'success');
+    refreshTailorReview();
+  } catch (e) { toast('Not sent: ' + e.message.replace(/^{"detail":"|"}$/g, ''), 'error'); }
+}
+
+async function setTailoredStatus(status) {
+  const t = TAILOR_CTX.bundle.tailored;
+  try {
+    await apiCall(`/api/tailored/${t.id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function downloadTailoredPdf(id, company) {
+  try {
+    const res = await fetch(`${API}/api/tailored/${id}/pdf`, { headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` } });
+    if (!res.ok) throw new Error('PDF not available');
+    const url = URL.createObjectURL(await res.blob());
+    const a = Object.assign(document.createElement('a'), { href: url, download: `resume_${company}.pdf` });
+    a.click(); URL.revokeObjectURL(url);
+  } catch (e) { toast(e.message, 'error'); }
+}
+
+async function genTailorLetter() {
+  try {
+    toast('Writing cover letter…', 'info');
+    await apiCall(`/api/jobs/${TAILOR_CTX.jobId}/cover-letter`, { method: 'POST' });
+    refreshTailorReview();
+  } catch (e) { toast('Cover letter failed: ' + e.message, 'error'); }
+}
+
+async function saveTailorLetter(status) {
+  const letter = TAILOR_CTX.bundle.cover_letter;
+  if (!letter) return;
+  try {
+    await apiCall(`/api/cover-letters/${letter.id}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ text: document.getElementById('tailor-letter-text').value, status }),
+    });
+    toast(status === 'approved' ? 'Cover letter approved ✓' : 'Cover letter saved', 'success');
+    refreshTailorReview();
+  } catch (e) { toast(e.message, 'error'); }
 }
 
 function showAiText(title, body) {

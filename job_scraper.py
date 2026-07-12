@@ -25,6 +25,7 @@ adding guesses is free.
 
 import re
 import time
+import hashlib
 import logging
 import threading
 from datetime import datetime
@@ -35,6 +36,20 @@ import httpx
 from database import SessionLocal, JobPosting, Notification
 
 logger = logging.getLogger("agent_logger")
+
+MAX_RAW_DESC = 20000   # chars of full JD kept for enrichment/tailoring
+
+
+def _finalize(job: dict) -> dict:
+    """Add apply-pipeline fields shared by every source: ats_type, apply_url,
+    raw_description (full text; snippet stays truncated), dedupe_hash."""
+    raw = job.pop("_raw_description", None) or job.get("description_snippet")
+    job["raw_description"] = raw[:MAX_RAW_DESC] if raw else None
+    job["ats_type"] = job["source"]
+    job.setdefault("apply_url", job.get("url"))
+    key = f'{job["company"]}|{job["title"]}|{job.get("location") or ""}'.lower()
+    job["dedupe_hash"] = hashlib.sha1(re.sub(r"\s+", " ", key).encode()).hexdigest()
+    return job
 
 # ─── What to search for ──────────────────────────────────────────────────────
 KEYWORDS = [
@@ -171,24 +186,25 @@ def fetch_greenhouse(client: httpx.Client, token: str) -> list:
 
     jobs = []
     for j in matched[:MAX_CONTENT_FETCHES]:
-        desc = ""
+        full_desc = ""
         try:  # fetch description per matched job only
             detail = client.get(f"{url}/{j['id']}")
             if detail.status_code == 200:
-                desc = _strip_html(detail.json().get("content", ""))[:2000]
+                full_desc = _strip_html(detail.json().get("content", ""))
         except Exception:
             pass
         loc = (j.get("location") or {}).get("name") or ""
-        jobs.append({
+        jobs.append(_finalize({
             "source": "greenhouse", "external_id": str(j["id"]),
             "company": token, "title": j.get("title", ""),
             "location": loc, "url": j.get("absolute_url", ""),
-            "description_snippet": desc,
+            "description_snippet": full_desc[:2000],
+            "_raw_description": full_desc,
             "posted_at": _parse_dt(j.get("updated_at")),
             "remote": "remote" in loc.lower(),
-            "sponsorship_flag": _sponsorship_flag(desc),
+            "sponsorship_flag": _sponsorship_flag(full_desc),
             "matched_keywords": _matches_keywords(j.get("title", "")),
-        })
+        }))
     return jobs
 
 
@@ -201,18 +217,20 @@ def fetch_lever(client: httpx.Client, company: str) -> list:
         kws = _matches_keywords(j.get("text", ""))
         if not kws:
             continue
-        desc = (j.get("descriptionPlain") or "")[:2000]
+        full_desc = j.get("descriptionPlain") or ""
         loc = (j.get("categories") or {}).get("location") or ""
-        jobs.append({
+        jobs.append(_finalize({
             "source": "lever", "external_id": str(j["id"]),
             "company": company, "title": j.get("text", ""),
             "location": loc, "url": j.get("hostedUrl", ""),
-            "description_snippet": desc,
+            "description_snippet": full_desc[:2000],
+            "_raw_description": full_desc,
+            "apply_url": (j.get("hostedUrl", "") or "").rstrip("/") + "/apply" if j.get("hostedUrl") else None,
             "posted_at": _parse_dt(j.get("createdAt")),
             "remote": "remote" in loc.lower(),
-            "sponsorship_flag": _sponsorship_flag(desc),
+            "sponsorship_flag": _sponsorship_flag(full_desc),
             "matched_keywords": kws,
-        })
+        }))
     return jobs
 
 
@@ -225,17 +243,20 @@ def fetch_ashby(client: httpx.Client, org: str) -> list:
         kws = _matches_keywords(j.get("title", ""))
         if not kws:
             continue
-        jobs.append({
+        full_desc = j.get("descriptionPlain") or _strip_html(j.get("descriptionHtml") or "")
+        jobs.append(_finalize({
             "source": "ashby", "external_id": str(j["id"]),
             "company": org, "title": j.get("title", ""),
             "location": j.get("location"),
             "url": j.get("jobUrl") or j.get("applyUrl") or "",
-            "description_snippet": None,  # list endpoint has no description
+            "description_snippet": full_desc[:2000] or None,
+            "_raw_description": full_desc,
+            "apply_url": j.get("applyUrl") or j.get("jobUrl") or "",
             "posted_at": _parse_dt(j.get("publishedAt")),
             "remote": bool(j.get("isRemote")),
-            "sponsorship_flag": "unknown",
+            "sponsorship_flag": _sponsorship_flag(full_desc) if full_desc else "unknown",
             "matched_keywords": kws,
-        })
+        }))
     return jobs
 
 
@@ -250,7 +271,7 @@ def fetch_smartrecruiters(client: httpx.Client, company: str) -> list:
             continue
         loc = (j.get("location") or {})
         loc_str = ", ".join(filter(None, [loc.get("city"), loc.get("country")]))
-        jobs.append({
+        jobs.append(_finalize({
             "source": "smartrecruiters", "external_id": str(j["id"]),
             "company": company, "title": j.get("name", ""),
             "location": loc_str,
@@ -260,7 +281,7 @@ def fetch_smartrecruiters(client: httpx.Client, company: str) -> list:
             "remote": bool(loc.get("remote")),
             "sponsorship_flag": "unknown",
             "matched_keywords": kws,
-        })
+        }))
     return jobs
 
 
@@ -285,7 +306,7 @@ def fetch_workday(client: httpx.Client, cfg: dict) -> list:
                 continue
             ext_id = (j.get("bulletFields") or [j.get("externalPath", "")])[0]
             loc = j.get("locationsText") or ""
-            jobs.append({
+            jobs.append(_finalize({
                 "source": "workday", "external_id": str(ext_id),
                 "company": cfg.get("company", tenant), "title": title,
                 "location": loc,
@@ -295,7 +316,7 @@ def fetch_workday(client: httpx.Client, cfg: dict) -> list:
                 "remote": "remote" in loc.lower(),
                 "sponsorship_flag": "unknown",
                 "matched_keywords": kws,
-            })
+            }))
     return jobs
 
 
@@ -338,10 +359,18 @@ def run_scrape(companies: dict = None) -> str:
                             [j["external_id"] for j in jobs] or [""]
                         )).all()
                     }
+                    # cross-source dedupe: same company+title+location already stored
+                    existing_hashes = {
+                        row[0] for row in db.query(JobPosting.dedupe_hash)
+                        .filter(JobPosting.dedupe_hash.in_(
+                            [j["dedupe_hash"] for j in jobs] or [""]
+                        )).all()
+                    }
                     for j in jobs:
-                        if j["external_id"] in existing_ids:
+                        if j["external_id"] in existing_ids or j["dedupe_hash"] in existing_hashes:
                             deduped += 1
                             continue
+                        existing_hashes.add(j["dedupe_hash"])
                         db.add(JobPosting(**j))
                         new_count += 1
                     db.commit()

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<!-- Mock of a classic boards.greenhouse.io application form for adapter smoke tests -->
+<head><title>Data Engineer - Acme</title></head>
+<body>
+  <div id="application-form">
+    <h1>Apply for Data Engineer</h1>
+    <form id="application_form">
+      <label for="first_name">First Name *</label>
+      <input id="first_name" name="job_application[first_name]" type="text" />
+      <label for="last_name">Last Name *</label>
+      <input id="last_name" name="job_application[last_name]" type="text" />
+      <label for="email">Email *</label>
+      <input id="email" name="job_application[email]" type="text" />
+      <label for="phone">Phone</label>
+      <input id="phone" name="job_application[phone]" type="text" />
+      <label for="resume">Resume/CV *</label>
+      <input id="resume" name="resume" type="file" />
+      <label for="cover_letter_text">Cover Letter</label>
+      <textarea id="cover_letter_text" name="cover_letter_text"></textarea>
+
+      <div id="custom_fields">
+        <div class="field">
+          <label>Will you now or in the future require sponsorship for employment visa status? *</label>
+          <select name="job_application[answers_attributes][0][text_value]">
+            <option>--</option><option>Yes</option><option>No</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Why do you want to work at Acme? *</label>
+          <textarea name="job_application[answers_attributes][1][text_value]"></textarea>
+        </div>
+        <div class="field">
+          <label>LinkedIn Profile</label>
+          <input type="text" name="job_application[answers_attributes][2][text_value]" />
+        </div>
+      </div>
+
+      <div id="eeoc_fields">
+        <label>Veteran Status</label>
+        <select name="job_application[veteran_status]">
+          <option>--</option>
+          <option>I am not a protected veteran</option>
+          <option>I identify as one or more of the classifications of a protected veteran</option>
+          <option>I don't wish to answer</option>
+        </select>
+      </div>
+
+      <input type="button" id="submit_app" value="Submit Application"
+             onclick="document.getElementById('application-form').style.display='none';
+                      document.getElementById('application_confirmation').style.display='block';" />
+    </form>
+  </div>
+  <div id="application_confirmation" style="display:none">
+    Thank you for applying to Acme. Your application has been received.
+  </div>
+</body>
+</html>

@@ -51,7 +51,7 @@ from database import (
 )
 from utils import sanitize_text
 from tts import synthesize_b64
-from sqlalchemy import func, desc, distinct
+from sqlalchemy import func, desc, distinct, text
 
 # ─── Constants ───────────────────────────────────────────────────────────────
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-dashboard-key-change-in-prod-2025")
@@ -163,6 +163,14 @@ logger = logging.getLogger("agent_logger")
 init_db()
 seed_db()
 
+# ─── Ops: env validation + optional Sentry (Phase 6) ─────────────────────────
+try:
+    import ops
+    ops.init_sentry("web")
+    ops.validate_env("web")
+except Exception as _e:
+    logging.getLogger("agent_logger").warning(f"[boot] ops init skipped: {_e}")
+
 # ─── RAG Setup ───────────────────────────────────────────────────────────────
 embeddings = HuggingFaceEndpointEmbeddings(
     model="sentence-transformers/all-MiniLM-L6-v2",
@@ -266,9 +274,20 @@ def _run_job(job_name: str, job_type: str):
             output = "Gmail check complete"
         elif job_type == "job_scrape":
             from job_scraper import run_scrape
-            from job_intel import score_new_jobs
+            from job_enrich import enrich_and_score_new_jobs
             output = run_scrape(companies=(job.config or {}).get("companies"))
-            output += " | " + score_new_jobs(db)
+            # explainable weighted scoring (falls back to legacy LLM scorer
+            # inside if the profile/fact bank aren't set up yet)
+            output += " | " + enrich_and_score_new_jobs(db)
+        elif job_type == "nightly_maintenance":
+            import ops
+            output = ops.nightly_maintenance(db)
+        elif job_type == "email_routing":
+            from email_reader import get_reader
+            from email_router import ingest
+            reader = get_reader()
+            output = (ingest(db, reader, since_minutes=int((job.config or {}).get("since_minutes", 15)))
+                      if reader else "no email source configured (set GMAIL_OAUTH_* or GMAIL_USER/GMAIL_APP_PASSWORD)")
         elif job_type == "followup_reminder":
             output = _send_followup_reminders(db)
         elif job_type == "morning_briefing":
@@ -320,6 +339,13 @@ def _generate_report_data(report_type: str, db) -> str:
     total_apps = db.query(func.count(JobApplication.id))\
         .filter(JobApplication.created_at >= since).scalar() or 0
 
+    # Real auto-apply funnel from ApplicationRun records (Phase 6)
+    try:
+        import ops
+        funnel = ops.application_funnel(db, since_days=(now - since).days or 7)
+    except Exception:
+        funnel = {}
+
     summary = {
         "period": report_type,
         "from": since.isoformat(),
@@ -328,6 +354,7 @@ def _generate_report_data(report_type: str, db) -> str:
         "messages": total_messages,
         "agent_executions": total_agents,
         "job_applications": total_apps,
+        "apply_funnel": funnel,
     }
     report = Report(
         type=report_type,
@@ -536,6 +563,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ─── Apply-pipeline router (Profile / Resumes / FactBank / Enrichment) ────────
+# Auth is enforced router-wide here so pipeline_api.py stays import-cycle-free.
+from pipeline_api import router as pipeline_router
+app.include_router(pipeline_router, dependencies=[Depends(get_current_user)])
+
 # ─── Pydantic Models ──────────────────────────────────────────────────────────
 class Message(BaseModel):
     role: str
@@ -659,6 +691,25 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "healthy", "timestamp": datetime.utcnow().isoformat()}
+
+
+@app.get("/api/ops/health")
+async def ops_health(db=Depends(get_db), current_user: AdminUser = Depends(get_current_user)):
+    """Deep health: DB reachable, adapter success rates, env issues, funnel."""
+    import ops
+    db_ok = True
+    try:
+        db.execute(text("SELECT 1"))
+    except Exception:
+        db_ok = False
+    return {
+        "status": "healthy" if db_ok else "degraded",
+        "database": "ok" if db_ok else "unreachable",
+        "timestamp": datetime.utcnow().isoformat(),
+        "adapters": ops.adapter_health(db),
+        "env_issues": ops.validate_env("web"),
+        "funnel": ops.application_funnel(db),
+    }
 
 @app.get("/proto/{key}/run")
 async def proto_run(key: str, request: Request):
@@ -1497,12 +1548,24 @@ async def list_jobs(
     total = q.count()
     order = desc(JobPosting.match_score) if sort == "score" else desc(JobPosting.scraped_at)
     rows = q.order_by(order).offset((page - 1) * limit).limit(limit).all()
+    # latest tailored-resume status per listed posting (one query, ordered so
+    # later rows overwrite earlier ones in the map)
+    from database import TailoredResume
+    tailored_map = {}
+    if rows:
+        for t in (db.query(TailoredResume)
+                  .filter(TailoredResume.job_posting_id.in_([j.id for j in rows]))
+                  .order_by(TailoredResume.created_at).all()):
+            tailored_map[t.job_posting_id] = {"id": t.id, "status": t.status}
     return {
         "jobs": [{
             "id": j.id, "source": j.source, "company": j.company, "title": j.title,
             "location": j.location, "url": j.url, "remote": j.remote,
             "sponsorship_flag": j.sponsorship_flag, "matched_keywords": j.matched_keywords,
             "match_score": j.match_score, "match_reason": j.match_reason,
+            "match_breakdown": j.match_breakdown,
+            "tailored": tailored_map.get(j.id),
+            "ats_type": j.ats_type or j.source, "apply_url": j.apply_url or j.url,
             "posted_at": j.posted_at.isoformat() if j.posted_at else None,
             "scraped_at": j.scraped_at.isoformat(), "is_new": j.is_new,
             "tracked_application_id": j.tracked_application_id,
