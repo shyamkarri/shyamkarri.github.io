@@ -4,13 +4,20 @@ services:
     runtime: docker
     plan: free
     envVars:
-      - key: GROQ_API_KEY
+      - key: GROQ_API_KEY          # free LLM — powers tailoring/answers/classify when ANTHROPIC_API_KEY is blank
         sync: false
       - key: HUGGINGFACEHUB_API_TOKEN
         sync: false
       - key: GMAIL_USER
         sync: false
       - key: GMAIL_APP_PASSWORD
+        sync: false
+      # Phase 5: Gmail read-only routing (OAuth preferred, IMAP fallback above)
+      - key: GMAIL_OAUTH_CLIENT_ID
+        sync: false
+      - key: GMAIL_OAUTH_CLIENT_SECRET
+        sync: false
+      - key: GMAIL_OAUTH_REFRESH_TOKEN
         sync: false
       - key: DATABASE_URL
         fromDatabase:
@@ -26,6 +33,17 @@ services:
         value: "1440"
       - key: REPORTS_DIR
         value: /tmp/reports
+      # Apply pipeline (Phase 1+): Anthropic preferred, Groq fallback (leave blank to stay free)
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: UPLOADS_DIR
+        value: /tmp/uploads
+      # Phase 3: public half of the sealed-box keypair (web can only encrypt)
+      - key: ATS_CREDS_PUBLIC_KEY
+        sync: false
+      # Phase 6: optional error tracking (blank = disabled)
+      - key: SENTRY_DSN
+        sync: false
       # Optional Telegram instant alerts (leave blank to disable)
       - key: TELEGRAM_BOT_TOKEN
         sync: false
@@ -42,6 +60,42 @@ services:
         sync: false
       - key: SMTP_FROM
         value: noreply@karriprasad.ai
+
+  # ── Auto-apply Playwright worker (Phase 3) ─────────────────────────────────
+  # NOT deployed on Render free: Render's free tier has no worker services and
+  # Chromium won't fit in 512 MB. Run the worker for FREE on your own machine:
+  #
+  #   pip install -r requirements-worker.txt && playwright install chromium
+  #   DATABASE_URL="<your Render/Neon external Postgres URL>" \
+  #     ATS_CREDS_PUBLIC_KEY=... ATS_CREDS_PRIVATE_KEY=... GROQ_API_KEY=... \
+  #     PW_HEADLESS=false python3 apply_worker.py
+  #
+  # Headed (PW_HEADLESS=false) also lets you solve CAPTCHAs in the visible
+  # browser. Only run it while you're actively submitting applications.
+  #
+  # To run it on Render instead, uncomment below and set plan to a paid tier:
+  # - type: worker
+  #   name: apply-worker
+  #   runtime: docker
+  #   dockerfilePath: ./Dockerfile.worker
+  #   plan: starter
+  #   envVars:
+  #     - key: DATABASE_URL
+  #       fromDatabase:
+  #         name: conversation-logs-db
+  #         property: connectionString
+  #     - key: GROQ_API_KEY
+  #       sync: false
+  #     - key: ANTHROPIC_API_KEY
+  #       sync: false
+  #     - key: ATS_CREDS_PUBLIC_KEY
+  #       sync: false
+  #     - key: ATS_CREDS_PRIVATE_KEY
+  #       sync: false
+  #     - key: PW_HEADLESS
+  #       value: "true"
+  #     - key: SENTRY_DSN
+  #       sync: false
 
 databases:
   - name: conversation-logs-db

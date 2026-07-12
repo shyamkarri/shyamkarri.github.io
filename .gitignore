@@ -8,3 +8,7 @@ reports/
 /tmp/reports/
 *.db-shm
 *.db-wal
+
+# Apply pipeline
+uploads/
+tests/fixtures/dummy.pdf

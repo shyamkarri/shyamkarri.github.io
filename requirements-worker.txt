@@ -1,0 +1,11 @@
+# Auto-apply worker (Playwright) — separate service from the web app.
+# The base Docker image (mcr.microsoft.com/playwright/python) ships browsers.
+playwright==1.49.1
+sqlalchemy==2.0.50
+psycopg2-binary==2.9.9
+httpx==0.28.1
+pynacl==1.5.0
+pypdf==5.1.0
+reportlab==4.2.5
+anthropic>=0.42.0
+langchain-groq==0.3.8

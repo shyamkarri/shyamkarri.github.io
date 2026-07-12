@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from sqlalchemy import (
     create_engine, Column, Integer, String, Text, DateTime,
-    Float, JSON, Boolean, ForeignKey, inspect, text, Enum
+    Float, JSON, Boolean, ForeignKey, inspect, text, Enum, LargeBinary
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 import enum
@@ -49,6 +49,14 @@ class ReportFormat(str, enum.Enum):
 class UserRole(str, enum.Enum):
     admin = "admin"
     user = "user"
+
+class WorkAuthorization(str, enum.Enum):
+    citizen = "citizen"
+    green_card = "green_card"
+    opt = "opt"
+    stem_opt = "stem_opt"
+    h1b = "h1b"
+    needs_sponsorship = "needs_sponsorship"
 
 # ─── Models ──────────────────────────────────────────────────────────────────
 
@@ -129,6 +137,199 @@ class JobApplication(Base):
     priority = Column(Integer, default=0)  # 0=normal, 1=high, 2=urgent
 
 
+class CandidateProfile(Base):
+    """Single-row profile of the candidate — the source of truth for
+    work-authorization answers, targeting, and tone. Never guessed by the LLM."""
+    __tablename__ = "candidate_profile"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    full_name = Column(String(255), nullable=True)
+    email = Column(String(255), nullable=True)
+    phone = Column(String(50), nullable=True)
+    location = Column(String(255), nullable=True)
+    links = Column(JSON, nullable=True)              # {linkedin, github, portfolio, website}
+    work_authorization = Column(String(50), nullable=True)   # WorkAuthorization values
+    salary_floor = Column(Integer, nullable=True)            # annual USD
+    target_titles = Column(JSON, nullable=True)              # ["Data Engineer", ...]
+    target_locations = Column(JSON, nullable=True)           # ["Remote", "New York, NY", ...]
+    remote_pref = Column(String(50), nullable=True)          # remote_only / hybrid / onsite_ok / any
+    eeo_answers = Column(JSON, nullable=True)                # {gender, race, veteran, disability} — optional
+    tone_notes = Column(Text, nullable=True)                 # voice/tone for open-ended answers
+    # Agent guardrails (used from Phase 3 on, stored here as settings)
+    kill_switch = Column(Boolean, default=False)             # global stop for auto-apply
+    max_apps_per_day = Column(Integer, default=20)
+    auto_mode = Column(Boolean, default=False)               # score>=threshold → auto-tailor
+    auto_threshold = Column(Integer, default=80)
+    company_allowlist = Column(JSON, nullable=True)          # full-auto only for these
+
+
+class BaseResume(Base):
+    """An uploaded resume PDF + its LLM-parsed structured content."""
+    __tablename__ = "base_resumes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    uploaded_at = Column(DateTime, default=datetime.utcnow, index=True)
+    label = Column(String(255), nullable=False)
+    file_path = Column(String(512), nullable=True)           # local/S3-abstracted path
+    raw_text = Column(Text, nullable=True)                   # extracted PDF text
+    parsed_json = Column(JSON, nullable=True)                # {contact, experiences[], skills[], education[], projects[]}
+    is_default = Column(Boolean, default=False)
+    parse_status = Column(String(50), default="pending")     # pending / parsing / ready / failed
+    parse_error = Column(Text, nullable=True)
+
+
+class ResumeFact(Base):
+    """FactBank — atomic true statements. Every tailored bullet must trace to
+    fact ids from this table (anti-hallucination)."""
+    __tablename__ = "resume_facts"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    resume_id = Column(Integer, ForeignKey("base_resumes.id"), nullable=True, index=True)  # NULL = manual
+    category = Column(String(50), nullable=False, index=True)  # experience / skill / education / project / metric / other
+    fact = Column(Text, nullable=False)                        # one atomic statement
+    context = Column(String(512), nullable=True)               # e.g. "Senior Data Engineer @ Acme, 2021-2024"
+    source = Column(String(50), default="resume")              # resume / manual
+    verified = Column(Boolean, default=True)                   # user can un-verify a bad extraction
+
+    resume = relationship("BaseResume", backref="facts")
+
+
+class TailoredResume(Base):
+    """A per-posting rewrite of the base resume. diff_json holds every bullet
+    (old → new, fact ids, accepted flag); the PDF is rendered only on approval.
+    Nothing downstream (auto-apply) may use a TailoredResume unless approved."""
+    __tablename__ = "tailored_resumes"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    job_posting_id = Column(Integer, ForeignKey("job_postings.id"), nullable=False, index=True)
+    base_resume_id = Column(Integer, ForeignKey("base_resumes.id"), nullable=False)
+    diff_json = Column(JSON, nullable=True)      # {summary, experiences[{bullets[{ref,old,new,fact_ids,accepted,edited}]}], skills_order, dropped_by_validator[]}
+    pdf_path = Column(String(512), nullable=True)
+    status = Column(String(50), default="queued", index=True)  # queued / generating / draft / approved / rejected / failed
+    error = Column(Text, nullable=True)
+    approved_at = Column(DateTime, nullable=True)
+
+    base_resume = relationship("BaseResume")
+
+
+class CoverLetter(Base):
+    """Generated cover letter per posting — must be approved before any use."""
+    __tablename__ = "cover_letters"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    job_posting_id = Column(Integer, ForeignKey("job_postings.id"), nullable=False, index=True)
+    text = Column(Text, nullable=True)
+    status = Column(String(50), default="draft")   # draft / approved / rejected
+
+
+class ApplicationRun(Base):
+    """One attempt to submit an application through an ATS adapter.
+    The Playwright worker claims queued rows; every filled field is logged to
+    field_receipts and screenshots go to RunArtifact — runs never fail silently."""
+    __tablename__ = "application_runs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow, index=True)
+    started_at = Column(DateTime, nullable=True)
+    finished_at = Column(DateTime, nullable=True)
+    duration_ms = Column(Float, nullable=True)
+    job_posting_id = Column(Integer, ForeignKey("job_postings.id"), nullable=False, index=True)
+    tailored_resume_id = Column(Integer, ForeignKey("tailored_resumes.id"), nullable=False)
+    cover_letter_id = Column(Integer, ForeignKey("cover_letters.id"), nullable=True)
+    application_id = Column(Integer, ForeignKey("job_applications.id"), nullable=True)  # tracker card, set on submit
+    ats_type = Column(String(50), nullable=False, index=True)
+    # queued / running / needs_review / awaiting_approval / submitting / submitted / failed / skipped / cancelled
+    status = Column(String(50), default="queued", index=True)
+    attempt = Column(Integer, default=0)
+    worker_id = Column(String(100), nullable=True)
+    field_receipts = Column(JSON, nullable=True)      # [{label, value, source, selector}]
+    pending_answers = Column(JSON, nullable=True)     # generated answers awaiting user approval
+    confirmation_text = Column(Text, nullable=True)
+    needs_review_reason = Column(Text, nullable=True)
+    error = Column(Text, nullable=True)
+    resume_requested = Column(Boolean, default=False)  # user clicked Resume/Approve — worker continues
+    current_url = Column(String(1024), nullable=True)  # where the run paused, for manual finishing
+
+    posting = relationship("JobPosting")
+    tailored_resume = relationship("TailoredResume")
+
+
+class RunArtifact(Base):
+    """Screenshots (and other small artifacts) for a run, stored in the DB so
+    the web service can serve what the separate worker service captured."""
+    __tablename__ = "run_artifacts"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    run_id = Column(Integer, ForeignKey("application_runs.id"), nullable=False, index=True)
+    name = Column(String(255), nullable=False)         # e.g. "01_form_loaded.jpg"
+    content_type = Column(String(100), default="image/jpeg")
+    content = Column(LargeBinary, nullable=False)
+
+
+class AnswerBankEntry(Base):
+    """Approved answers to application questions — always reused before the
+    LLM generates anything. Generated answers land here unapproved and must be
+    approved by the user before any run may submit with them."""
+    __tablename__ = "answer_bank"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    question = Column(Text, nullable=False)             # as seen on the form
+    question_norm = Column(String(512), nullable=False, index=True)
+    answer = Column(Text, nullable=False)
+    company = Column(String(255), nullable=True, index=True)  # set for company-specific questions
+    source = Column(String(50), default="manual")       # manual / generated / profile
+    approved = Column(Boolean, default=False)
+    times_reused = Column(Integer, default=0)
+
+
+class AtsCredential(Base):
+    """Per-tenant ATS logins (Workday). password_sealed is a libsodium sealed
+    box: the web service encrypts with ATS_CREDS_PUBLIC_KEY and can never read
+    it back; only the worker (holding ATS_CREDS_PRIVATE_KEY) can decrypt."""
+    __tablename__ = "ats_credentials"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    ats_type = Column(String(50), default="workday")
+    tenant = Column(String(255), nullable=False, index=True)   # e.g. "nvidia"
+    username = Column(String(255), nullable=False)
+    password_sealed = Column(Text, nullable=False)             # base64 sealed box
+    notes = Column(String(512), nullable=True)
+
+
+class EmailThread(Base):
+    """A Gmail thread routed into the tracker. Read-only ingestion: we classify,
+    match to an application, optionally move its status (reversibly), and
+    summarize — we never send or modify mail."""
+    __tablename__ = "email_threads"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    gmail_thread_id = Column(String(255), unique=True, nullable=False, index=True)
+    matched_application_id = Column(Integer, ForeignKey("job_applications.id"),
+                                    nullable=True, index=True)
+    classification = Column(String(50), nullable=True, index=True)  # recruiter_reply / interview_invite / OA_link / rejection / spam / other
+    confidence = Column(Float, nullable=True)
+    summary = Column(Text, nullable=True)
+    from_email = Column(String(320), nullable=True)
+    from_name = Column(String(255), nullable=True)
+    subject = Column(String(998), nullable=True)
+    snippet = Column(Text, nullable=True)
+    last_message_at = Column(DateTime, nullable=True, index=True)
+    is_read = Column(Boolean, default=False)
+    auto_action = Column(String(255), nullable=True)   # e.g. "moved to Interview"
+    prev_status = Column(String(50), nullable=True)     # for undo of an auto status move
+
+    application = relationship("JobApplication")
+
+
 class JobPosting(Base):
     """Jobs discovered by the scraper from public job-board APIs."""
     __tablename__ = "job_postings"
@@ -152,6 +353,13 @@ class JobPosting(Base):
     # AI match scoring (filled in by job_intel after each scrape)
     match_score = Column(Integer, nullable=True, index=True)     # 0-100 fit vs profile
     match_reason = Column(Text, nullable=True)                   # one-line explanation
+    # Apply-pipeline enrichment (Phase 1+)
+    ats_type = Column(String(50), nullable=True)                 # greenhouse / lever / ashby / smartrecruiters / workday
+    apply_url = Column(String(1024), nullable=True)              # direct application form URL
+    raw_description = Column(Text, nullable=True)                # full JD text (snippet is truncated)
+    extracted_requirements = Column(JSON, nullable=True)         # {required_skills[], nice_to_have[], seniority, min_years, salary, sponsorship, keywords[]}
+    dedupe_hash = Column(String(64), nullable=True, index=True)  # sha1(company|title|location) — cross-source dedupe
+    match_breakdown = Column(JSON, nullable=True)                # {skills:{points,max,matched,missing}, title:{}, location_auth:{}, recency:{}, total}
 
 
 class Notification(Base):
@@ -332,6 +540,23 @@ def seed_db():
                 "cron_expression": "0 7 1 * *",
                 "job_type": "monthly_report",
                 "enabled": True,
+            },
+            {
+                "name": "nightly_maintenance",
+                "description": "Nightly 3 AM: refresh scrapes, re-score, retry failed "
+                               "apply runs once, and run the selector-drift check",
+                "cron_expression": "0 3 * * *",
+                "job_type": "nightly_maintenance",
+                "enabled": True,
+            },
+            {
+                "name": "email_routing",
+                "description": "Read new recruiter emails (read-only), classify, "
+                               "match to applications, and auto-route the tracker every 5 min",
+                "cron_expression": "*/5 * * * *",
+                "job_type": "email_routing",
+                "enabled": True,
+                "config": {"since_minutes": 15},
             },
             {
                 "name": "job_scrape",

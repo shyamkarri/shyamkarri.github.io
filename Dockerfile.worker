@@ -1,0 +1,17 @@
+# Auto-apply Playwright worker — deploy as a Render "worker" service
+# (or run locally headed for CAPTCHA solving: PW_HEADLESS=false python3 apply_worker.py)
+FROM mcr.microsoft.com/playwright/python:v1.49.0-jammy
+
+WORKDIR /app
+COPY requirements-worker.txt .
+RUN pip install --no-cache-dir -r requirements-worker.txt
+
+COPY database.py llm.py crypto_box.py answer_engine.py apply_queue.py \
+     resume_bank.py job_enrich.py job_intel.py tailor.py apply_worker.py ./
+COPY adapters ./adapters
+
+ENV PW_HEADLESS=true \
+    UPLOADS_DIR=/tmp/uploads \
+    WORKER_POLL_SECONDS=5
+
+CMD ["python3", "apply_worker.py"]
