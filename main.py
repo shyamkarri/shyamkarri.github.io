@@ -171,6 +171,38 @@ try:
 except Exception as _e:
     logging.getLogger("agent_logger").warning(f"[boot] ops init skipped: {_e}")
 
+
+# ─── Keep-awake self-ping (Render free spins down after ~15 min idle) ─────────
+def _start_keep_awake():
+    """Ping our own /health on an interval so the free web instance stays up and
+    the in-process schedulers (email 5m, scrape 6h, nightly) actually fire.
+    No-op locally (no RENDER_EXTERNAL_URL) or when KEEP_AWAKE=false."""
+    if os.getenv("KEEP_AWAKE", "true").strip().lower() == "false":
+        return
+    base = os.getenv("SELF_PING_URL") or os.getenv("RENDER_EXTERNAL_URL")
+    if not base:
+        return
+    ping_url = base.rstrip("/") + "/health"
+    interval = int(os.getenv("KEEP_AWAKE_SECONDS", "600"))  # 10 min < Render's 15
+
+    def _loop():
+        import time as _t
+        import httpx as _httpx
+        while True:
+            _t.sleep(interval)
+            try:
+                _httpx.get(ping_url, timeout=15)
+            except Exception:
+                pass
+
+    import threading
+    threading.Thread(target=_loop, daemon=True).start()
+    logging.getLogger("agent_logger").info(
+        f"[keep-awake] self-ping {ping_url} every {interval}s")
+
+
+_start_keep_awake()
+
 # ─── RAG Setup ───────────────────────────────────────────────────────────────
 embeddings = HuggingFaceEndpointEmbeddings(
     model="sentence-transformers/all-MiniLM-L6-v2",

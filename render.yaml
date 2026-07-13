@@ -44,6 +44,10 @@ services:
       # Phase 6: optional error tracking (blank = disabled)
       - key: SENTRY_DSN
         sync: false
+      # Keep the free instance awake so schedulers fire (self-pings /health).
+      # RENDER_EXTERNAL_URL is provided by Render automatically. Set false to disable.
+      - key: KEEP_AWAKE
+        value: "true"
       # Optional Telegram instant alerts (leave blank to disable)
       - key: TELEGRAM_BOT_TOKEN
         sync: false
